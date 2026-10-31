@@ -64,5 +64,11 @@
     "seen": 1793468984.15803,
     "ast_hash": "d1f95c2f185fe03001db2679f24e08f9",
     "semantic_hash": ""
+  },
+  "docs/ROADMAP.md": {
+    "mtime": 1793469784.2319236,
+    "seen": 1793469800.5454643,
+    "ast_hash": "cc611eef64b2b34d2ea60d38a96c2aa4",
+    "semantic_hash": ""
   }
 }
