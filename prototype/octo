@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# octo — CLI minimale del prototipo Octopus
+#   octo list                 stato, RAM e swap di ogni tentacolo
+#   octo start|stop NAME
+#   octo freeze|thaw NAME
+#   octo switch NAME          congela tutti gli altri, attiva NAME (misura il tempo)
+#   octo cpu NAME [SEC]       uso CPU del tentacolo (% di un core)
+#   octo limit NAME SIZE      tetto RAM (es. 2G, oppure "infinity" per toglierlo)
+#   octo shell NAME
+set -euo pipefail
+M=/var/lib/machines
+
+need_root() { [[ $EUID -eq 0 ]] || exec sudo "$0" "$@"; }
+unit()  { echo "systemd-nspawn@$1.service"; }
+cg()    { echo "/sys/fs/cgroup/machine.slice/systemd-nspawn@$1.service"; }
+names() { for d in "$M"/*/; do if [[ -d $d/etc ]]; then basename "$d"; fi; done; }
+
+state() {
+  systemctl is-active -q "$(unit "$1")" || { echo spenta; return; }
+  if [[ $(systemctl show -P FreezerState "$(unit "$1")") == frozen ]]; then echo congelata; else echo attiva; fi
+}
+human() { numfmt --to=iec --suffix=B "${1:-0}" 2>/dev/null || echo "$1"; }
+
+cpu_pct() {  # campiona usage_usec del cgroup
+  local f; f="$(cg "$1")/cpu.stat"; local s=${2:-2}
+  local a b; a=$(awk '/usage_usec/{print $2}' "$f"); sleep "$s"; b=$(awk '/usage_usec/{print $2}' "$f")
+  echo $(( (b - a) / (s * 10000) ))
+}
+
+wait_ready() {  # aspetta che systemd dentro il tentacolo sia su
+  for _ in $(seq 60); do
+    s=$(systemctl -M "$1" is-system-running 2>/dev/null || true)
+    [[ $s == running || $s == degraded ]] && return 0
+    sleep 0.5
+  done
+  echo "timeout avvio $1" >&2; return 1
+}
+
+cmd=${1:-list}; shift || true
+case $cmd in
+  list)
+    printf "%-10s %-10s %10s %10s %10s\n" TENTACOLO STATO RAM SWAP LIMITE
+    for n in $(names); do
+      st=$(state "$n"); ram=- sw=- lim=-
+      if [[ $st != spenta ]]; then
+        ram=$(human "$(cat "$(cg "$n")/memory.current")")
+        sw=$(human "$(cat "$(cg "$n")/memory.swap.current")")
+        lim=$(cat "$(cg "$n")/memory.max"); if [[ $lim != max ]]; then lim=$(human "$lim"); fi
+      fi
+      printf "%-10s %-10s %10s %10s %10s\n" "$n" "$st" "$ram" "$sw" "$lim"
+    done ;;
+  start)  need_root "$cmd" "$@"; machinectl start "$1"; wait_ready "$1"; echo "$1 avviata" ;;
+  stop)   need_root "$cmd" "$@"
+          if [[ $(state "$1") == congelata ]]; then systemctl thaw "$(unit "$1")"; fi
+          machinectl poweroff "$1" ;;
+  freeze) need_root "$cmd" "$@"; systemctl freeze "$(unit "$1")" ;;
+  thaw)   need_root "$cmd" "$@"; systemctl thaw "$(unit "$1")" ;;
+  switch)
+    need_root "$cmd" "$@"; target=$1; t0=$(date +%s%N)
+    for n in $(names); do
+      [[ $n == "$target" ]] && continue
+      if [[ $(state "$n") == attiva ]]; then systemctl freeze "$(unit "$n")"; echo "  congelata $n"; fi
+    done
+    case $(state "$target") in
+      congelata) systemctl thaw "$(unit "$target")"; echo "  scongelata $target" ;;
+      spenta)    machinectl start "$target"; wait_ready "$target"; echo "  avviata $target" ;;
+      attiva)    echo "  $target era già attiva" ;;
+    esac
+    echo "switch → $target in $(( ($(date +%s%N) - t0) / 1000000 )) ms" ;;
+  cpu)    echo "$1: $(cpu_pct "$1" "${2:-2}")% di un core" ;;
+  limit)  need_root "$cmd" "$@"; systemctl set-property --runtime "$(unit "$1")" MemoryMax="$2"; echo "limite RAM $1 = $2" ;;
+  shell)  need_root "$cmd" "$@"; machinectl shell "$1" ;;
+  *) sed -n '2,10p' "$0"; exit 1 ;;
+esac

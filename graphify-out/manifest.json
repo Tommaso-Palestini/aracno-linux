@@ -1,0 +1,26 @@
+{
+  "prototype/00-setup.sh": {
+    "mtime": 1793445348.737391,
+    "seen": 1793446364.784186,
+    "ast_hash": "5227e3bada79125abd8ae05935e0b7f2",
+    "semantic_hash": ""
+  },
+  "prototype/01-create-tentacles.sh": {
+    "mtime": 1793445348.8883934,
+    "seen": 1793446364.7841887,
+    "ast_hash": "14d519fb9cb57be738a81593774b11a0",
+    "semantic_hash": ""
+  },
+  "prototype/02-test-freeze.sh": {
+    "mtime": 1793445349.9004087,
+    "seen": 1793446364.7841914,
+    "ast_hash": "d0f0fd51ffd3dbb48370c688eb04260e",
+    "semantic_hash": ""
+  },
+  "prototype/octo": {
+    "mtime": 1793445365.8606162,
+    "seen": 1793446364.7841942,
+    "ast_hash": "2d32387c8b1a3c627eff8fe8f6fddc3a",
+    "semantic_hash": ""
+  }
+}
