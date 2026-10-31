@@ -58,5 +58,11 @@
     "seen": 1793468650.2761414,
     "ast_hash": "019c83957cf2d6f264402e17f8986f92",
     "semantic_hash": ""
+  },
+  "prototype/07-wayland-bind.sh": {
+    "mtime": 1793468979.059494,
+    "seen": 1793468984.15803,
+    "ast_hash": "d1f95c2f185fe03001db2679f24e08f9",
+    "semantic_hash": ""
   }
 }

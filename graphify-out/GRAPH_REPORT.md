@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-10-31)
 
 ## Corpus Check
-- 10 files · ~3,188 words
+- 11 files · ~3,448 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 1 file(s) not represented in the graph (top: (none) 1)
 
 ## Summary
-- 51 nodes · 60 edges · 10 communities (3 shown, 7 thin omitted)
+- 54 nodes · 62 edges · 11 communities (3 shown, 8 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3e2d857d`
+- Built from commit: `08384842`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,6 +21,7 @@
 - 04-gpu-bind.sh
 - 05-gpu-driver.sh
 - 06-vram-test.sh
+- 07-wayland-bind.sh
 - 01-create-tentacles.sh
 - 00-setup.sh
 - 02-test-freeze.sh
@@ -43,7 +44,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 7 thin omitted)
+## Communities (11 total, 8 thin omitted)
 
 ### Community 0 - "03-bench-switch.sh"
 Cohesion: 0.60
@@ -58,7 +59,7 @@ Cohesion: 0.50
 Nodes (7): alloc_log(), inside(), near(), ok_of(), 06-vram-test.sh script, start_alloc(), vram()
 
 ## Knowledge Gaps
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Not enough signal to generate questions. This usually means the corpus has no AMBIGUOUS edges, no bridge nodes, no INFERRED relationships, and all communities are tightly cohesive. Add more files or run with --mode deep to extract richer edges._
