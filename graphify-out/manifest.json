@@ -22,5 +22,41 @@
     "seen": 1793446364.7841942,
     "ast_hash": "2d32387c8b1a3c627eff8fe8f6fddc3a",
     "semantic_hash": ""
+  },
+  "prototype/03-bench-switch.sh": {
+    "mtime": 1793454160.3194492,
+    "seen": 1793454506.3987513,
+    "ast_hash": "8ff8db3e0c90b105c3d3e08d53174f4b",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1793446375.7072105,
+    "seen": 1793454506.3987563,
+    "ast_hash": "74d0a6770808c5d6b331e027e50d3602",
+    "semantic_hash": ""
+  },
+  "prototype/04-gpu-bind.sh": {
+    "mtime": 1793468156.1588423,
+    "seen": 1793468162.8441637,
+    "ast_hash": "33200a10c7849c30214ce328438af53b",
+    "semantic_hash": ""
+  },
+  "prototype/05-gpu-driver.sh": {
+    "mtime": 1793455702.72273,
+    "seen": 1793455708.4264667,
+    "ast_hash": "68040b691a4bd2140f44217079d0f95c",
+    "semantic_hash": ""
+  },
+  "prototype/06-vram-test.sh": {
+    "mtime": 1793468644.0149531,
+    "seen": 1793468650.276133,
+    "ast_hash": "828553e1567e65523270fc0e8bd0ab77",
+    "semantic_hash": ""
+  },
+  "prototype/vkalloc.c": {
+    "mtime": 1793468630.9897382,
+    "seen": 1793468650.2761414,
+    "ast_hash": "019c83957cf2d6f264402e17f8986f92",
+    "semantic_hash": ""
   }
 }
