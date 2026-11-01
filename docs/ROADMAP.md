@@ -19,6 +19,7 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 - [x] Fase 4.2: driver hardware RADV (AMD Radeon Vega 10) dentro ogni tentacolo (`prototype/05-gpu-driver.sh`)
 - [x] Fase 4.3: la VRAM di un tentacolo congelato resta occupata e si libera allo stop; switch 89 ms (`prototype/06-vram-test.sh`)
 - [x] Fase 4.4: finestra Wayland dal tentacolo sul desktop COSMIC; il cubo si ferma allo switch e riprende (`prototype/07-wayland-bind.sh`)
+- [x] Fase 4.5: `octo limit` funziona anche su un tentacolo congelato: tetto a 256M in ~3,2 s, 557 MB tolti al tentacolo ma solo ~250 MB guadagnati dall'host (zram ~1,9:1); dati intatti al rientro, rilettura di 768 MB in 2,4 s (`prototype/08-ram-limit.sh`)
 - [x] Repo su GitHub: `Tommaso-Palestini/octopus-linux`
 
 ## Da fare
@@ -27,7 +28,7 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 - [x] **ADR:** decisioni registrate in `docs/adr/` (0001–0006: nspawn, freezer, rete condivisa, GPU, socket Wayland, base ISO)
 - [ ] **Scelta del menù a tentacoli:** finestra, applet nella barra, o schermata a tutto schermo (decisione aperta)
 - [ ] **Menù a tentacoli:** implementazione dopo la scelta (`frontend-ui-engineering`, `design-taste-frontend`)
-- [ ] **Limite RAM:** testare `octo limit` (non ancora verificato)
+- [ ] **RAM dei tentacoli congelati:** decidere la politica (tetto automatico allo switch? quanto basso? zram o swap su disco per i congelati?). Dato di partenza: fase 4.5
 - [ ] **Socket Wayland:** rivedere il compromesso prima di un uso quotidiano
 
 ### Fase 5 — ISO installabile (base: Debian trixie, `live-build`)
