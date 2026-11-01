@@ -148,8 +148,10 @@ dependencies = [
 name = "octod"
 version = "0.1.0"
 dependencies = [
+ "futures-core",
  "octopus-proto",
  "zbus",
+ "zbus_polkit",
 ]
 
 [[package]]
@@ -280,6 +282,12 @@ dependencies = [
  "libc",
  "windows-sys",
 ]
+
+[[package]]
+name = "static_assertions"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "syn"
@@ -458,6 +466,19 @@ dependencies = [
  "quote",
  "syn",
  "zbus_utils",
+]
+
+[[package]]
+name = "zbus_polkit"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "493c2474ae7bd12adcda9daabda8b7db0a8c95b4563876edf0f34afaf5f9e74e"
+dependencies = [
+ "bitflags",
+ "serde",
+ "serde_repr",
+ "static_assertions",
+ "zbus",
 ]
 
 [[package]]

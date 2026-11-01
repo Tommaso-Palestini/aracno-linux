@@ -37,7 +37,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Accettazione: O1. `ListTentacles` restituisce nome, stato, RAM e limite giusti con debian attiva e arch congelata, confrontati con `octo list`.
   - Verifica: `cargo test`; installazione; `busctl call io.github.tommaso_palestini.Octopus1 … ListTentacles`.
   - Dipendenze: T1, T4.
-- [ ] **T6: `Switch`** (M)
+- [x] **T6: `Switch`** (M): PASS il 2026-11-01. Mediana 13 ms, nobody fuori dalla sessione rifiutato, 12 Busy su 60 chiamate in contemporanea, stato sempre coerente. Le azioni polkit hanno come proprietario `unix-user:octopus`
   - Accettazione:
     - O2: switch dalla sessione senza password, mediana su 20 switch < 150 ms;
     - O3: `nobody` rifiutato;

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!--
+  Octopus: azioni controllate da octod (spec: docs/spec/SPEC-octod.md).
+  org.freedesktop.policykit.owner = unix-user:octopus permette a octod, che non è
+  root, di chiedere a polkit i permessi degli utenti che lo chiamano
+  (polkit ≥ 0.114; senza, polkit risponde "Only trusted callers…").
+-->
+<policyconfig>
+  <vendor>Octopus Linux</vendor>
+  <vendor_url>https://github.com/Tommaso-Palestini/octopus-linux</vendor_url>
+
+  <action id="io.github.tommaso_palestini.Octopus1.switch">
+    <description>Switch to another tentacle</description>
+    <description xml:lang="it">Passare a un altro tentacolo</description>
+    <message>Authentication is required to switch tentacle</message>
+    <message xml:lang="it">Serve l'autenticazione per cambiare tentacolo</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.owner">unix-user:octopus</annotate>
+  </action>
+
+  <action id="io.github.tommaso_palestini.Octopus1.manage">
+    <description>Manage tentacles (stop and other administrative operations)</description>
+    <description xml:lang="it">Gestire i tentacoli (spegnimento e altre operazioni di amministrazione)</description>
+    <message>Authentication is required to manage tentacles</message>
+    <message xml:lang="it">Serve l'autenticazione per gestire i tentacoli</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.owner">unix-user:octopus</annotate>
+  </action>
+</policyconfig>

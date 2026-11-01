@@ -1,8 +1,11 @@
-//! Proxy D-Bus verso systemd-machined e systemd. Solo letture in questo modulo,
-//! tutte permesse a un utente non privilegiato (verificato in T1, punto P6).
+//! Proxy D-Bus verso systemd-machined e systemd.
+//! Letture: permesse a un utente non privilegiato (T1, P6).
+//! Freeze/Thaw/Start: permessi a `octopus` solo sui tentacoli da 50-octopus.rules (T1, P1–P4).
 
 use crate::list::UnitInfo;
+use futures_core::Stream;
 use octopus_proto::TentacleName;
+use std::pin::Pin;
 use zbus::proxy::CacheProperties;
 use zbus::{proxy, Connection, OwnedObjectPath};
 
@@ -26,6 +29,19 @@ pub trait Machined {
 )]
 pub trait Systemd {
     fn get_unit(&self, name: &str) -> zbus::Result<OwnedObjectPath>;
+    fn freeze_unit(&self, name: &str) -> zbus::Result<()>;
+    fn thaw_unit(&self, name: &str) -> zbus::Result<()>;
+    fn start_unit(&self, name: &str, mode: &str) -> zbus::Result<OwnedObjectPath>;
+    /// Chiede a systemd di mandare i segnali dei job a questa connessione.
+    fn subscribe(&self) -> zbus::Result<()>;
+    #[zbus(signal)]
+    fn job_removed(
+        &self,
+        id: u32,
+        job: OwnedObjectPath,
+        unit: String,
+        result: String,
+    ) -> zbus::Result<()>;
 }
 
 #[proxy(
@@ -88,4 +104,42 @@ pub async fn unit_info(conn: &Connection, name: &TentacleName) -> zbus::Result<O
         memory_current: svc.memory_current().await?,
         memory_max: svc.memory_max().await?,
     }))
+}
+
+/// Congela il tentacolo. systemd risponde a congelamento finito.
+pub async fn freeze(conn: &Connection, name: &TentacleName) -> zbus::Result<()> {
+    SystemdProxy::new(conn)
+        .await?
+        .freeze_unit(&name.unit_name())
+        .await
+}
+
+/// Scongela il tentacolo. systemd risponde a scongelamento finito.
+pub async fn thaw(conn: &Connection, name: &TentacleName) -> zbus::Result<()> {
+    SystemdProxy::new(conn)
+        .await?
+        .thaw_unit(&name.unit_name())
+        .await
+}
+
+/// Avvia il tentacolo e aspetta che il job di avvio finisca. Il flusso dei segnali
+/// `JobRemoved` si apre PRIMA di StartUnit, così la fine del job non può sfuggire.
+/// Il tempo massimo è quello di systemd per l'avvio della unit (TimeoutStartSec).
+pub async fn start(conn: &Connection, name: &TentacleName) -> zbus::Result<bool> {
+    let mgr = SystemdProxy::new(conn).await?;
+    mgr.subscribe().await?;
+    let mut fine = mgr.receive_job_removed().await?;
+    let job = mgr.start_unit(&name.unit_name(), "replace").await?;
+    while let Some(sig) = next(&mut fine).await {
+        let a = sig.args()?;
+        if a.job == job {
+            return Ok(a.result == "done");
+        }
+    }
+    Ok(false)
+}
+
+/// Prossimo elemento di uno stream, senza dipendere da futures-util.
+async fn next<S: Stream + Unpin>(s: &mut S) -> Option<S::Item> {
+    std::future::poll_fn(|cx| Pin::new(&mut *s).poll_next(cx)).await
 }

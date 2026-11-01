@@ -9,3 +9,6 @@ repository.workspace = true
 [dependencies]
 octopus-proto.workspace = true
 zbus.workspace = true
+zbus_polkit.workspace = true
+# già presente nell'albero tramite zbus: serve solo per leggere gli stream dei segnali
+futures-core = "0.3"

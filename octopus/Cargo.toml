@@ -16,3 +16,4 @@ thiserror = "2.0"
 # zbus senza tokio: basta il suo runtime (zbus::block_on). Niente tracing, niente object-manager.
 zbus = { version = "6.2", default-features = false, features = ["default-rt", "proxy", "service"] }
 octopus-proto = { path = "octopus-proto" }
+zbus_polkit = { version = "6.0", default-features = false }

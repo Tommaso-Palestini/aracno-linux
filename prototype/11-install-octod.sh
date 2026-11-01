@@ -6,6 +6,7 @@
 #   /etc/dbus-1/system.d/io.github.tommaso_palestini.Octopus1.conf  policy del nome
 #   /usr/local/share/dbus-1/system-services/…Octopus1.service       attivazione via D-Bus
 #   /etc/systemd/system/octod.service                               unit con restrizioni
+#   /usr/share/polkit-1/actions/…Octopus1.policy                    azioni switch e manage
 # Reinstalla anche i file di T1 (utente octopus, regola polkit, policy freeze/thaw).
 #
 # Ipotesi e criteri (scritti prima del test):
@@ -26,6 +27,8 @@ BIN=/usr/local/libexec/octod
 BUSCONF=/etc/dbus-1/system.d/$NAME.conf
 ACTIV=/usr/local/share/dbus-1/system-services/$NAME.service
 UNIT=/etc/systemd/system/octod.service
+# polkit legge le azioni solo da /usr/share/polkit-1/actions (non da /usr/local)
+ACTIONS=/usr/share/polkit-1/actions/$NAME.policy
 UTENTE=${SUDO_USER:-xenon}
 
 reload_bus() { busctl call --system org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus ReloadConfig; }
@@ -34,7 +37,7 @@ case ${1:-} in
   "") ;;
   --rimuovi)
     systemctl stop octod.service 2>/dev/null || true
-    rm -f "$BIN" "$BUSCONF" "$ACTIV" "$UNIT"
+    rm -f "$BIN" "$BUSCONF" "$ACTIV" "$UNIT" "$ACTIONS"
     systemctl daemon-reload; reload_bus
     echo "octod rimosso (i file di T1 restano: prototype/10-polkit-spike.sh --rimuovi)"; exit 0 ;;
   *) echo "Opzione sconosciuta: $*  (uso: $0 [--rimuovi])"; exit 2 ;;
@@ -51,6 +54,7 @@ install -D -m 755 -o root -g root "$BIN_SRC" "$BIN"
 install -D -m 644 "$D/dbus/$NAME.conf" "$BUSCONF"
 install -D -m 644 "$D/dbus/$NAME.service" "$ACTIV"
 install -D -m 644 "$D/systemd/octod.service" "$UNIT"
+install -D -m 644 "$D/polkit/$NAME.policy" "$ACTIONS"
 systemctl daemon-reload
 reload_bus
 systemctl stop octod.service 2>/dev/null || true   # la prossima chiamata attiva il binario nuovo

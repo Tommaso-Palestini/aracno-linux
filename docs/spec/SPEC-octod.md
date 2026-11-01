@@ -37,6 +37,7 @@ Regole sui nomi dei tentacoli, validate **nel demone** prima di tutto il resto: 
 - **Azioni polkit** in `io.github.tommaso_palestini.Octopus1.policy`:
   - `switch`: `allow_active=yes`, `allow_inactive=no`, `allow_any=no`. Solo chi è seduto nella sessione attiva, senza password.
   - `manage`: `allow_active=auth_admin_keep`, gli altri `no`.
+  - Nota (T6, 2026-11-01): `allow_active` guarda la **sessione del processo**, non il suo utente. Un processo di un altro utente lanciato da root dentro la sessione attiva (per esempio `sudo runuser -u nobody` dal terminale) viene autorizzato. Non è un'escalation, perché per farlo bisogna già essere root, ed è il comportamento standard di polkit (lo stesso di NetworkManager e degli altri servizi desktop). I processi fuori da ogni sessione, come i servizi di sistema, vengono rifiutati.
 - **Nessuna shell, nessun `Command`**: `octod` parla con systemd su D-Bus (`FreezeUnit`, `ThawUnit`, `StartUnit`, `StopUnit`) e legge lo stato dai cgroup in sola lettura. I comandi di sistema non vengono composti come stringhe.
 - **Un solo switch alla volta**: un lock interno; una seconda richiesta durante uno switch riceve `Busy`.
 - **Policy D-Bus** (`/usr/share/dbus-1/system.d/…conf`): solo l'utente `octopus` può possedere il nome. Chiunque può chiamare i metodi, e il controllo vero lo fa polkit dentro il demone.
