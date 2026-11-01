@@ -7,6 +7,7 @@
 #   octo cpu NAME [SEC]       uso CPU del tentacolo (% di un core)
 #   octo limit NAME SIZE      tetto RAM (es. 2G, oppure "infinity" per toglierlo)
 #   octo shell NAME
+#   octo upgrade [NAME...]    aggiorna i pacchetti dei tentacoli (default: tutti), poi rimette lo stato
 set -euo pipefail
 M=/var/lib/machines
 
@@ -34,6 +35,41 @@ wait_ready() {  # aspetta che systemd dentro il tentacolo sia su
     sleep 0.5
   done
   echo "timeout avvio $1" >&2; return 1
+}
+
+upgrade_cmd() {  # comando di aggiornamento non interattivo, scelto da /etc/os-release del tentacolo
+  local id like
+  id=$(. "$M/$1/etc/os-release"; echo "${ID:-}")
+  like=$(. "$M/$1/etc/os-release"; echo "${ID_LIKE:-}")
+  case " $id $like " in
+    *" debian "*|*" ubuntu "*)
+      echo 'export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get -y -o Dpkg::Options::=--force-confold full-upgrade' ;;
+    *" arch "*)
+      # prima il keyring: con un keyring vecchio le firme dei pacchetti nuovi falliscono
+      echo 'pacman -Sy --noconfirm --needed archlinux-keyring && pacman -Su --noconfirm' ;;
+    *) return 1 ;;
+  esac
+}
+
+upgrade_one() {  # scongela/avvia, aggiorna, rimette lo stato di prima anche se l'aggiornamento fallisce
+  local n=$1 prev c rc=0 t0
+  [[ -d $M/$n/etc ]] || { echo "$n: tentacolo inesistente"; return 1; }
+  c=$(upgrade_cmd "$n") || { echo "$n: distro non supportata da octo upgrade"; return 1; }
+  prev=$(state "$n")
+  echo ">> $n ($prev)"
+  case $prev in
+    spenta)    machinectl start "$n"; wait_ready "$n" ;;
+    congelata) systemctl thaw "$(unit "$n")" ;;
+  esac
+  t0=$(date +%s)
+  systemd-run -M "$n" --wait --pipe --quiet --collect /bin/sh -c "$c" || rc=$?
+  case $prev in
+    spenta)    machinectl poweroff "$n" ;;
+    congelata) systemctl freeze "$(unit "$n")" ;;
+  esac
+  if (( rc == 0 )); then echo "$n: aggiornato in $(( $(date +%s) - t0 )) s, stato rimesso: $prev"
+  else echo "$n: AGGIORNAMENTO FALLITO (codice $rc), stato rimesso: $prev"; fi
+  return "$rc"
 }
 
 cmd=${1:-list}; shift || true
@@ -70,5 +106,10 @@ case $cmd in
   cpu)    echo "$1: $(cpu_pct "$1" "${2:-2}")% di un core" ;;
   limit)  need_root "$cmd" "$@"; systemctl set-property --runtime "$(unit "$1")" MemoryMax="$2"; echo "limite RAM $1 = $2" ;;
   shell)  need_root "$cmd" "$@"; machinectl shell "$1" ;;
+  upgrade)
+    need_root "$cmd" "$@"; falliti=0
+    if (( $# == 0 )); then set -- $(names); fi
+    for n in "$@"; do upgrade_one "$n" || falliti=$((falliti + 1)); echo; done
+    if (( falliti == 0 )); then echo "upgrade: tutti i tentacoli aggiornati"; else echo "upgrade: $falliti tentacoli falliti"; exit 1; fi ;;
   *) sed -n '2,10p' "$0"; exit 1 ;;
 esac

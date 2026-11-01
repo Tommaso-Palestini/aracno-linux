@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "prototype/octo": {
-    "mtime": 1793445365.8606162,
-    "seen": 1793446364.7841942,
-    "ast_hash": "2d32387c8b1a3c627eff8fe8f6fddc3a",
+    "mtime": 1793538430.111738,
+    "seen": 1793539252.7872272,
+    "ast_hash": "7320078127bd8665945980b92d2fe744",
     "semantic_hash": ""
   },
   "prototype/03-bench-switch.sh": {
@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793528282.9500618,
-    "seen": 1793528284.0107,
-    "ast_hash": "43887c2cc6d1abe727d8fbeee7b68554",
+    "mtime": 1793538926.2263103,
+    "seen": 1793539252.7872386,
+    "ast_hash": "e56fa49a98a395c34a0c94b3872afa17",
     "semantic_hash": ""
   },
   "docs/adr/0001-tentacoli-systemd-nspawn.md": {
@@ -108,9 +108,9 @@
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793527282.125754,
-    "seen": 1793527292.73018,
-    "ast_hash": "b9a8726afed917411736b5df9be40e69",
+    "mtime": 1793538234.5163572,
+    "seen": 1793539252.7872689,
+    "ast_hash": "f01a0f3a850a1856a510af0a40c6189d",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
@@ -123,6 +123,48 @@
     "mtime": 1793527418.4681594,
     "seen": 1793528284.0106628,
     "ast_hash": "ee60d6d97fd7c2660eaa9c30872980cb",
+    "semantic_hash": ""
+  },
+  "prototype/09-upgrade-test.sh": {
+    "mtime": 1793538451.6577208,
+    "seen": 1793539252.7872176,
+    "ast_hash": "f4b0417bc5d3ca64f3534b18d9b4d86e",
+    "semantic_hash": ""
+  },
+  "docs/adr/0007-menu-a-tutto-schermo.md": {
+    "mtime": 1793538234.0981107,
+    "seen": 1793539252.7872648,
+    "ast_hash": "7561af3c8a9c8ed95dd418ec9ab76388",
+    "semantic_hash": ""
+  },
+  "docs/spec/CAPABILITY-MAP.md": {
+    "mtime": 1793538561.9704704,
+    "seen": 1793539252.7872725,
+    "ast_hash": "52e04b815342bff4d4e5f2997e61852e",
+    "semantic_hash": ""
+  },
+  "docs/spec/SPEC-octo-menu.md": {
+    "mtime": 1793538926.2261446,
+    "seen": 1793539252.787276,
+    "ast_hash": "f59d816da8083fc6559da4a9839ba7d3",
+    "semantic_hash": ""
+  },
+  "docs/spec/SPEC-octod.md": {
+    "mtime": 1793539008.8661842,
+    "seen": 1793539252.7872794,
+    "ast_hash": "f6734c23a9ef04f57a0f36b5aa71e5ad",
+    "semantic_hash": ""
+  },
+  "tasks/plan.md": {
+    "mtime": 1793539075.7267103,
+    "seen": 1793539252.7872827,
+    "ast_hash": "e4d6f534d6bbe080528ff772ada5cde3",
+    "semantic_hash": ""
+  },
+  "tasks/todo.md": {
+    "mtime": 1793539075.804712,
+    "seen": 1793539252.7872858,
+    "ast_hash": "5e8cd3912eb57538590e05d929dd58d3",
     "semantic_hash": ""
   }
 }
