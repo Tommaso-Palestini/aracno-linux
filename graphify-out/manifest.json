@@ -66,9 +66,51 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793469784.2319236,
-    "seen": 1793469800.5454643,
-    "ast_hash": "cc611eef64b2b34d2ea60d38a96c2aa4",
+    "mtime": 1793527291.036076,
+    "seen": 1793527292.7301571,
+    "ast_hash": "6dda1c47980f4322fcd49ed005461ee7",
+    "semantic_hash": ""
+  },
+  "docs/adr/0001-tentacoli-systemd-nspawn.md": {
+    "mtime": 1793527282.2427583,
+    "seen": 1793527292.730162,
+    "ast_hash": "fd6c3162872450b3e4591c547219ed12",
+    "semantic_hash": ""
+  },
+  "docs/adr/0002-switch-con-congelamento-cgroup.md": {
+    "mtime": 1793527282.3297615,
+    "seen": 1793527292.7301652,
+    "ast_hash": "5db50222d2baf12f6e9eee566b7da6c6",
+    "semantic_hash": ""
+  },
+  "docs/adr/0003-rete-condivisa-con-host.md": {
+    "mtime": 1793527282.7997785,
+    "seen": 1793527292.7301686,
+    "ast_hash": "35d38db3320c95951947eb76bb01f05f",
+    "semantic_hash": ""
+  },
+  "docs/adr/0004-gpu-bind-dev-dri.md": {
+    "mtime": 1793527283.2337942,
+    "seen": 1793527292.7301717,
+    "ast_hash": "21f05f5537e6a4e506a03e04394276ee",
+    "semantic_hash": ""
+  },
+  "docs/adr/0005-solo-socket-wayland.md": {
+    "mtime": 1793527283.6788101,
+    "seen": 1793527292.7301745,
+    "ast_hash": "a825536e5304202d1536207a73d51f7c",
+    "semantic_hash": ""
+  },
+  "docs/adr/0006-host-debian-trixie-live-build.md": {
+    "mtime": 1793527283.780814,
+    "seen": 1793527292.7301772,
+    "ast_hash": "8ee3b9238d972cfa4403431efcf58888",
+    "semantic_hash": ""
+  },
+  "docs/adr/README.md": {
+    "mtime": 1793527282.125754,
+    "seen": 1793527292.73018,
+    "ast_hash": "b9a8726afed917411736b5df9be40e69",
     "semantic_hash": ""
   }
 }

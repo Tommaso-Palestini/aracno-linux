@@ -24,7 +24,7 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 ## Da fare
 
 ### Subito
-- [ ] **ADR:** registrare in `docs/adr/` le decisioni sopra, con il perché (nspawn, rete condivisa, drop-in GPU, socket Wayland, compromesso di sicurezza)
+- [x] **ADR:** decisioni registrate in `docs/adr/` (0001–0006: nspawn, freezer, rete condivisa, GPU, socket Wayland, base ISO)
 - [ ] **Scelta del menù a tentacoli:** finestra, applet nella barra, o schermata a tutto schermo (decisione aperta)
 - [ ] **Menù a tentacoli:** implementazione dopo la scelta (`frontend-ui-engineering`, `design-taste-frontend`)
 - [ ] **Limite RAM:** testare `octo limit` (non ancora verificato)
