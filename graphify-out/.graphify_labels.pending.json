@@ -20,6 +20,7 @@
   "18": "Piano: menù a tentacoli (`octod` + `octo-menu`)",
   "19": "Task: menù a tentacoli",
   "20": "09-upgrade-test.sh",
+  "21": "10-polkit-spike.sh",
   "46": "octo",
   "70": "01-create-tentacles.sh",
   "72": "00-setup.sh",

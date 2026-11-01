@@ -4,7 +4,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 ## Fase 1: prove dei rischi
 
-- [ ] **T1: prova di utente `octopus` + regola polkit** (S)
+- [x] **T1: prova di utente `octopus` + regola polkit** (S): PASS il 2026-11-01. Serve anche una policy D-Bus per FreezeUnit/ThawUnit su systemd 255
   - Lavoro: `octopus/data/sysusers/octopus.conf`, `octopus/data/polkit/50-octopus.rules`, `prototype/10-polkit-spike.sh` (installa, prova, rimuove).
   - Accettazione:
     - come `octopus`, `busctl call … FreezeUnit/ThawUnit systemd-nspawn@arch.service` funziona senza password;

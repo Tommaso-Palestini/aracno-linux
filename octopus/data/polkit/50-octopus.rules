@@ -1,0 +1,24 @@
+// Octopus — permessi del servizio octod (utente di sistema "octopus").
+// octod può solo avviare, fermare, congelare e scongelare i tentacoli:
+//   - azione org.freedesktop.systemd1.manage-units
+//   - unit systemd-nspawn@NOME.service con NOME valido per Octopus
+//   - verbo "start" (StartUnit, ThawUnit) o "stop" (StopUnit, FreezeUnit)
+// Qualsiasi altra richiesta di gestione unit da parte di "octopus" viene
+// rifiutata in modo esplicito (fail closed). Gli altri utenti non sono toccati.
+// Riferimento: systemd v255 src/core/dbus-unit.c (freeze → "stop", thaw → "start").
+polkit.addRule(function (action, subject) {
+    if (subject.user !== "octopus") {
+        return null;
+    }
+    if (action.id !== "org.freedesktop.systemd1.manage-units") {
+        return null;
+    }
+    var unit = action.lookup("unit");
+    var verb = action.lookup("verb");
+    var tentacolo = /^systemd-nspawn@[a-z0-9][a-z0-9-]{0,62}\.service$/;
+    if (typeof unit === "string" && tentacolo.test(unit) &&
+        (verb === "start" || verb === "stop")) {
+        return polkit.Result.YES;
+    }
+    return polkit.Result.NO;
+});

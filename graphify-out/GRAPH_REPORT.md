@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-11-01)
 
 ## Corpus Check
-- 28 files · ~12,196 words
+- 29 files · ~13,119 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 1 file(s) not represented in the graph (top: (none) 1)
+- Unclassified: 4 file(s) not represented in the graph (top: .conf 2, (none) 1, .rules 1)
 
 ## Summary
-- 216 nodes · 240 edges · 25 communities (18 shown, 7 thin omitted)
+- 225 nodes · 260 edges · 26 communities (19 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9f7e9d91`
+- Built from commit: `5e6a6a56`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,6 +37,7 @@
 - Piano: menù a tentacoli (`octod` + `octo-menu`)
 - Task: menù a tentacoli
 - 09-upgrade-test.sh
+- 10-polkit-spike.sh
 - 01-create-tentacles.sh
 - 00-setup.sh
 - 02-test-freeze.sh
@@ -59,7 +60,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (25 total, 7 thin omitted)
+## Communities (26 total, 7 thin omitted)
 
 ### Community 0 - "03-bench-switch.sh"
 Cohesion: 0.60
@@ -132,6 +133,10 @@ Nodes (7): Checkpoint A, Checkpoint B, Checkpoint C, Fase 1: prove dei rischi, F
 ### Community 20 - "09-upgrade-test.sh"
 Cohesion: 0.60
 Nodes (3): fail(), inside(), 09-upgrade-test.sh script
+
+### Community 21 - "10-polkit-spike.sh"
+Cohesion: 0.56
+Nodes (7): allow(), as(), deny(), fail(), ok(), sd(), 10-polkit-spike.sh script
 
 ## Knowledge Gaps
 - **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
