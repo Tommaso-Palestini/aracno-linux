@@ -13,7 +13,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Verifica: `sudo /home/xenon/Desktop/progetti-personal/idea-linux/prototype/10-polkit-spike.sh` → PASS.
   - Dipendenze: nessuna.
 
-- [ ] **T2: prova di layer-shell su COSMIC** (S)
+- [x] **T2: prova di layer-shell su COSMIC** (S): PASS il 2026-11-01. Layer-shell overlay a tutto schermo (pannelli compresi), tastiera esclusiva, Esc chiude; ripiego X11 ok; avvio a freddo 129–207 ms
   - Prerequisito (lo lancia l'utente): `sudo apt install libgtk-4-dev meson ninja-build libwayland-dev wayland-protocols`. Poi gtk4-layer-shell 1.0.4 compilata in `~/.local`, senza introspection e senza vala.
   - Lavoro: `octopus/spikes/layer-shell/` (una finestra minima in Rust).
   - Accettazione:
@@ -23,7 +23,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Dipendenze: nessuna.
 
 ### Checkpoint A
-- [ ] T1 e T2 passati, oppure piano rivisto con te se un'ipotesi è caduta.
+- [x] T1 e T2 passati (2026-11-01). Ipotesi corretta in T1: serve una policy D-Bus per FreezeUnit/ThawUnit.
 
 ## Fase 2: `octod`
 
@@ -63,6 +63,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 - [ ] **T8: menù base** (M)
   - Lavoro: istanza unica (lanciato di nuovo si chiude), layer-shell o ripiego, elenco testuale da `ListTentacles`, Esc.
   - Accettazione: M4, cioè un messaggio chiaro se `octod` non risponde o rifiuta.
+  - Da T2: l'avvio a freddo (129–207 ms) è al limite di M1. Tenere il processo già avviato e mostrare o nascondere la finestra; misurare.
+  - Da T2: controllare che il display sia Wayland prima di `is_supported()`, altrimenti la libreria 1.0.4 dà un CRITICAL su X11.
   - Dipendenze: T2, T5.
 - [ ] **T9: raggiera, tastiera e switch** (M)
   - Lavoro: `radial.rs` (logica pura, test per 1–8 tentacoli su 1366×768), navigazione con frecce, Tab e Invio, `Switch` tramite `octod`, chiusura a switch fatto.

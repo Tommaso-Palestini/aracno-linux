@@ -9,7 +9,7 @@ Si costruisce un servizio di sistema senza privilegi (`octod`, utente `octopus`)
 ## Decisioni architetturali
 - **Utente dedicato `octopus` + regola polkit**, non root. Verificato sul sorgente di systemd v255: freeze e thaw passano a polkit `unit` e `verb` (`stop`/`start`), e anche root senza `CAP_SYS_ADMIN` passa da polkit. La regola permette solo `start` e `stop` sulle sole unit `systemd-nspawn@*.service`.
 - **Elenco dei tentacoli da systemd-machined** (`ListImages`): `/var/lib/machines` è 0700 root e `octod` non deve leggerlo.
-- **Rust**, workspace in `octopus/`: `zbus` 6.2, `zbus_polkit` 6.0, `tokio` 1.54, `thiserror` 2.0, `gtk4` 0.11, `gtk4-layer-shell` 0.8 (versioni stabili su crates.io al 2026-11-01). Il crate di layer-shell richiede la libreria C ≥ 1.0: Debian trixie ha 1.0.4, Pop!_OS 24.04 non ce l'ha e va compilata.
+- **Rust**, workspace in `octopus/`: `zbus` 6.2, `zbus_polkit` 6.0, `tokio` 1.54, `thiserror` 2.0, `gtk4` 0.11, `gtk4-layer-shell` 0.8 (versioni stabili su crates.io al 2026-11-01). Il crate di layer-shell richiede la libreria C ≥ 1.0: Debian trixie ha 1.0.4, Pop!_OS 24.04 non ce l'ha: per lo sviluppo è compilata dai sorgenti v1.0.4 in `~/.local` (build con `PKG_CONFIG_PATH=$HOME/.local/lib/x86_64-linux-gnu/pkgconfig`, avvio con `LD_LIBRARY_PATH=$HOME/.local/lib/x86_64-linux-gnu`).
 - **Installazione di sviluppo** sul PC con uno script lanciato dall'utente (`prototype/11-install-octod.sh`), in percorsi locali: `/usr/local/libexec`, `/etc/dbus-1/system.d`, `/etc/polkit-1/rules.d`, `/etc/systemd/system`. I pacchetti `.deb` e Arch, con i percorsi in `/usr/share`, arrivano con l'ISO.
 - Le decisioni confermate dalle prove vanno registrate in **ADR-0008** (task 3).
 

@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-11-01)
 
 ## Corpus Check
-- 29 files · ~13,119 words
+- 31 files · ~13,510 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 4 file(s) not represented in the graph (top: .conf 2, (none) 1, .rules 1)
+- Unclassified: 5 file(s) not represented in the graph (top: (none) 2, .conf 2, .rules 1)
 
 ## Summary
-- 225 nodes · 260 edges · 26 communities (19 shown, 7 thin omitted)
+- 237 nodes · 271 edges · 28 communities (19 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5e6a6a56`
+- Built from commit: `13a7d11a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,6 +38,8 @@
 - Task: menù a tentacoli
 - 09-upgrade-test.sh
 - 10-polkit-spike.sh
+- main.rs
+- octo-spike-layer-shell
 - 01-create-tentacles.sh
 - 00-setup.sh
 - 02-test-freeze.sh
@@ -60,7 +62,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (26 total, 7 thin omitted)
+## Communities (28 total, 9 thin omitted)
 
 ### Community 0 - "03-bench-switch.sh"
 Cohesion: 0.60
@@ -87,15 +89,15 @@ Cohesion: 0.18
 Nodes (10): ADR-0002: Switch con il freezer dei cgroup (`systemctl freeze`), Alternative considerate, Conseguenze, Contesto, Data, Decisione, SIGSTOP/SIGCONT ai processi, Solo priorità (CPUWeight/nice) senza congelare (+2 more)
 
 ### Community 9 - "ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (11): ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Docker / Podman, LXC/LXD (Incus) (+3 more)
 
 ### Community 10 - "ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd"
-Cohesion: 0.18
+Cohesion: 0.20
 Nodes (10): ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Passare la GPU a una VM, Rendering software (llvmpipe) (+2 more)
 
 ### Community 11 - "ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Montare l'intera `/run/user/UID`, Stato (+2 more)
 
 ### Community 12 - "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`"
@@ -119,7 +121,7 @@ Cohesion: 0.15
 Nodes (13): Assunzioni, Comandi, Confini, Criteri di successo, Domande aperte, Interfaccia D-Bus (`octopus-proto`), Obiettivo, Sicurezza (`security-and-hardening`) (+5 more)
 
 ### Community 17 - "ADR-0007: Menù a tentacoli come schermata a tutto schermo"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): ADR-0007: Menù a tentacoli come schermata a tutto schermo, Alternative considerate, Applet nella barra di COSMIC, Conseguenze, Contesto, Data, Decisione, Finestra normale (+2 more)
 
 ### Community 18 - "Piano: menù a tentacoli (`octod` + `octo-menu`)"
@@ -139,12 +141,20 @@ Cohesion: 0.56
 Nodes (7): allow(), as(), deny(), fail(), ok(), sd(), 10-polkit-spike.sh script
 
 ## Knowledge Gaps
-- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **1 isolated node(s):** `octo-spike-layer-shell`
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 133 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
+- **Why does `ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel` connect `ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel` to `ADR-0003: Rete dei tentacoli condivisa con l'host`?**
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
+- **What connects `octo-spike-layer-shell` to the rest of the system?**
+  _1 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `ADR-0003: Rete dei tentacoli condivisa con l'host` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+- **Why does `ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd` connect `ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd` to `ADR-0003: Rete dei tentacoli condivisa con l'host`?**
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Should `Spec: `octo-menu`` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
