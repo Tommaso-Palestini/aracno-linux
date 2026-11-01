@@ -108,9 +108,9 @@
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793538234.5163572,
-    "seen": 1793539252.7872689,
-    "ast_hash": "f01a0f3a850a1856a510af0a40c6189d",
+    "mtime": 1793540413.5145721,
+    "seen": 1793540503.300993,
+    "ast_hash": "31b805447a7308f98035e0ba4df53994",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
@@ -162,9 +162,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793540313.1551974,
-    "seen": 1793540313.8997316,
-    "ast_hash": "2203d3816c6b96f23f39bdfc9b5fdde3",
+    "mtime": 1793540502.511059,
+    "seen": 1793540503.3010042,
+    "ast_hash": "d459d54bf3988da0c74d7033bf7c01a1",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -183,6 +183,30 @@
     "mtime": 1793540245.2636263,
     "seen": 1793540313.8996139,
     "ast_hash": "d1064865e2181e3a2d6a4eb36e8ced79",
+    "semantic_hash": ""
+  },
+  "octopus/Cargo.toml": {
+    "mtime": 1793540451.3992436,
+    "seen": 1793540503.300915,
+    "ast_hash": "7d8f28a89b3b20b84076a77b96157731",
+    "semantic_hash": ""
+  },
+  "octopus/octopus-proto/Cargo.toml": {
+    "mtime": 1793540451.4032438,
+    "seen": 1793540503.3009205,
+    "ast_hash": "dff3dce19d9a0a7d88a5dd995783ffe4",
+    "semantic_hash": ""
+  },
+  "octopus/octopus-proto/src/lib.rs": {
+    "mtime": 1793540481.503777,
+    "seen": 1793540503.3009238,
+    "ast_hash": "1d46a619bfd95fc2e1b3e44ececc5917",
+    "semantic_hash": ""
+  },
+  "docs/adr/0008-octod-servizio-di-sistema.md": {
+    "mtime": 1793540413.3745697,
+    "seen": 1793540503.30099,
+    "ast_hash": "ce56b745dfe596fea894f755007d44ea",
     "semantic_hash": ""
   }
 }

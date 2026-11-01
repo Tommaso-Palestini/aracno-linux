@@ -27,8 +27,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 ## Fase 2: `octod`
 
-- [ ] **T3: ADR-0008** (XS): demone di sistema + D-Bus + polkit, utente dedicato, Rust. Con i risultati di T1 e T2.
-- [ ] **T4: workspace e `octopus-proto`** (S)
+- [x] **T3: ADR-0008** (XS): demone di sistema + D-Bus + polkit, utente dedicato, Rust. Con i risultati di T1 e T2.
+- [x] **T4: workspace e `octopus-proto`** (S): 7 test verdi (nomi, stati, coerenza con la regola polkit), clippy e fmt puliti
   - Lavoro: `octopus/Cargo.toml`, `octopus/octopus-proto/` con i nomi D-Bus, `TentacleName`, `TentacleState` e gli errori.
   - Accettazione: test unitari della validazione dei nomi (validi, vuoto, maiuscole, `../`, spazi, 64 caratteri).
   - Verifica: `cargo test -p octopus-proto`, `cargo clippy -- -D warnings`.

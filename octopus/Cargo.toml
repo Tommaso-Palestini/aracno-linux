@@ -1,0 +1,15 @@
+# Workspace di Octopus: octopus-proto (interfaccia condivisa), poi octod e octo-menu.
+# Le prove in spikes/ restano fuori (ognuna è un progetto a sé).
+[workspace]
+resolver = "2"
+members = ["octopus-proto"]
+exclude = ["spikes"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/Tommaso-Palestini/octopus-linux"
+
+[workspace.dependencies]
+thiserror = "2.0"

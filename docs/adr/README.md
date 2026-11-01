@@ -14,5 +14,6 @@ Nome dei file: `NNNN-titolo-breve.md`, numerazione progressiva.
 | [0005](0005-solo-socket-wayland.md) | Desktop: nei tentacoli si monta solo il socket Wayland | Accettata, da rivedere prima dell'uso quotidiano |
 | [0006](0006-host-debian-trixie-live-build.md) | Host dell'ISO: Debian trixie costruita con `live-build` | Accettata |
 | [0007](0007-menu-a-tutto-schermo.md) | Menù a tentacoli come schermata a tutto schermo | Accettata |
+| [0008](0008-octod-servizio-di-sistema.md) | Lo switch passa da `octod`: servizio di sistema, utente dedicato, polkit, D-Bus, Rust | Accettata |
 
 Nota: le decisioni 0001–0005 sono state prese e verificate durante le fasi 0–4.4 del prototipo, tra ottobre e il 31/10/2026. Sono state messe per scritto il 01/11/2026, quindi le alternative sono una ricostruzione fatta dopo.

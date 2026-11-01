@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-11-01)
 
 ## Corpus Check
-- 31 files · ~13,510 words
+- 35 files · ~15,062 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 2, .conf 2, .rules 1)
 
 ## Summary
-- 237 nodes · 271 edges · 28 communities (19 shown, 9 thin omitted)
+- 289 nodes · 328 edges · 30 communities (20 shown, 10 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `13a7d11a`
+- Built from commit: `40026b98`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,7 +28,7 @@
 - ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel
 - ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd
 - ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland
-- ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`
+- lib.rs
 - ADR-0003: Rete dei tentacoli condivisa con l'host
 - 08-ram-limit.sh
 - Spec: `octo-menu`
@@ -40,6 +40,8 @@
 - 10-polkit-spike.sh
 - main.rs
 - octo-spike-layer-shell
+- ADR-0008: Lo switch passa da `octod`, un servizio di sistema con utente dedicato, polkit e D-Bus
+- octopus-proto
 - 01-create-tentacles.sh
 - 00-setup.sh
 - 02-test-freeze.sh
@@ -48,13 +50,13 @@
 1. `Spec: `octod` (con `octopus-proto`)` - 13 edges
 2. `Spec: `octo-menu`` - 11 edges
 3. `08-ram-limit.sh script` - 9 edges
-4. `ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel` - 7 edges
-5. `ADR-0002: Switch con il freezer dei cgroup (`systemctl freeze`)` - 7 edges
-6. `ADR-0003: Rete dei tentacoli condivisa con l'host` - 7 edges
-7. `ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd` - 7 edges
-8. `ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland` - 7 edges
-9. `ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`` - 7 edges
-10. `ADR-0007: Menù a tentacoli come schermata a tutto schermo` - 7 edges
+4. `TentacleState` - 8 edges
+5. `ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel` - 7 edges
+6. `ADR-0002: Switch con il freezer dei cgroup (`systemctl freeze`)` - 7 edges
+7. `ADR-0003: Rete dei tentacoli condivisa con l'host` - 7 edges
+8. `ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd` - 7 edges
+9. `ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland` - 7 edges
+10. `ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -62,7 +64,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (28 total, 9 thin omitted)
+## Communities (30 total, 10 thin omitted)
 
 ### Community 0 - "03-bench-switch.sh"
 Cohesion: 0.60
@@ -89,24 +91,24 @@ Cohesion: 0.18
 Nodes (10): ADR-0002: Switch con il freezer dei cgroup (`systemctl freeze`), Alternative considerate, Conseguenze, Contesto, Data, Decisione, SIGSTOP/SIGCONT ai processi, Solo priorità (CPUWeight/nice) senza congelare (+2 more)
 
 ### Community 9 - "ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel"
-Cohesion: 0.18
+Cohesion: 0.17
 Nodes (11): ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Docker / Podman, LXC/LXD (Incus) (+3 more)
 
 ### Community 10 - "ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Passare la GPU a una VM, Rendering software (llvmpipe) (+2 more)
 
 ### Community 11 - "ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland"
 Cohesion: 0.18
 Nodes (10): ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Montare l'intera `/run/user/UID`, Stato (+2 more)
 
-### Community 12 - "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`"
-Cohesion: 0.18
-Nodes (10): ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`, Alternative considerate, Altre basi (Arch con archiso, Fedora con kiwi), Conseguenze, Contesto, Data, Decisione, Distro da zero (Linux From Scratch, buildroot) (+2 more)
+### Community 12 - "lib.rs"
+Cohesion: 0.06
+Nodes (22): ACTION_MANAGE, ACTION_SWITCH, BUS_NAME, BUSY, FAILED, INTERFACE, INVALID_NAME, MAX_NAME_LEN (+14 more)
 
 ### Community 13 - "ADR-0003: Rete dei tentacoli condivisa con l'host"
-Cohesion: 0.14
-Nodes (10): ADR-0003: Rete dei tentacoli condivisa con l'host, Alternative considerate, Bridge di rete verso la LAN, Conseguenze, Contesto, Data, Decisione, Stato (+2 more)
+Cohesion: 0.09
+Nodes (20): ADR-0003: Rete dei tentacoli condivisa con l'host, Alternative considerate, Bridge di rete verso la LAN, Conseguenze, Contesto, Data, Decisione, Stato (+12 more)
 
 ### Community 14 - "08-ram-limit.sh"
 Cohesion: 0.27
@@ -140,21 +142,23 @@ Nodes (3): fail(), inside(), 09-upgrade-test.sh script
 Cohesion: 0.56
 Nodes (7): allow(), as(), deny(), fail(), ok(), sd(), 10-polkit-spike.sh script
 
+### Community 24 - "ADR-0008: Lo switch passa da `octod`, un servizio di sistema con utente dedicato, polkit e D-Bus"
+Cohesion: 0.15
+Nodes (12): ADR-0008: Lo switch passa da `octod`, un servizio di sistema con utente dedicato, polkit e D-Bus, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Il menù chiama systemd direttamente, con una regola polkit per l'utente, Linguaggio: Python o C invece di Rust (+4 more)
+
 ## Knowledge Gaps
-- **1 isolated node(s):** `octo-spike-layer-shell`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 133 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **6 isolated node(s):** `octopus-proto`, `InvalidName`, `Active`, `Frozen`, `Off` (+1 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 168 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel` connect `ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel` to `ADR-0003: Rete dei tentacoli condivisa con l'host`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **What connects `octo-spike-layer-shell` to the rest of the system?**
-  _1 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `octopus-proto`, `InvalidName`, `Active` to the rest of the system?**
+  _6 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `lib.rs` be split into smaller, more focused modules?**
+  _Cohesion score 0.06258890469416785 - nodes in this community are weakly interconnected._
 - **Should `ADR-0003: Rete dei tentacoli condivisa con l'host` be split into smaller, more focused modules?**
-  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
-- **Why does `ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd` connect `ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd` to `ADR-0003: Rete dei tentacoli condivisa con l'host`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
 - **Should `Spec: `octo-menu`` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
