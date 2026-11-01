@@ -162,9 +162,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793540502.511059,
-    "seen": 1793540503.3010042,
-    "ast_hash": "d459d54bf3988da0c74d7033bf7c01a1",
+    "mtime": 1793540930.7199912,
+    "seen": 1793540931.5834043,
+    "ast_hash": "df9e6febb5f383882b2c6645dbcbb4ff",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "octopus/Cargo.toml": {
-    "mtime": 1793540451.3992436,
-    "seen": 1793540503.300915,
-    "ast_hash": "7d8f28a89b3b20b84076a77b96157731",
+    "mtime": 1793540639.3250272,
+    "seen": 1793540931.5832329,
+    "ast_hash": "a79978d4ccba3ce3981e9fcfb7e23714",
     "semantic_hash": ""
   },
   "octopus/octopus-proto/Cargo.toml": {
@@ -207,6 +207,36 @@
     "mtime": 1793540413.3745697,
     "seen": 1793540503.30099,
     "ast_hash": "ce56b745dfe596fea894f755007d44ea",
+    "semantic_hash": ""
+  },
+  "octopus/octod/Cargo.toml": {
+    "mtime": 1793540639.330574,
+    "seen": 1793540931.583244,
+    "ast_hash": "8527301db62c3006e73eb1106d9edbcf",
+    "semantic_hash": ""
+  },
+  "octopus/octod/src/list.rs": {
+    "mtime": 1793540672.1511557,
+    "seen": 1793540931.5832505,
+    "ast_hash": "2f01dae091007a7eec19d397d51fa52d",
+    "semantic_hash": ""
+  },
+  "octopus/octod/src/main.rs": {
+    "mtime": 1793540729.162166,
+    "seen": 1793540931.5832555,
+    "ast_hash": "74a2d579d87ee5100ced51b90d3998f7",
+    "semantic_hash": ""
+  },
+  "octopus/octod/src/systemd.rs": {
+    "mtime": 1793540729.163166,
+    "seen": 1793540931.5832598,
+    "ast_hash": "b8f2ea2ad9fca1495174bf2601257515",
+    "semantic_hash": ""
+  },
+  "prototype/11-install-octod.sh": {
+    "mtime": 1793540841.217169,
+    "seen": 1793540931.5833294,
+    "ast_hash": "bf9b1b28a028dab2867bb21044c423e5",
     "semantic_hash": ""
   }
 }

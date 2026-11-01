@@ -32,7 +32,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Lavoro: `octopus/Cargo.toml`, `octopus/octopus-proto/` con i nomi D-Bus, `TentacleName`, `TentacleState` e gli errori.
   - Accettazione: test unitari della validazione dei nomi (validi, vuoto, maiuscole, `../`, spazi, 64 caratteri).
   - Verifica: `cargo test -p octopus-proto`, `cargo clippy -- -D warnings`.
-- [ ] **T5: `octod` con `ListTentacles`** (M)
+- [x] **T5: `octod` con `ListTentacles`** (M): PASS il 2026-11-01 (O1a–O1d). Senza tokio: zbus 6 ha il suo runtime; RAM e limite dalle proprietà di systemd, nessun file letto
   - Lavoro: `octopus/octod/`; i file `data/dbus/`, `data/systemd/octod.service`; `prototype/11-install-octod.sh`.
   - Accettazione: O1. `ListTentacles` restituisce nome, stato, RAM e limite giusti con debian attiva e arch congelata, confrontati con `octo list`.
   - Verifica: `cargo test`; installazione; `busctl call io.github.tommaso_palestini.Octopus1 … ListTentacles`.

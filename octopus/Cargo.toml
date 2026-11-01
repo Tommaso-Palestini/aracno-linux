@@ -2,7 +2,7 @@
 # Le prove in spikes/ restano fuori (ognuna è un progetto a sé).
 [workspace]
 resolver = "2"
-members = ["octopus-proto"]
+members = ["octopus-proto", "octod"]
 exclude = ["spikes"]
 
 [workspace.package]
@@ -13,3 +13,6 @@ repository = "https://github.com/Tommaso-Palestini/octopus-linux"
 
 [workspace.dependencies]
 thiserror = "2.0"
+# zbus senza tokio: basta il suo runtime (zbus::block_on). Niente tracing, niente object-manager.
+zbus = { version = "6.2", default-features = false, features = ["default-rt", "proxy", "service"] }
+octopus-proto = { path = "octopus-proto" }

@@ -1,0 +1,7 @@
+# Attivazione via D-Bus: il bus chiede a systemd di avviare octod.service
+# alla prima chiamata. Exec non viene usato quando c'è SystemdService.
+[D-BUS Service]
+Name=io.github.tommaso_palestini.Octopus1
+Exec=/bin/false
+User=octopus
+SystemdService=octod.service
