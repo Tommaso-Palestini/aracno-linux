@@ -58,7 +58,7 @@ for n in debian arch; do
 done
 T0=$(date '+%Y-%m-%d %H:%M:%S')
 
-echo; echo ">> K2: arch congelato fermato dal watchdog, come è successo a debian (fino a ~2 minuti)"
+echo; echo ">> K2: arch congelato fermato dal watchdog, come è successo a debian (fino a ~3 minuti)"
 # Primo giro: con SIGKILL il disallineamento non si riproduceva. Nel caso reale systemd
 # ha fermato il filo per il watchdog mentre era congelato ("stop-watchdog timed out").
 # Watchdog di prova di 3 s solo per arch, in /run (sparisce al riavvio, e il test lo toglie).
@@ -73,11 +73,22 @@ systemctl restart "$(u arch)"; pronto arch || true
 echo "    arch riavviato con WatchdogUSec=$(systemctl show -P WatchdogUSec "$(u arch)")"
 hop debian >/dev/null   # arch congelato
 echo "    arch: systemd $(sd arch), kernel $(kernel arch); aspetto che il watchdog lo fermi…"
-for i in $(seq 240); do systemctl is-active -q "$(u arch)" || break; sleep 0.5; done
-echo "    dopo $((i / 2)) s: $(systemctl show -P Result "$(u arch)")"
+# Non toccare arch finché non è davvero fermo: `is-active` dice "no" già durante l'arresto
+# (secondo giro: il test lo riavviava mentre si fermava, e così lo scongelava).
+for i in $(seq 360); do
+  case $(systemctl show -P ActiveState "$(u arch)") in failed|inactive) break ;; esac
+  sleep 0.5
+done
+echo "    dopo $((i / 2)) s: $(systemctl show -P ActiveState "$(u arch)"), result $(systemctl show -P Result "$(u arch)"), FreezerState $(systemctl show -P FreezerState "$(u arch)")"
 togli_prova; trap - EXIT
-systemctl reset-failed "$(u arch)" 2>/dev/null || true
-systemctl start "$(u arch)"; pronto arch || true
+# machined deve aver tolto "arch" dal registro, altrimenti nspawn non riparte
+for _ in $(seq 20); do machinectl status arch >/dev/null 2>&1 || break; sleep 0.5; done
+for _ in 1 2 3 4 5; do
+  systemctl reset-failed "$(u arch)" 2>/dev/null || true
+  systemctl start "$(u arch)" 2>/dev/null && break
+  sleep 1
+done
+pronto arch || true
 echo "    arch riavviato: systemd $(sd arch), kernel $(kernel arch)"
 if [[ $(sd arch) == frozen && $(kernel arch) == active ]]; then
   ok "disallineamento riprodotto (systemd frozen, kernel no)"
