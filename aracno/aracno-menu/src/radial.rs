@@ -112,6 +112,17 @@ pub const ANELLI: [f64; 4] = [0.45, 0.65, 0.85, 1.1];
 /// Raggi di sfondo della ragnatela.
 pub const RAGGI: usize = 16;
 
+/// Avanzamento (0–1) del nodo `i` di `n` quando l'apertura intera è a `t` (0–1):
+/// ogni nodo dura il 60% dell'apertura e parte un po' dopo il precedente.
+pub fn fase(t: f64, i: usize, n: usize) -> f64 {
+    const DURATA: f64 = 0.6;
+    if t >= 1.0 {
+        return 1.0; // a fine apertura ogni nodo è arrivato, senza resti di arrotondamento
+    }
+    let ritardo = if n > 1 { (1.0 - DURATA) * i as f64 / (n - 1) as f64 } else { 0.0 };
+    ((t - ritardo) / DURATA).clamp(0.0, 1.0)
+}
+
 /// Curva d'uscita cubica per l'animazione: veloce all'inizio, morbida alla fine.
 pub fn uscita_cubica(t: f64) -> f64 {
     let t = t.clamp(0.0, 1.0);
@@ -234,6 +245,18 @@ mod tests {
         assert!(a_meta.len() < alla_fine.len());
         assert!((uscita_cubica(0.0)).abs() < 1e-9 && (uscita_cubica(1.0) - 1.0).abs() < 1e-9);
         assert!(uscita_cubica(0.5) > 0.5);
+    }
+
+    #[test]
+    fn fasi_sfalsate_e_complete() {
+        for n in 1..=8 {
+            for i in 0..n {
+                assert_eq!(fase(0.0, i, n), 0.0);
+                assert_eq!(fase(1.0, i, n), 1.0, "n={n} i={i}: a fine apertura ogni nodo è arrivato");
+            }
+        }
+        assert!(fase(0.3, 0, 4) > fase(0.3, 3, 4)); // il primo parte prima dell'ultimo
+        assert_eq!(fase(0.5, 0, 1), 0.5 / 0.6);
     }
 
     #[test]

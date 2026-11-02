@@ -17,8 +17,10 @@ pub const NODO_H: f64 = 84.0;
 pub const CENTRO_W: f64 = 220.0;
 pub const CENTRO_H: f64 = 88.0;
 
-/// Durata dell'animazione d'apertura: i fili crescono dal centro, poi i nodi.
-const APERTURA: Duration = Duration::from_millis(260);
+/// Durata dell'animazione d'apertura (tutti i nodi, compreso lo sfasamento).
+const APERTURA: Duration = Duration::from_millis(300);
+/// Quanti pixel percorre un nodo lungo il suo filo mentre arriva.
+const CORSA: f64 = 28.0;
 
 // Colori per cairo, gli stessi ruoli di data/style.css.
 const INCHIOSTRO: (f64, f64, f64) = (0.922, 0.906, 0.875); // #ebe7df
@@ -59,8 +61,6 @@ struct Disegno {
     centro: (f64, f64),
     ellisse: (f64, f64),
     nodi: Vec<((f64, f64), StrandState)>,
-    /// Avanzamento dell'apertura, 0–1, già con la curva applicata.
-    p: f64,
 }
 
 struct Nodo {
@@ -193,6 +193,8 @@ impl Vista {
             d.ellisse = radial::raggi(l, a, NODO_W, NODO_H);
             d.nodi = nodi.iter().map(|n| (n.rett.centro(), n.filo.stato)).collect();
         }
+        // la ragnatela si disegna una volta sola
+        self.area.queue_draw();
         // il primo elemento selezionato è il filo attivo (spec)
         if let Some(n) = nodi.first() {
             n.bottone.grab_focus();
@@ -203,21 +205,45 @@ impl Vista {
         self.anima_apertura(bottoni);
     }
 
-    /// I fili crescono dal centro; i nodi compaiono nell'ultima parte. Con le
-    /// animazioni di sistema spente tutto appare subito.
+    /// Apertura: la ragnatela è ferma e visibile dal primo fotogramma; i nodi arrivano
+    /// uno dopo l'altro scorrendo lungo il loro filo verso l'esterno, come gocce che si
+    /// posano. Si muovono solo superfici piccole: col motore cairo GTK ridisegna solo le
+    /// zone che cambiano, e animare la ragnatela intera (2 milioni di pixel a fotogramma)
+    /// scendeva a ~30 fotogrammi al secondo (T10, 2026-11-02, misurato).
+    /// I primi fotogrammi di una finestra nuova sono lenti: si parte dopo il secondo.
+    /// Con le animazioni di sistema spente tutto appare subito.
     fn anima_apertura(&self, bottoni: Vec<gtk::Button>) {
         let animazioni = gtk::Settings::default().is_none_or(|s| s.is_gtk_enable_animations());
-        let imposta = {
-            let d = self.disegno.clone();
-            let area = self.area.clone();
-            move |t: f64| {
-                let p = radial::uscita_cubica(t);
-                d.borrow_mut().p = p;
-                let o = ((p - 0.45) / 0.55).clamp(0.0, 1.0);
-                for b in &bottoni {
-                    b.set_opacity(o);
-                }
-                area.queue_draw();
+        let (cx, cy) = self.disegno.borrow().centro;
+        // per ogni nodo: la sua posizione (angolo in alto a sinistra) e la direzione
+        // (unitaria) dal centro dello schermo al nodo. In GtkFixed la posizione è essa
+        // stessa una trasformazione: quella dell'animazione deve contenerla, altrimenti
+        // il nodo finisce in (0,0) (visto nello screenshot del 2026-11-02).
+        let nodi: Vec<(gtk::Button, Rett, f64, f64)> = {
+            let d = self.disegno.borrow();
+            let posti: Vec<Rett> = self.nodi.borrow().iter().map(|n| n.rett).collect();
+            bottoni
+                .into_iter()
+                .zip(posti)
+                .zip(d.nodi.iter())
+                .map(|((b, r), &((nx, ny), _))| {
+                    let l = (nx - cx).hypot(ny - cy).max(1.0);
+                    (b, r, (nx - cx) / l, (ny - cy) / l)
+                })
+                .collect()
+        };
+        let n = nodi.len();
+        let fisso = self.fisso.clone();
+        let imposta = move |t: f64| {
+            for (i, (b, r, ux, uy)) in nodi.iter().enumerate() {
+                let p = radial::uscita_cubica(radial::fase(t, i, n));
+                let indietro = (1.0 - p) * CORSA;
+                let tr = gtk::gsk::Transform::new().translate(&gtk::graphene::Point::new(
+                    (r.x - ux * indietro) as f32,
+                    (r.y - uy * indietro) as f32,
+                ));
+                fisso.set_child_transform(b, Some(&tr));
+                b.set_opacity(p);
             }
         };
         if !animazioni {
@@ -225,13 +251,38 @@ impl Vista {
             return;
         }
         imposta(0.0);
-        let inizio = RefCell::new(None::<i64>);
+        const RISCALDAMENTO: u32 = 2;
+        let inizio = std::cell::Cell::new(None::<i64>);
+        let fotogrammi = std::cell::Cell::new(0u32);
+        let prec = std::cell::Cell::new(0i64);
+        let intervalli = RefCell::new(Vec::<i64>::new());
         self.area.add_tick_callback(move |_, orologio| {
             let ora = orologio.frame_time(); // microsecondi
-            let t0 = *inizio.borrow_mut().get_or_insert(ora);
+            let k = fotogrammi.get() + 1;
+            fotogrammi.set(k);
+            if prec.get() > 0 {
+                intervalli.borrow_mut().push((ora - prec.get()) / 1000);
+            }
+            prec.set(ora);
+            if k <= RISCALDAMENTO {
+                return gtk::glib::ControlFlow::Continue;
+            }
+            let t0 = match inizio.get() {
+                Some(t0) => t0,
+                None => {
+                    inizio.set(Some(ora));
+                    ora
+                }
+            };
             let t = (ora - t0) as f64 / APERTURA.as_micros() as f64;
             imposta(t);
             if t >= 1.0 {
+                eprintln!(
+                    "aracno-menu: apertura animata in {} fotogrammi, {} ms; intervalli ms {:?}",
+                    k - RISCALDAMENTO,
+                    (ora - t0) / 1000,
+                    intervalli.borrow()
+                );
                 gtk::glib::ControlFlow::Break
             } else {
                 gtk::glib::ControlFlow::Continue
@@ -315,7 +366,7 @@ fn bottone(f: &Filo, scelta: Scelta) -> (gtk::Button, gtk::Label) {
 /// La ragnatela: raggi e anelli sottili di sfondo, un filo verso ogni nodo,
 /// quello del filo attivo nel colore della rugiada.
 fn disegna_fili(cr: &gtk::cairo::Context, d: &Disegno) {
-    if d.nodi.is_empty() || d.p <= 0.0 {
+    if d.nodi.is_empty() {
         return;
     }
     let lib = radial::libero(CENTRO_W, CENTRO_H);
@@ -324,7 +375,7 @@ fn disegna_fili(cr: &gtk::cairo::Context, d: &Disegno) {
 
     cr.set_source_rgba(r, g, b, 0.09);
     cr.set_line_width(1.0);
-    let sfondo = radial::ragnatela(d.centro, d.ellisse, lib, radial::RAGGI, &radial::ANELLI, d.p);
+    let sfondo = radial::ragnatela(d.centro, d.ellisse, lib, radial::RAGGI, &radial::ANELLI, 1.0);
     for (x1, y1, x2, y2) in sfondo {
         cr.move_to(x1, y1);
         cr.line_to(x2, y2);
@@ -335,7 +386,7 @@ fn disegna_fili(cr: &gtk::cairo::Context, d: &Disegno) {
     for &((nx, ny), stato) in &d.nodi {
         let a = (ny - cy).atan2(nx - cx);
         let (x1, y1) = (cx + lib.0 * a.cos(), cy + lib.1 * a.sin());
-        let (x2, y2) = (x1 + (nx - x1) * d.p, y1 + (ny - y1) * d.p);
+        let (x2, y2) = (nx, ny);
         if stato == StrandState::Active {
             let (r, g, b) = RUGIADA;
             cr.set_source_rgba(r, g, b, 0.9);

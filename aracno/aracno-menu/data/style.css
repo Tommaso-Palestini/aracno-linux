@@ -4,12 +4,13 @@
  * Regole: superfici piatte, nessun gradiente, ombra, bagliore o sfocatura; un solo
  * colore d'accento (rugiada) solo sul filo attivo e sulla selezione; lo stato è
  * sempre anche testo e simbolo.
- * Ruoli:  fondo #0f1115 (94%) · inchiostro #ebe7df · secondario #a7a39b
+ * Ruoli:  fondo #0f1115 (opaco) · inchiostro #ebe7df · secondario #a7a39b
  *         accento rugiada #8fd3c7 · errore #f0a58a
  * Gli stessi colori sono ripetuti in view.rs per il disegno dei fili (cairo). */
 
 window.aracno {
-  background-color: rgba(15, 17, 21, 0.94);
+  /* opaco: con il fondo semitrasparente COSMIC compone a scatti (T10, misurato) */
+  background-color: #0f1115;
   color: #ebe7df;
   font-family: "Fira Sans", "Inter", "Noto Sans", sans-serif;
 }

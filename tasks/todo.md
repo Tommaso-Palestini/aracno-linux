@@ -84,7 +84,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Accettazione: M2, M3.
   - Dipendenze: T6, T8.
 - [ ] **T10: grafica** (M)
-  - Fatto il 2026-11-02, da verificare: `data/style.css` (fondo notte piatto, un solo accento "rugiada" sul filo attivo e sulla selezione, nodi tondi pieni, niente ombre/gradienti/sfocature), ragnatela disegnata con cairo (raggi e anelli sottili, zona libera intorno al centro, filo attivo colorato), centro "aracno · sei su NOME", apertura animata 260 ms (salta se le animazioni di sistema sono spente). M1 dopo la grafica: 152–166 ms. Screenshot: `docs/img/aracno-menu-t10.png`. Anteprima per screenshot: `ARACNO_MENU_ANTEPRIMA=1`. Test: `prototype/18-menu-grafica-test.sh`.
+  - Fatto il 2026-11-02, da verificare: `data/style.css` (fondo notte piatto, un solo accento "rugiada" sul filo attivo e sulla selezione, nodi tondi pieni, niente ombre/gradienti/sfocature), ragnatela disegnata con cairo (raggi e anelli sottili, zona libera intorno al centro, filo attivo colorato), centro "aracno · sei su NOME", apertura: ragnatela ferma, nodi che arrivano lungo il loro filo (300 ms, salta se le animazioni di sistema sono spente). Primo giro del test 18: G1 FAIL (apertura a scatti, 9 fotogrammi in 266 ms); corretto con motore cairo (impostato dal menù), fondo opaco e solo i nodi animati: 14–18 fotogrammi in 300 ms, M1 72–109 ms. Screenshot: `docs/img/aracno-menu-t10.png`. Anteprima per screenshot: `ARACNO_MENU_ANTEPRIMA=1`. Test: `prototype/18-menu-grafica-test.sh`.
   - Lavoro: CSS, icone, stati come testo e icona, animazione di apertura. Skill `frontend-ui-engineering` e `design-taste-frontend`; screenshot.
   - Accettazione: M1 (< 200 ms dal tasto alla schermata).
   - Dipendenze: T9.

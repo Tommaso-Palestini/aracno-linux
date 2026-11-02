@@ -28,6 +28,14 @@ const APP_ID: &str = "io.github.tommaso_palestini.AracnoMenu";
 
 fn main() -> glib::ExitCode {
     let avvio = Instant::now();
+    // Motore di disegno cairo, se nessuno ne ha scelto un altro. Misurato il 2026-11-02
+    // (T10) sul PC di riferimento (Radeon Vega integrata, COSMIC): con il motore OpenGL
+    // predefinito il menù compare in 135 ms e l'apertura animata va a ~30 fotogrammi al
+    // secondo; con cairo compare in ~60 ms e l'apertura va a 60. Per un'interfaccia
+    // piatta come questa il disegno con il processore è più veloce.
+    if std::env::var_os("GSK_RENDERER").is_none() {
+        std::env::set_var("GSK_RENDERER", "cairo");
+    }
     let app = gtk::Application::builder().application_id(APP_ID).build();
     // Istanza unica: un secondo avvio manda `activate` al processo già aperto ed esce.
     // Menù già aperto → si chiude (tasto rapido = apri/chiudi).
