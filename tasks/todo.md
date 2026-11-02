@@ -54,6 +54,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Verifica: la parte Stop/O6 di `12-aracnod-test.sh`.
   - Revisione con la skill `security-and-hardening`.
   - Dipendenze: T6.
+  - Stato 2026-11-02: `Stop` e O6 PASS (`13-aracnod-stop-test.sh`, esposizione 0.2). Mancano `cargo audit`/`cargo deny check` e la revisione di sicurezza.
 
 ### Checkpoint B
 - [ ] O1–O6 PASS, test e clippy verdi, revisione con te.
