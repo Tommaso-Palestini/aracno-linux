@@ -12,7 +12,7 @@
   "10": "ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con utente dedicato, polkit e D-Bus",
   "11": "ragnatela.rs",
   "12": "lib.rs",
-  "13": "README.md",
+  "13": "ADR-0001: Fili come container systemd-nspawn su un unico kernel",
   "14": "08-ram-limit.sh",
   "15": "Spec: `aracnod` (con `aracno-proto`)",
   "16": "list.rs",
@@ -36,6 +36,11 @@
   "34": "ADR-0003: Rete dei fili condivisa con l'host",
   "35": "14-aracno-cli-test.sh",
   "36": "01-create-strands.sh",
+  "37": "ADR-0005: Desktop: nei fili si monta solo il socket Wayland",
+  "38": "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`",
+  "39": "15-watchdog-freeze.sh",
+  "40": "ADR-0009: Disco cifrato con LUKS2, due password all'avvio",
+  "41": "README.md",
   "72": "00-setup.sh",
   "73": "02-test-freeze.sh"
 }

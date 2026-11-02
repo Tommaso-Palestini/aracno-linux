@@ -39,3 +39,4 @@ Misure sul PC di riferimento:
 - Un filo congelato non risponde: niente rete, timer o notifiche finché non torna attivo. Le connessioni aperte possono cadere per timeout.
 - Il congelamento è a runtime: un riavvio dell'host spegne tutti i fili.
 - Lo switch in bash (~70 ms) basta. Un demone in Rust si valuterà solo se servirà uno stato persistente (vedi le note della roadmap).
+- **Watchdog di systemd-nspawn (scoperto il 2026-11-02):** la unit `systemd-nspawn@.service` ha `WatchdogSec=3min`. Il processo `systemd-nspawn` sta nel cgroup del filo e viene congelato con lui, quindi dopo 3 minuti systemd lo considera bloccato e allo scongelamento lo uccide (SIGABRT, `Result=watchdog`). Correzione: drop-in `aracno/data/systemd/systemd-nspawn@.service.d/aracno-watchdog.conf` con `WatchdogSec=0`, verificato da `prototype/15-watchdog-freeze.sh`. Va incluso nell'ISO (fase 5c).

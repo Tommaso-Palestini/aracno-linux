@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-11-02)
 
 ## Corpus Check
-- 51 files · ~23,594 words
+- 52 files · ~24,255 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 10 file(s) not represented in the graph (top: .conf 3, (none) 2, .service 2)
+- Unclassified: 11 file(s) not represented in the graph (top: .conf 4, (none) 2, .service 2)
 
 ## Summary
-- 504 nodes · 747 edges · 39 communities (29 shown, 10 thin omitted)
+- 511 nodes · 757 edges · 44 communities (33 shown, 11 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.63)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `23de1936`
+- Built from commit: `bfbcf04b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,7 +29,7 @@
 - ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con utente dedicato, polkit e D-Bus
 - ragnatela.rs
 - lib.rs
-- README.md
+- ADR-0001: Fili come container systemd-nspawn su un unico kernel
 - 08-ram-limit.sh
 - Spec: `aracnod` (con `aracno-proto`)
 - list.rs
@@ -52,6 +52,11 @@
 - ADR-0003: Rete dei fili condivisa con l'host
 - 14-aracno-cli-test.sh
 - 01-create-strands.sh
+- ADR-0005: Desktop: nei fili si monta solo il socket Wayland
+- ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`
+- 15-watchdog-freeze.sh
+- ADR-0009: Disco cifrato con LUKS2, due password all'avvio
+- README.md
 - 00-setup.sh
 - 02-test-freeze.sh
 
@@ -82,7 +87,7 @@
 ## Import Cycles
 - 1-file cycle: `aracno/aracnod/src/main.rs -> aracno/aracnod/src/main.rs`
 
-## Communities (39 total, 10 thin omitted)
+## Communities (44 total, 11 thin omitted)
 
 ### Community 0 - "03-bench-switch.sh"
 Cohesion: 0.60
@@ -124,9 +129,9 @@ Nodes (26): AIUTO, Errore, esegui(), fili(), main(), Manager, prossimo(), attivi
 Cohesion: 0.08
 Nodes (14): ACTION_MANAGE, ACTION_SWITCH, BUS_NAME, BUSY, FAILED, INTERFACE, INVALID_NAME, MAX_NAME_LEN (+6 more)
 
-### Community 13 - "README.md"
-Cohesion: 0.05
-Nodes (37): ADR-0001: Fili come container systemd-nspawn su un unico kernel, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Docker / Podman, LXC/LXD (Incus) (+29 more)
+### Community 13 - "ADR-0001: Fili come container systemd-nspawn su un unico kernel"
+Cohesion: 0.17
+Nodes (11): ADR-0001: Fili come container systemd-nspawn su un unico kernel, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Docker / Podman, LXC/LXD (Incus) (+3 more)
 
 ### Community 14 - "08-ram-limit.sh"
 Cohesion: 0.27
@@ -200,25 +205,41 @@ Nodes (9): ADR-0003: Rete dei fili condivisa con l'host, Alternative considerate
 Cohesion: 0.62
 Nodes (6): errore(), fail(), it(), ok(), 14-aracno-cli-test.sh script, stato_api()
 
+### Community 37 - "ADR-0005: Desktop: nei fili si monta solo il socket Wayland"
+Cohesion: 0.20
+Nodes (10): ADR-0005: Desktop: nei fili si monta solo il socket Wayland, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Montare l'intera `/run/user/UID`, Stato (+2 more)
+
+### Community 38 - "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`"
+Cohesion: 0.20
+Nodes (10): ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`, Alternative considerate, Altre basi (Arch con archiso, Fedora con kiwi), Conseguenze, Contesto, Data, Decisione, Distro da zero (Linux From Scratch, buildroot) (+2 more)
+
+### Community 39 - "15-watchdog-freeze.sh"
+Cohesion: 0.48
+Nodes (5): fail(), ok(), p(), pronto(), 15-watchdog-freeze.sh script
+
+### Community 40 - "ADR-0009: Disco cifrato con LUKS2, due password all'avvio"
+Cohesion: 0.33
+Nodes (5): ADR-0009: Disco cifrato con LUKS2, due password all'avvio, Alternative scartate, Conseguenze, Contesto, Decisione
+
 ## Knowledge Gaps
 - **11 isolated node(s):** `aracno-cli`, `InvalidName`, `Active`, `Frozen`, `Off` (+6 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 214 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 215 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `StrandName` connect `TentacleName` to `list.rs`, `switch.rs`, `aracnod/src/main.rs`, `lib.rs`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **What connects `aracno-cli`, `InvalidName`, `Active` to the rest of the system?**
   _11 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `ragnatela.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.07215541165587419 - nodes in this community are weakly interconnected._
 - **Why does `StrandState` connect `ragnatela.rs` to `list.rs`, `switch.rs`, `aracnod/src/main.rs`, `lib.rs`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Should `lib.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
 - **Why does `AracnoError` connect `aracnod/src/main.rs` to `ragnatela.rs`, `lib.rs`, `auth.rs`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
-- **Should `README.md` be split into smaller, more focused modules?**
-  _Cohesion score 0.046511627906976744 - nodes in this community are weakly interconnected._
+- **Should `Spec: `aracnod` (con `aracno-proto`)` be split into smaller, more focused modules?**
+  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._

@@ -36,7 +36,7 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 ### Fase 5 — ISO installabile (base: Debian trixie, `live-build`)
 - [ ] **5a:** costruire una prima ISO Debian minimale con `live-build`, che si avvia e basta
 - [ ] **5b:** fili creati offline: immagini Debian e Arch dentro l'ISO, niente `debootstrap` o `docker pull` a runtime
-- [ ] **5c:** primo boot automatico: fili, socket Wayland, GPU e menù partono da soli
+- [ ] **5c:** primo boot automatico: fili, socket Wayland, GPU e menù partono da soli. Includere il drop-in `aracno-watchdog.conf` per i fili (ADR-0002).
 - [ ] **5d:** test su VM o disco di prova, non sul PC di lavoro
 - [ ] **5e:** disco cifrato con due password all'avvio (prima LUKS, poi login), come su Pop!_OS (ADR-0009)
 
