@@ -96,3 +96,30 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 ### Checkpoint C
 - [ ] M1–M5 PASS, criteri di successo delle due spec verificati, revisione con te.
+
+## Prima della fase 5 (chiesto il 2026-11-02)
+
+- [ ] **T12: copia di sicurezza prima di `aracno upgrade`** (S)
+  - Ipotesi: su ext4 non ci sono snapshot, ma una copia completa in `/var/lib/aracno/copie/`
+    (stesso filesystem di `/var/lib/machines`, fuori dalla vista di machined) costa pochi
+    secondi per filo e il ripristino è uno scambio di cartelle, istantaneo. Con btrfs
+    (ISO) `cp --reflink=auto` diventa gratis senza cambiare codice.
+  - Lavoro: `aracno upgrade` copia il filo prima di aggiornarlo (spento o congelato:
+    copia coerente come dopo uno spegnimento brusco); una copia per filo, la più recente;
+    rifiuta se lo spazio libero è meno di 1,2 volte il filo; `aracno ripristina NOME`.
+  - Accettazione: `prototype/22-upgrade-copia-test.sh` (U1–U4) con tempi misurati.
+- [ ] **T13: politica della RAM per i fili congelati** (S)
+  - Domanda: serve un tetto automatico allo switch, o il kernel sacrifica già da solo i
+    fili congelati quando la memoria scarseggia? Dato di partenza: fase 4.5 (con zram si
+    guadagna circa metà di quanto si toglie).
+  - Ipotesi: le pagine di un filo congelato sono fredde, quindi sotto pressione il kernel
+    le libera per prime; il filo attivo perde poco.
+  - Misura: `prototype/23-ram-pressione-test.sh` (P1–P3). Poi la decisione in un ADR.
+- [ ] **T14: revisione del socket Wayland (ADR-0005)** (M)
+  - Domanda: quali protocolli vede un programma dentro un filo? Appunti, cattura dello
+    schermo, tastiera virtuale, layer-shell (una finestra a tutto schermo che imita il
+    login), gestione delle finestre?
+  - Misura: `aracno/spikes/wayland-globali` elenca i protocolli dall'host e da un filo
+    (`prototype/24-wayland-globali-test.sh`). Poi: se COSMIC supporta
+    `wp_security_context_v1`, socket dedicato per filo con i protocolli privilegiati
+    filtrati; decisione in un ADR che sostituisce o aggiorna lo 0005.
