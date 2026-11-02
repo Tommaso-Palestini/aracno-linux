@@ -7,9 +7,16 @@
 #   aracno cpu NAME [SEC]       uso CPU del filo (% di un core)
 #   aracno limit NAME SIZE      tetto RAM (es. 2G, oppure "infinity" per toglierlo)
 #   aracno shell NAME
-#   aracno upgrade [NAME...]    aggiorna i pacchetti dei fili (default: tutti), poi rimette lo stato
+#   aracno upgrade [--senza-copia] [NAME...]
+#                               copia di sicurezza, poi aggiorna i pacchetti dei fili
+#                               (default: tutti) e rimette lo stato
+#   aracno ripristina NAME      rimette la copia fatta prima dell'ultimo upgrade
+#   aracno copie                elenca le copie di sicurezza
 set -euo pipefail
 M=/var/lib/machines
+# Copie di sicurezza (T12): stesso filesystem di $M, quindi il ripristino è uno scambio di
+# cartelle; fuori da $M, quindi machined non le vede come fili.
+COPIE=/var/lib/aracno/copie
 
 need_root() { [[ $EUID -eq 0 ]] || exec sudo "$0" "$@"; }
 unit()  { echo "systemd-nspawn@$1.service"; }
@@ -51,12 +58,78 @@ upgrade_cmd() {  # comando di aggiornamento non interattivo, scelto da /etc/os-r
   esac
 }
 
+valida_nome() { [[ $1 =~ ^[a-z0-9][a-z0-9-]{0,62}$ ]]; }   # come StrandName in aracno-proto
+
+# rimuove una cartella solo se sta dentro $COPIE (mai altro)
+via_copia() {
+  local d=$1
+  [[ -n $d && $d == "$COPIE"/* && $d != *..* ]] || { echo "rifiuto di cancellare: $d" >&2; return 1; }
+  rm -rf --one-file-system -- "$d"
+}
+
+copia_filo() {  # copia di sicurezza di un filo: una per filo, la più recente
+  local n=$1 prev dim libero serve t0 rc=0
+  valida_nome "$n" && [[ -d $M/$n/etc ]] || { echo "$n: filo inesistente"; return 1; }
+  dim=$(du -sb --one-file-system "$M/$n" | cut -f1)
+  # ARACNO_PROVA_LIBERI (solo test 22): finge che sul disco ci siano tanti byte liberi
+  libero=${ARACNO_PROVA_LIBERI:-$(df -B1 --output=avail "$M" | tail -1)}
+  serve=$(( dim * 12 / 10 ))
+  if (( libero < serve )); then
+    echo "$n: spazio insufficiente per la copia (servono $(human "$serve"), liberi $(human "$libero"))"
+    echo "    per aggiornare senza copia: aracno upgrade --senza-copia $n"
+    return 1
+  fi
+  install -d -m 700 /var/lib/aracno "$COPIE"
+  prev=$(state "$n")
+  # il filo attivo si congela solo per la durata della copia: copia coerente come dopo
+  # uno spegnimento brusco; spento o già congelato non cambia niente
+  if [[ $prev == attiva ]]; then systemctl freeze "$(unit "$n")"; fi
+  via_copia "$COPIE/.$n.nuova" 2>/dev/null || true
+  t0=$(date +%s%N)
+  cp -a --reflink=auto --one-file-system "$M/$n" "$COPIE/.$n.nuova" || rc=$?
+  if [[ $prev == attiva ]]; then systemctl thaw "$(unit "$n")"; fi
+  if (( rc != 0 )); then
+    via_copia "$COPIE/.$n.nuova" || true
+    echo "$n: COPIA FALLITA (codice $rc), aggiornamento annullato"; return 1
+  fi
+  if [[ -d $COPIE/$n ]]; then via_copia "$COPIE/$n"; fi
+  mv "$COPIE/.$n.nuova" "$COPIE/$n"
+  date '+%Y-%m-%d %H:%M' >"$COPIE/$n.data"
+  echo "$n: copia di sicurezza ($(human "$dim")) in $(( ($(date +%s%N) - t0) / 1000000 )) ms (filo $prev)"
+}
+
+aspetta_spento() {
+  for _ in $(seq 120); do systemctl is-active -q "$(unit "$1")" || return 0; sleep 0.5; done
+  echo "$1: non si spegne" >&2; return 1
+}
+
+ripristina() {  # rimette la copia; la versione tolta resta in $COPIE/NOME.scartata
+  local n=$1 prev
+  valida_nome "$n" && [[ -d $M/$n/etc ]] || { echo "$n: filo inesistente"; return 1; }
+  [[ -d $COPIE/$n/etc ]] || { echo "$n: nessuna copia di sicurezza"; return 1; }
+  prev=$(state "$n")
+  if [[ $prev != spenta ]]; then
+    if [[ $prev == congelata ]]; then systemctl thaw "$(unit "$n")"; fi
+    machinectl poweroff "$n"; aspetta_spento "$n"
+  fi
+  if [[ -d $COPIE/$n.scartata ]]; then via_copia "$COPIE/$n.scartata"; fi
+  mv "$M/$n" "$COPIE/$n.scartata"
+  mv "$COPIE/$n" "$M/$n"
+  rm -f "$COPIE/$n.data"
+  case $prev in
+    attiva)    machinectl start "$n"; wait_ready "$n" ;;
+    congelata) machinectl start "$n"; wait_ready "$n"; systemctl freeze "$(unit "$n")" ;;
+  esac
+  echo "$n: ripristinata la copia; la versione tolta è in $COPIE/$n.scartata (stato rimesso: $prev)"
+}
+
 upgrade_one() {  # scongela/avvia, aggiorna, rimette lo stato di prima anche se l'aggiornamento fallisce
   local n=$1 prev c rc=0 t0
   [[ -d $M/$n/etc ]] || { echo "$n: filo inesistente"; return 1; }
   c=$(upgrade_cmd "$n") || { echo "$n: distro non supportata da aracno upgrade"; return 1; }
   prev=$(state "$n")
   echo ">> $n ($prev)"
+  if [[ ${SENZA_COPIA:-0} != 1 ]]; then copia_filo "$n" || return 1; fi
   case $prev in
     spenta)    machinectl start "$n"; wait_ready "$n" ;;
     congelata) systemctl thaw "$(unit "$n")" ;;
@@ -108,8 +181,17 @@ case $cmd in
   shell)  need_root "$cmd" "$@"; machinectl shell "$1" ;;
   upgrade)
     need_root "$cmd" "$@"; falliti=0
+    if [[ ${1:-} == --senza-copia ]]; then SENZA_COPIA=1; shift; fi
     if (( $# == 0 )); then set -- $(names); fi
     for n in "$@"; do upgrade_one "$n" || falliti=$((falliti + 1)); echo; done
     if (( falliti == 0 )); then echo "upgrade: tutti i fili aggiornati"; else echo "upgrade: $falliti fili falliti"; exit 1; fi ;;
-  *) sed -n '2,10p' "$0"; exit 1 ;;
+  ripristina) need_root "$cmd" "$@"; ripristina "$1" ;;
+  copie)
+    need_root "$cmd" "$@"
+    printf "%-10s %-17s %10s\n" FILO DATA DIMENSIONE
+    for d in "$COPIE"/*/; do
+      [[ -d $d ]] || continue; n=$(basename "$d"); [[ $n == *.scartata ]] && continue
+      printf "%-10s %-17s %10s\n" "$n" "$(cat "$COPIE/$n.data" 2>/dev/null || echo '?')" "$(human "$(du -sb "$d" | cut -f1)")"
+    done ;;
+  *) sed -n '2,14p' "$0"; exit 1 ;;
 esac

@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-11-02)
 
 ## Corpus Check
-- 65 files · ~34,877 words
+- 71 files · ~38,635 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 16 file(s) not represented in the graph (top: .conf 4, (none) 3, .service 2)
+- Unclassified: 17 file(s) not represented in the graph (top: (none) 4, .conf 4, .service 2)
 
 ## Summary
-- 690 nodes · 1095 edges · 58 communities (44 shown, 14 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.76)
+- 749 nodes · 1196 edges · 63 communities (49 shown, 14 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 17 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `47fe30de`
+- Built from commit: `69bf0dea`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -69,6 +69,11 @@
 - 18-menu-grafica-test.sh
 - 21-menu-t11-test.sh
 - 20-tasto-rapido.sh
+- aracno-socket-sicuro.rs
+- 23-ram-pressione-test.sh
+- 24-wayland-sicuro-test.sh
+- 22-upgrade-copia-test.sh
+- aracno-wayland-globali
 - 00-setup.sh
 - 02-test-freeze.sh
 
@@ -80,9 +85,9 @@
 5. `Filo` - 19 edges
 6. `Spec: `aracnod` (con `aracno-proto`)` - 13 edges
 7. `n()` - 12 edges
-8. `Spec: `aracno-menu`` - 11 edges
-9. `bottone()` - 10 edges
-10. `info()` - 10 edges
+8. `23-ram-pressione-test.sh script` - 12 edges
+9. `Spec: `aracno-menu`` - 11 edges
+10. `bottone()` - 10 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `mostra()` --calls--> `messaggio()`  [INFERRED]
@@ -91,15 +96,15 @@
   aracno/aracno-menu/src/main.rs → aracno/aracno-proto/src/client.rs
 - `bottone()` --calls--> `scelta()`  [INFERRED]
   aracno/aracno-menu/src/view.rs → aracno/aracno-menu/src/main.rs
-- `testo_dove()` --calls--> `tr()`  [INFERRED]
-  aracno/aracno-menu/src/view.rs → aracno/aracno-proto/src/client.rs
+- `simbolo()` --references--> `StrandState`  [EXTRACTED]
+  aracno/aracno-proto/src/client.rs → aracno/aracno-proto/src/lib.rs
 - `fili()` --references--> `UnitInfo`  [INFERRED]
   aracno/aracnod/src/main.rs → aracno/aracnod/src/list.rs
 
 ## Import Cycles
 - 1-file cycle: `aracno/aracnod/src/main.rs -> aracno/aracnod/src/main.rs`
 
-## Communities (58 total, 14 thin omitted)
+## Communities (63 total, 14 thin omitted)
 
 ### Community 0 - "03-bench-switch.sh"
 Cohesion: 0.60
@@ -135,14 +140,14 @@ Nodes (12): ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con u
 
 ### Community 11 - "client.rs"
 Cohesion: 0.10
-Nodes (10): CARTELLA_TRADUZIONI, da_righe(), DOMINIO, fili(), Manager, messaggio(), messaggio_errore(), righe_da_aracnod() (+2 more)
+Nodes (9): CARTELLA_TRADUZIONI, da_righe(), DOMINIO, fili(), Manager, messaggio(), messaggio_errore(), righe_da_aracnod() (+1 more)
 
 ### Community 12 - "lib.rs"
 Cohesion: 0.10
 Nodes (14): ACTION_MANAGE, ACTION_SWITCH, BUS_NAME, BUSY, FAILED, INTERFACE, INVALID_NAME, MAX_NAME_LEN (+6 more)
 
 ### Community 13 - "ADR-0001: Fili come container systemd-nspawn su un unico kernel"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (11): ADR-0001: Fili come container systemd-nspawn su un unico kernel, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Docker / Podman, LXC/LXD (Incus) (+3 more)
 
 ### Community 14 - "08-ram-limit.sh"
@@ -154,11 +159,11 @@ Cohesion: 0.07
 Nodes (25): Mappa dei componenti: menù a ragnatela, Assunzioni, Comandi, Comportamento, Confini, Criteri di successo, Domande aperte, Obiettivo (+17 more)
 
 ### Community 16 - "aracno-cli/src/main.rs"
-Cohesion: 0.13
+Cohesion: 0.15
 Nodes (7): AIUTO, Errore, esegui(), fili(), main(), prossimo(), attivi()
 
 ### Community 17 - "TentacleName"
-Cohesion: 0.09
+Cohesion: 0.08
 Nodes (17): StrandName, file_eventi(), n(), ALREADY_SUBSCRIBED, freeze(), image_names(), job(), Machined (+9 more)
 
 ### Community 18 - "Piano: menù a tentacoli (`octod` + `octo-menu`)"
@@ -166,8 +171,8 @@ Cohesion: 0.25
 Nodes (7): Decisioni architetturali, Domande aperte, Fasi, Grafo delle dipendenze, Piano: menù a ragnatela (`aracnod` + `aracno-menu`), Rischi, Sintesi
 
 ### Community 19 - "Task: menù a tentacoli"
-Cohesion: 0.25
-Nodes (7): Checkpoint A, Checkpoint B, Checkpoint C, Fase 1: prove dei rischi, Fase 2: `aracnod`, Fase 3: `aracno-menu`, Task: menù a ragnatela
+Cohesion: 0.22
+Nodes (8): Checkpoint A, Checkpoint B, Checkpoint C, Fase 1: prove dei rischi, Fase 2: `aracnod`, Fase 3: `aracno-menu`, Prima della fase 5 (chiesto il 2026-11-02), Task: menù a ragnatela
 
 ### Community 20 - "09-upgrade-test.sh"
 Cohesion: 0.60
@@ -190,7 +195,7 @@ Cohesion: 0.44
 Nodes (9): attesa_errore(), call(), fail(), ms_of(), ok(), 12-aracnod-test.sh script, stati(), stato_di() (+1 more)
 
 ### Community 26 - "aracnod/src/main.rs"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (22): AracnoError, Busy, Failed, InvalidName, NotAuthorized, NotFound, ZBus, nomi_degli_errori_coerenti_con_proto() (+14 more)
 
 ### Community 27 - "ADR-0004: GPU nei tentacoli con bind di `/dev/dri` e drop-in systemd"
@@ -214,15 +219,15 @@ Cohesion: 0.29
 Nodes (6): Aggiunta (2026-11-02, stato disallineato), Confini di fiducia, Dipendenze, Revisione di sicurezza di aracnod (T7) — 2026-11-02, Risultati, STRIDE
 
 ### Community 34 - "view.rs"
-Cohesion: 0.11
-Nodes (12): APERTURA, CENTRO_H, CENTRO_W, CORSA, disegna_fili(), Disegno, dove_sei(), f() (+4 more)
+Cohesion: 0.13
+Nodes (9): APERTURA, CENTRO_H, CENTRO_W, CORSA, dove_sei(), INCHIOSTRO, NODO_H, NODO_W (+1 more)
 
 ### Community 35 - "14-aracno-cli-test.sh"
 Cohesion: 0.62
 Nodes (6): errore(), fail(), it(), ok(), 14-aracno-cli-test.sh script, stato_api()
 
 ### Community 37 - "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`, Alternative considerate, Altre basi (Arch con archiso, Fedora con kiwi), Conseguenze, Contesto, Data, Decisione, Distro da zero (Linux From Scratch, buildroot) (+2 more)
 
 ### Community 39 - "15-watchdog-freeze.sh"
@@ -242,7 +247,7 @@ Cohesion: 0.47
 Nodes (9): apri(), chiedi(), DBUS_SYSTEM_BUS_ADDRESS, fail(), log_pulito(), ok(), 16-menu-base-test.sh script, uscito_bene() (+1 more)
 
 ### Community 43 - "ADR-0003: Rete dei fili condivisa con l'host"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (9): ADR-0003: Rete dei fili condivisa con l'host, Alternative considerate, Bridge di rete verso la LAN, Conseguenze, Contesto, Data, Decisione, Stato (+1 more)
 
 ### Community 44 - "17-menu-switch-test.sh"
@@ -250,24 +255,28 @@ Cohesion: 0.62
 Nodes (6): chiedi(), fail(), ok(), prova(), 17-menu-switch-test.sh script, vivo()
 
 ### Community 45 - "list.rs"
-Cohesion: 0.13
-Nodes (18): ProtoError, InvalidName, UnknownState, attivo_con_memoria_e_senza_limite(), congelato_con_limite(), d_accordo_o_kernel_non_letto(), Entry, entry() (+10 more)
+Cohesion: 0.12
+Nodes (19): ProtoError, InvalidName, UnknownState, attivo_con_memoria_e_senza_limite(), congelato_con_limite(), d_accordo_o_kernel_non_letto(), Entry, entry() (+11 more)
 
 ### Community 46 - "ADR-0009: Disco cifrato con LUKS2, due password all'avvio"
 Cohesion: 0.33
 Nodes (5): ADR-0009: Disco cifrato con LUKS2, due password all'avvio, Alternative scartate, Conseguenze, Contesto, Decisione
 
+### Community 48 - "Vista"
+Cohesion: 0.17
+Nodes (6): disegna_fili(), Disegno, testo_dove(), Vista, stato_it(), tr()
+
 ### Community 49 - "ragnatela.rs"
-Cohesion: 0.14
-Nodes (12): colore(), colori_solo_se_chiesti(), f(), filo_attivo(), ragnatela_ordinata_e_senza_colori(), f(), simbolo(), StrandState (+4 more)
+Cohesion: 0.15
+Nodes (15): colore(), colori_solo_se_chiesti(), disegna(), f(), filo_attivo(), ragnatela_ordinata_e_senza_colori(), f(), f() (+7 more)
 
 ### Community 50 - "19-stato-disallineato-test.sh"
 Cohesion: 0.31
 Nodes (8): fail(), hop(), kernel(), ok(), pronto(), 19-stato-disallineato-test.sh script, togli_prova(), u()
 
 ### Community 51 - "Filo"
-Cohesion: 0.28
-Nodes (10): disegna(), bottone(), classe(), Nodo, testo_accessibile(), testo_dove(), testo_stato(), Filo (+2 more)
+Cohesion: 0.23
+Nodes (6): bottone(), classe(), Nodo, testo_accessibile(), testo_stato(), main()
 
 ### Community 52 - "18-menu-grafica-test.sh"
 Cohesion: 0.57
@@ -277,25 +286,41 @@ Nodes (6): chiedi(), fail(), ok(), pulito(), 18-menu-grafica-test.sh script, viv
 Cohesion: 0.60
 Nodes (5): chiedi(), fail(), ok(), 21-menu-t11-test.sh script, vivo()
 
+### Community 56 - "aracno-socket-sicuro.rs"
+Cohesion: 0.15
+Nodes (3): Stato, Globali, main()
+
+### Community 57 - "23-ram-pressione-test.sh"
+Cohesion: 0.26
+Nodes (14): avail(), fail(), ferma(), hog(), hop(), mb(), ok(), ooms() (+6 more)
+
+### Community 58 - "24-wayland-sicuro-test.sh"
+Cohesion: 0.48
+Nodes (5): fail(), ok(), riavvia_fili(), 24-wayland-sicuro-test.sh script, utente()
+
+### Community 59 - "22-upgrade-copia-test.sh"
+Cohesion: 0.53
+Nodes (4): byte(), fail(), ok(), 22-upgrade-copia-test.sh script
+
 ## Knowledge Gaps
-- **17 isolated node(s):** `aracno-cli`, `aracno-menu`, `Su`, `Giu`, `Sinistra` (+12 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 271 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **18 isolated node(s):** `aracno-cli`, `aracno-menu`, `Su`, `Giu`, `Sinistra` (+13 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 280 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **14 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `StrandState` connect `ragnatela.rs` to `view.rs`, `switch.rs`, `client.rs`, `lib.rs`, `list.rs`, `Filo`, `aracnod/src/main.rs`?**
-  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **Why does `StrandState` connect `ragnatela.rs` to `view.rs`, `switch.rs`, `client.rs`, `lib.rs`, `list.rs`, `Vista`, `Filo`, `aracnod/src/main.rs`?**
+  _High betweenness centrality (0.066) - this node is a cross-community bridge._
 - **What connects `aracno-cli`, `aracno-menu`, `Su` to the rest of the system?**
-  _17 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _18 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `client.rs` be split into smaller, more focused modules?**
-  _Cohesion score 0.10153846153846154 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
 - **Why does `StrandName` connect `TentacleName` to `switch.rs`, `aracnod/src/main.rs`, `lib.rs`, `list.rs`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **Should `lib.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
-- **Why does `AracnoError` connect `aracnod/src/main.rs` to `ragnatela.rs`, `client.rs`, `auth.rs`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+- **Why does `main()` connect `Filo` to `aracno-socket-sicuro.rs`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Should `Spec: `aracnod` (con `aracno-proto`)` be split into smaller, more focused modules?**
   _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._

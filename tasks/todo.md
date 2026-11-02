@@ -108,6 +108,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     copia coerente come dopo uno spegnimento brusco); una copia per filo, la più recente;
     rifiuta se lo spazio libero è meno di 1,2 volte il filo; `aracno ripristina NOME`.
   - Accettazione: `prototype/22-upgrade-copia-test.sh` (U1–U4) con tempi misurati.
+  - Fatto il 2026-11-02, da verificare: `aracno upgrade` copia prima di aggiornare (`--senza-copia` per saltare), `aracno ripristina`, `aracno copie`.
 - [ ] **T13: politica della RAM per i fili congelati** (S)
   - Domanda: serve un tetto automatico allo switch, o il kernel sacrifica già da solo i
     fili congelati quando la memoria scarseggia? Dato di partenza: fase 4.5 (con zram si
@@ -115,6 +116,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Ipotesi: le pagine di un filo congelato sono fredde, quindi sotto pressione il kernel
     le libera per prime; il filo attivo perde poco.
   - Misura: `prototype/23-ram-pressione-test.sh` (P1–P3). Poi la decisione in un ADR.
+  - Test scritto il 2026-11-02, da lanciare.
 - [ ] **T14: revisione del socket Wayland (ADR-0005)** (M)
   - Domanda: quali protocolli vede un programma dentro un filo? Appunti, cattura dello
     schermo, tastiera virtuale, layer-shell (una finestra a tutto schermo che imita il
@@ -123,3 +125,4 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     (`prototype/24-wayland-globali-test.sh`). Poi: se COSMIC supporta
     `wp_security_context_v1`, socket dedicato per filo con i protocolli privilegiati
     filtrati; decisione in un ADR che sostituisce o aggiorna lo 0005.
+  - 2026-11-02, misurato dall'host: socket normale 59 protocolli (appunti letti di nascosto, cattura schermo, tastiera virtuale, layer-shell, blocco schermo, gestione finestre e monitor); socket etichettato con `wp_security_context_v1` 36, i 23 privilegiati nascosti. Helper `aracno-socket-sicuro` + servizio utente `aracno-wayland@FILO`; test `24-wayland-sicuro-test.sh` da lanciare. Notato anche: i `.nspawn` hanno `PrivateUsers=no` (root nel filo = root dell'host), da rivedere.

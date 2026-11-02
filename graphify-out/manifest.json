@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793625656.6461809,
-    "seen": 1793625658.9363277,
-    "ast_hash": "22348f77ac5e56411289803fa0edf726",
+    "mtime": 1793626457.9798057,
+    "seen": 1793626459.814269,
+    "ast_hash": "b1883b66cda497b644541c8d8b156b3d",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "prototype/aracno": {
-    "mtime": 1793613419.3066022,
-    "seen": 1793613641.550318,
-    "ast_hash": "23dff5bfa06cd45d8217e6a2a7cc9d18",
+    "mtime": 1793626183.416864,
+    "seen": 1793626459.814221,
+    "ast_hash": "4459c6ec243403740882b8523398e661",
     "semantic_hash": ""
   },
   "docs/adr/0008-aracnod-servizio-di-sistema.md": {
@@ -393,6 +393,42 @@
     "mtime": 1793625656.470158,
     "seen": 1793625658.9362507,
     "ast_hash": "52b4a65acbbc7b82b4c58ccf3d432ba6",
+    "semantic_hash": ""
+  },
+  "aracno/spikes/wayland-globali/Cargo.toml": {
+    "mtime": 1793626313.764491,
+    "seen": 1793626459.8141506,
+    "ast_hash": "31688770c360f1116086c426493f2c2e",
+    "semantic_hash": ""
+  },
+  "aracno/spikes/wayland-globali/src/bin/aracno-socket-sicuro.rs": {
+    "mtime": 1793626347.3583474,
+    "seen": 1793626459.8141537,
+    "ast_hash": "3a0dd6fd53acc9ddd049970e30497f38",
+    "semantic_hash": ""
+  },
+  "aracno/spikes/wayland-globali/src/main.rs": {
+    "mtime": 1793626277.5085666,
+    "seen": 1793626459.814156,
+    "ast_hash": "2874f7411ca343cab55683c4e99fb695",
+    "semantic_hash": ""
+  },
+  "prototype/22-upgrade-copia-test.sh": {
+    "mtime": 1793626183.4978654,
+    "seen": 1793626459.814214,
+    "ast_hash": "b7c5c0847cfc38ecaf8714fb4170aff8",
+    "semantic_hash": ""
+  },
+  "prototype/23-ram-pressione-test.sh": {
+    "mtime": 1793626260.616883,
+    "seen": 1793626459.8142161,
+    "ast_hash": "e1d760510dc558f47f7be3b9fd69bea0",
+    "semantic_hash": ""
+  },
+  "prototype/24-wayland-sicuro-test.sh": {
+    "mtime": 1793626440.5455973,
+    "seen": 1793626459.8142185,
+    "ast_hash": "91e4dab66885de328f92e709ee82ea94",
     "semantic_hash": ""
   }
 }
