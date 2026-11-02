@@ -57,9 +57,11 @@ hog() {
   grep -q '^ok:' "$log" || { echo "  memhog $u in $f non è partito: $(cat "$log" 2>/dev/null)"; return 1; }
 }
 verifica() {  # rilegge la memoria di memhog e stampa il tempo
-  local f=$1 u=$2 log=$M/$1/var/tmp/$2.log
+  local f=$1 u=$2 log=$M/$1/var/tmp/$2.log n0
+  # aspetta una riga NUOVA: il tocco continuo ne ha già scritte molte
+  n0=$(grep -c '^verify' "$log" || true)
   systemctl -M "$f" kill --signal=SIGUSR1 "$u"
-  for _ in $(seq 240); do grep -qE '^verify' "$log" && break; sleep 0.25; done
+  for _ in $(seq 240); do (( $(grep -c '^verify' "$log" || true) > n0 )) && break; sleep 0.25; done
   grep '^verify' "$log" | tail -1
 }
 ferma() { systemctl -M "$1" stop "$2" 2>/dev/null || true; }
