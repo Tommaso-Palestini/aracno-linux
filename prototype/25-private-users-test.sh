@@ -47,23 +47,40 @@ utente() { runuser -u "$UTENTE" -- env XDG_RUNTIME_DIR="$RUN" DBUS_SESSION_BUS_A
 dentro() { local n=$1; shift; systemd-run -M "$n" --quiet --wait --pipe "$@" 2>&1; }
 copia() { [[ -f $1.prima-di-t15 ]] || cp -p "$1" "$1.prima-di-t15"; }
 rimetti() { [[ -f $1.prima-di-t15 ]] && mv "$1.prima-di-t15" "$1" && echo "  rimesso $1"; }
-riavvia_fili() {
+ferma_fili() {
   for n in $(names); do
     if systemctl is-active -q "systemd-nspawn@$n.service"; then
       systemctl thaw "systemd-nspawn@$n.service" 2>/dev/null || true
       machinectl poweroff "$n"
       for _ in $(seq 60); do systemctl is-active -q "systemd-nspawn@$n.service" || break; sleep 0.5; done
     fi
+  done
+}
+avvia_fili() {
+  for n in $(names); do
     for _ in 1 2 3 4 5; do "$O" start "$n" >/dev/null 2>&1 && break; sleep 1; done
   done
   "$O" switch debian >/dev/null
+}
+# Primo giro: PrivateUsersOwnership era in [Exec] (va in [Files]), nspawn l'ha ignorata e ha
+# cambiato il proprietario di tutti i file del filo (base UID scelta da "pick"). Qui li si
+# riporta alla numerazione da 0, con lo strumento di nspawn, a filo spento.
+a_zero() {
+  local n=$1 u; u=$(stat -c '%u' "$M/$n")
+  if [[ $u != 0 ]]; then
+    echo "  $n: file con proprietario spostato (UID $u), li riporto a 0…"
+    systemd-nspawn -q --settings=no -D "$M/$n" --private-users=0 --private-users-ownership=chown /bin/true
+    echo "  $n: ora $(stat -c '%u' "$M/$n")"
+  fi
 }
 ricarica_udev() { udevadm control --reload; udevadm trigger --subsystem-match=drm --action=change; udevadm settle; }
 
 if [[ ${1:-} == --rimuovi ]]; then
   for n in $(names); do rimetti "$CONF/$n.nspawn" || true; rimetti "$DROP/systemd-nspawn@$n.service.d/gpu.conf" || true; done
   rm -f "$UDEV"; ricarica_udev
-  systemctl daemon-reload; riavvia_fili
+  systemctl daemon-reload; ferma_fili
+  for n in $(names); do a_zero "$n"; done
+  avvia_fili
   echo "Fili di nuovo con PrivateUsers=no (l'helper del socket resta quello nuovo: innocuo)."; exit 0
 fi
 
@@ -77,16 +94,25 @@ install -m 755 -o root -g root "$SP/aracno-socket-sicuro" "$HELPER"
 for n in $(names); do
   utente systemctl --user restart "aracno-wayland@$n.service"
   f=$CONF/$n.nspawn; copia "$f"
-  sed -e 's/^PrivateUsers=no$/PrivateUsers=pick\nPrivateUsersOwnership=map/' \
+  # PrivateUsersOwnership sta in [Files], non in [Exec]
+  sed -e 's/^PrivateUsers=no$/PrivateUsers=pick/' \
+      -e 's/^\[Files\]$/[Files]\nPrivateUsersOwnership=map/' \
       -e 's#^Bind=/dev/dri$#Bind=/dev/dri/renderD128#' "$f.prima-di-t15" >"$f"
   g=$DROP/systemd-nspawn@$n.service.d/gpu.conf; copia "$g"
   grep -v 'card0' "$g.prima-di-t15" >"$g"
   echo "  $n: $(grep -E '^(PrivateUsers|Bind=/dev)' "$f" | tr '\n' ' ')"
+  [[ $(grep -c '^PrivateUsersOwnership=map' "$f") == 1 ]] || { echo "  $n: PrivateUsersOwnership non scritta in [Files]"; exit 1; }
 done
 sleep 1
 for n in $(names); do echo "  socket $n: $(stat -c '%a' "$RUN/aracno-wayland-$n.sock")"; done
 systemctl daemon-reload
-riavvia_fili
+ferma_fili
+for n in $(names); do a_zero "$n"; done
+avvia_fili
+for n in $(names); do
+  journalctl -u "systemd-nspawn@$n.service" --since "-2min" --no-pager -o cat | grep -i 'unknown key' \
+    && fail "$n: nspawn ignora una chiave del .nspawn" || true
+done
 
 echo; echo ">> I1–I3: spazio utenti"
 for n in $(names); do
