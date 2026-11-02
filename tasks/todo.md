@@ -165,6 +165,23 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     etichettato spariscono i protocolli privilegiati (come T14). Altrimenti si torna alla spec.
   - Anche: il menù nel ripiego senza layer-shell (M5) su un compositor diverso da COSMIC.
 
+**Prima prova, 2026-11-02 sera** (`aracno-20261102-amd64-prova.iso`, 2,3 GB, costruita in 94 min;
+seriale in `iso/out/seriale.log`, non committata):
+- T18: D1 ok (Plasma su Wayland), D2 ok (desktop a 39 s), **D3 FAIL: `starting`**, nessuna unità fallita.
+  Diagnosi: è colpa del test, non del sistema. `aracno-prova-rapporto.service` è `Type=oneshot`,
+  `WantedBy=graphical.target`, quindi è lui stesso un job d'avvio ancora in corso mentre chiede
+  `systemctl is-system-running`. Correzione proposta: `Type=exec` e nello script
+  `timeout 120 systemctl is-system-running --wait`. Serve ricostruire l'ISO.
+- T19: P1 ok (`zwlr_layer_shell_v1` e `wp_security_context_manager_v1` presenti).
+  **P2 FAIL**: socket normale 56 protocolli, socket etichettato 55. KWin (Plasma di trixie)
+  nasconde solo `wp_security_context_manager_v1` e lascia visibili ai client etichettati
+  `zwlr_layer_shell_v1`, `zwlr_data_control_manager_v1` (appunti), `kde_output_management_v2`,
+  `kde_output_device_v2`, `org_kde_plasma_shell`. Quindi con Plasma ADR-0010 non protegge.
+- **Decisione aperta (da prendere con l'utente)**: secondo il piano si torna alla spec. Strade:
+  (a) Sway o un altro compositor wlroots che filtri i privilegiati per i client etichettati (da misurare
+  con lo stesso spike); (b) COSMIC, dove T14 è già passato sull'host (da capire se è pacchettizzabile
+  su trixie); (c) restare su Plasma e mettere un proxy Wayland che filtra i globali tra i fili e KWin.
+
 ### Checkpoint D
 - [ ] ISO minima in VM, desktop deciso sui numeri, revisione con te.
 
