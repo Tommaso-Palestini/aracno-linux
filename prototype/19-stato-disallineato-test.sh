@@ -10,8 +10,9 @@
 # Ipotesi e criteri (scritti prima del test):
 #   K1 aracnod legge cgroup.events dentro la sua sandbox: con i fili d'accordo,
 #      ListStrands coincide con il kernel per debian e arch
-#   K2 riproduzione: arch congelato viene ucciso (SIGKILL) e riavviato; systemd dice
-#      frozen, il kernel no (se non si riproduce, il test lo dice e salta K3–K4)
+#   K2 riproduzione: arch congelato viene fermato dal watchdog (di prova, 3 s) e
+#      riavviato; systemd dice frozen, il kernel no (se non si riproduce, il test lo dice,
+#      salta K3–K4 e l'esito è INCOMPLETO, non PASS)
 #   K3 ListStrands dice arch "active" (vale il kernel)
 #   K4 `aracno hop debian`: il journal di aracnod dice "riallineo a active" per arch;
 #      dopo, systemd e kernel coincidono per entrambi e c'è un solo filo attivo (debian)
@@ -57,12 +58,27 @@ for n in debian arch; do
 done
 T0=$(date '+%Y-%m-%d %H:%M:%S')
 
-echo; echo ">> K2: arch congelato ucciso e riavviato"
-systemctl kill --signal=SIGKILL "$(u arch)" || true
-for _ in $(seq 40); do systemctl is-active -q "$(u arch)" || break; sleep 0.25; done
+echo; echo ">> K2: arch congelato fermato dal watchdog, come è successo a debian (fino a ~2 minuti)"
+# Primo giro: con SIGKILL il disallineamento non si riproduceva. Nel caso reale systemd
+# ha fermato il filo per il watchdog mentre era congelato ("stop-watchdog timed out").
+# Watchdog di prova di 3 s solo per arch, in /run (sparisce al riavvio, e il test lo toglie).
+PROVA=/run/systemd/system/$(u arch).d/zz-prova-watchdog.conf
+togli_prova() { rm -f "$PROVA"; rmdir "$(dirname "$PROVA")" 2>/dev/null || true; systemctl daemon-reload; }
+trap togli_prova EXIT
+mkdir -p "$(dirname "$PROVA")"
+printf '[Service]\nWatchdogSec=3s\n' >"$PROVA"
+systemctl daemon-reload
+systemctl thaw "$(u arch)" 2>/dev/null || true
+systemctl restart "$(u arch)"; pronto arch || true
+echo "    arch riavviato con WatchdogUSec=$(systemctl show -P WatchdogUSec "$(u arch)")"
+hop debian >/dev/null   # arch congelato
+echo "    arch: systemd $(sd arch), kernel $(kernel arch); aspetto che il watchdog lo fermi…"
+for i in $(seq 240); do systemctl is-active -q "$(u arch)" || break; sleep 0.5; done
+echo "    dopo $((i / 2)) s: $(systemctl show -P Result "$(u arch)")"
+togli_prova; trap - EXIT
 systemctl reset-failed "$(u arch)" 2>/dev/null || true
 systemctl start "$(u arch)"; pronto arch || true
-echo "    arch: systemd $(sd arch), kernel $(kernel arch)"
+echo "    arch riavviato: systemd $(sd arch), kernel $(kernel arch)"
 if [[ $(sd arch) == frozen && $(kernel arch) == active ]]; then
   ok "disallineamento riprodotto (systemd frozen, kernel no)"
   riprodotto=1
@@ -91,7 +107,10 @@ hop debian >/dev/null || true
 for n in debian arch; do echo "    $n: systemd $(sd $n), kernel $(kernel $n)"; done
 
 echo
-if (( fails == 0 )); then
+if (( fails == 0 && ! riprodotto )); then
+  echo "ESITO: INCOMPLETO (K1 ok, ma il disallineamento non si è riprodotto: K3–K4 non provati)"
+  exit 2
+elif (( fails == 0 )); then
   echo "ESITO: PASS (aracnod segue il kernel e riallinea systemd prima dello switch)"
 else
   echo "ESITO: FAIL ($fails controlli). Incolla l'output completo."
