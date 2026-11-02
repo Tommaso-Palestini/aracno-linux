@@ -18,6 +18,8 @@
 #   R1b l'evidenziazione si sposta subito a ogni freccia; ogni prova stampa la traccia
 #       di frecce, Tab e Invio dal log del menù
 #   In nessun caso "Broken pipe", CRITICAL o panic nel log.
+# Secondo giro: R1, R1b, M3, M3b, M2 PASS; R2 non valido (la traccia mostra Tab e frecce
+# prima di Invio, quindi lo switch a debian era corretto). Si ripete con SOLO=R2.
 set -euo pipefail
 [[ $EUID -ne 0 ]] || { echo "Lancia SENZA sudo, dalla sessione grafica"; exit 1; }
 
@@ -53,6 +55,17 @@ prova() {
 "$A" hop debian >/dev/null
 "$A" web | sed 's/^/    /'
 
+# SOLO=R2 ripete solo la prova R2 (con arch già attivo)
+if [[ ${SOLO:-} == R2 ]]; then
+  "$A" hop arch >/dev/null
+  echo; echo ">> R2: Invio sul filo già attivo"
+  prova "premi SOLO INVIO, nessun altro tasto (è evidenziato arch, già attivo)" arch
+  grep -q 'switch' "$LOG" && fail "c'è stato uno switch inutile" || ok "nessuno switch"
+  "$A" hop debian >/dev/null
+  (( fails == 0 )) && echo "ESITO R2: PASS" || { echo "ESITO R2: FAIL"; exit 1; }
+  exit 0
+fi
+
 echo; echo ">> R1 + M3: solo tastiera, frecce"
 prova "guarda la disposizione, poi con le FRECCE vai su arch e premi Invio" arch
 grep -q 'switch arch ok' "$LOG" && ok "log: $(grep -o 'switch arch ok in [0-9]* ms' "$LOG")" || fail "nessuno switch nel log"
@@ -68,7 +81,7 @@ echo; echo ">> M2: mouse"
 prova "CLICCA su arch" arch
 
 echo; echo ">> R2: Invio sul filo già attivo"
-prova "premi subito INVIO, senza toccare le frecce (è evidenziato arch, già attivo)" arch
+prova "premi SOLO INVIO, nessun altro tasto (è evidenziato arch, già attivo)" arch
 grep -q 'switch' "$LOG" && fail "c'è stato uno switch inutile" || ok "nessuno switch"
 
 echo; echo ">> Ripristino: debian attiva"
