@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793614219.5553153,
-    "seen": 1793614220.6256418,
-    "ast_hash": "83c8721b3d2f7d31aa11d47e7775d057",
+    "mtime": 1793627171.576808,
+    "seen": 1793627173.448574,
+    "ast_hash": "be6db782920fe7c623d1d1d0c63bce4d",
     "semantic_hash": ""
   },
   "docs/adr/0002-switch-con-congelamento-cgroup.md": {
@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "docs/adr/0005-solo-socket-wayland.md": {
-    "mtime": 1793613419.304701,
-    "seen": 1793613641.5503497,
-    "ast_hash": "7640e4478e01c070acd260a062782a70",
+    "mtime": 1793627171.5691504,
+    "seen": 1793627173.4485924,
+    "ast_hash": "ae97465a89949144f8e1d99fcf765ce2",
     "semantic_hash": ""
   },
   "docs/adr/0006-host-debian-trixie-live-build.md": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793613473.350858,
-    "seen": 1793613641.5503669,
-    "ast_hash": "e84ddecede9c61d5db3d78201784885d",
+    "mtime": 1793627171.5735552,
+    "seen": 1793627173.448615,
+    "ast_hash": "467272685390441722949dfcb40afd71",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793626457.9798057,
-    "seen": 1793626459.814269,
-    "ast_hash": "b1883b66cda497b644541c8d8b156b3d",
+    "mtime": 1793627171.5820692,
+    "seen": 1793627173.448637,
+    "ast_hash": "0c7aacf3c5f28291c9875d96dfc8613e",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -414,21 +414,27 @@
     "semantic_hash": ""
   },
   "prototype/22-upgrade-copia-test.sh": {
-    "mtime": 1793626183.4978654,
-    "seen": 1793626459.814214,
-    "ast_hash": "b7c5c0847cfc38ecaf8714fb4170aff8",
+    "mtime": 1793626599.5989757,
+    "seen": 1793627173.448547,
+    "ast_hash": "a51fd77f3b40cc53f1396d5f57a65ddc",
     "semantic_hash": ""
   },
   "prototype/23-ram-pressione-test.sh": {
-    "mtime": 1793626260.616883,
-    "seen": 1793626459.8142161,
-    "ast_hash": "e1d760510dc558f47f7be3b9fd69bea0",
+    "mtime": 1793627137.797198,
+    "seen": 1793627173.4485512,
+    "ast_hash": "9d30a06b11ec9f945284f858168cae8e",
     "semantic_hash": ""
   },
   "prototype/24-wayland-sicuro-test.sh": {
-    "mtime": 1793626440.5455973,
-    "seen": 1793626459.8142185,
-    "ast_hash": "91e4dab66885de328f92e709ee82ea94",
+    "mtime": 1793626937.7031481,
+    "seen": 1793627173.448555,
+    "ast_hash": "094ed8f46eab95415fd040752b62ae4c",
+    "semantic_hash": ""
+  },
+  "docs/adr/0010-socket-wayland-etichettato.md": {
+    "mtime": 1793627171.4048047,
+    "seen": 1793627173.4486113,
+    "ast_hash": "c5283b132af40cd5e6e3b442741da12e",
     "semantic_hash": ""
   }
 }

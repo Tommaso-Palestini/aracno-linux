@@ -117,7 +117,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     le libera per prime; il filo attivo perde poco.
   - Misura: `prototype/23-ram-pressione-test.sh` (P1–P3). Poi la decisione in un ADR.
   - Test scritto il 2026-11-02, da lanciare.
-- [ ] **T14: revisione del socket Wayland (ADR-0005)** (M)
+- [x] **T14: revisione del socket Wayland (ADR-0005)** (M)
+  - PASS il 2026-11-02 (`24-wayland-sicuro-test.sh`: arch e debian 36 protocolli, nessun privilegiato, vkcube ok). Decisione: ADR-0010.
   - Domanda: quali protocolli vede un programma dentro un filo? Appunti, cattura dello
     schermo, tastiera virtuale, layer-shell (una finestra a tutto schermo che imita il
     login), gestione delle finestre?

@@ -1,7 +1,7 @@
 # ADR-0005: Desktop: nei fili si monta solo il socket Wayland
 
 ## Stato
-Accettata per il prototipo. Da rivedere prima dell'uso quotidiano (vedi la roadmap).
+Accettata per il prototipo. Aggiornata da ADR-0010 (2026-11-02): resta solo il socket Wayland, ma etichettato con wp_security_context_v1.
 
 ## Data
 2026-10-31 (scritta il 2026-11-01)

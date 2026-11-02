@@ -31,7 +31,8 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 - [ ] **Menù a ragnatela:** spec approvate (`docs/spec/`), ora piano e implementazione (`spec-driven-development`, `security-and-hardening`, `frontend-ui-engineering`, `design-taste-frontend`)
 - [x] **`aracno upgrade`, copia di sicurezza:** copia completa in `/var/lib/aracno/copie` prima di aggiornare, `aracno ripristina` (T12, 9 s per 1,3 GB su ext4; con btrfs nell'ISO `cp --reflink` la rende quasi gratis)
 - [ ] **RAM dei fili congelati:** decidere la politica (tetto automatico allo switch? quanto basso? zram o swap su disco per i congelati?). Dato di partenza: fase 4.5
-- [ ] **Socket Wayland:** rivedere il compromesso prima di un uso quotidiano
+- [x] **Socket Wayland:** socket etichettato per filo, i 23 protocolli privilegiati di COSMIC nascosti (ADR-0010, T14)
+- [ ] **Isolamento dei fili:** i `.nspawn` hanno `PrivateUsers=no` (root nel filo = root dell'host): rivedere prima dell'uso quotidiano
 
 ### Fase 5 — ISO installabile (base: Debian trixie, `live-build`)
 - [ ] **5a:** costruire una prima ISO Debian minimale con `live-build`, che si avvia e basta
