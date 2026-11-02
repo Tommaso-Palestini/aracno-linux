@@ -83,11 +83,10 @@ echo "    dopo $((i / 2)) s: $(systemctl show -P ActiveState "$(u arch)"), resul
 togli_prova; trap - EXIT
 # machined deve aver tolto "arch" dal registro, altrimenti nspawn non riparte
 for _ in $(seq 20); do machinectl status arch >/dev/null 2>&1 || break; sleep 0.5; done
-for _ in 1 2 3 4 5; do
-  systemctl reset-failed "$(u arch)" 2>/dev/null || true
-  systemctl start "$(u arch)" 2>/dev/null && break
-  sleep 1
-done
+# Riavvio come nel caso reale: tramite aracnod (Switch → StartUnit), SENZA reset-failed.
+# Terzo giro: con `systemctl reset-failed` + `start` lo stato di systemd si azzerava e il
+# guasto non compariva; debian invece era stato riacceso da aracnod.
+for _ in 1 2 3 4 5; do hop arch >/dev/null 2>&1 && break; sleep 1; done
 pronto arch || true
 echo "    arch riavviato: systemd $(sd arch), kernel $(kernel arch)"
 if [[ $(sd arch) == frozen && $(kernel arch) == active ]]; then
@@ -103,6 +102,7 @@ if (( riprodotto )); then
   [[ $(api arch) == active ]] && ok "aracnod dice arch active" || fail "aracnod dice arch $(api arch)"
 
   echo; echo ">> K4: switch a debian con riallineamento"
+  # arch è attivo (riacceso da aracnod), debian congelato: si torna a debian
   hop debian | sed 's/^/    /'
   journalctl -u aracnod.service --since "$T0" --no-pager -o cat | grep -q 'arch: systemd e kernel non coincidono, riallineo a active' \
     && ok "journal: riallineo arch a active" || fail "nel journal manca il riallineamento"
