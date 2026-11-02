@@ -51,12 +51,37 @@ async fn fili(
     Ok(out)
 }
 
-fn stato(info: Option<&list::UnitInfo>) -> Result<StrandState, AracnoError> {
+/// Stato vero del filo e se systemd è disallineato dal kernel (list::stato_reale).
+fn stato(info: Option<&list::UnitInfo>) -> Result<(StrandState, bool), AracnoError> {
     match info {
-        None => Ok(StrandState::Off),
-        Some(u) => StrandState::from_systemd(&u.active_state, &u.freezer_state)
-            .map_err(|e| AracnoError::internal("stato", e)),
+        None => Ok((StrandState::Off, false)),
+        Some(u) => list::stato_reale(u).map_err(|e| AracnoError::internal("stato", e)),
     }
+}
+
+/// Riporta systemd allo stato vero del kernel per i fili disallineati, così il piano
+/// dello switch lavora su dati giusti: un filo che gira ma che systemd crede congelato
+/// va "scongelato" (systemd torna a running), e viceversa. Solo dopo polkit.
+async fn riallinea(
+    conn: &Connection,
+    fili: &[(StrandName, StrandState, bool)],
+) -> Result<(), AracnoError> {
+    for (n, vero, disallineato) in fili {
+        if !disallineato {
+            continue;
+        }
+        eprintln!(
+            "aracnod: {n}: systemd e kernel non coincidono, riallineo a {}",
+            vero.as_str()
+        );
+        match vero {
+            StrandState::Active => systemd::thaw(conn, n).await,
+            StrandState::Frozen => systemd::freeze(conn, n).await,
+            StrandState::Off => Ok(()),
+        }
+        .map_err(|e| AracnoError::internal(&format!("riallineo {n}"), e))?;
+    }
+    Ok(())
 }
 
 // Il nome deve essere una stringa letterale per la macro: il test
@@ -181,11 +206,13 @@ impl Manager {
         }
         let turno = Turno(&self.occupato);
 
-        let stati = fili(conn)
+        let letti: Vec<(StrandName, StrandState, bool)> = fili(conn)
             .await?
             .iter()
-            .map(|(n, i)| stato(i.as_ref()).map(|s| (n.clone(), s)))
+            .map(|(n, i)| stato(i.as_ref()).map(|(s, d)| (n.clone(), s, d)))
             .collect::<Result<_, _>>()?;
+        riallinea(conn, &letti).await?;
+        let stati = letti.into_iter().map(|(n, s, _)| (n, s)).collect();
         Ok((target, chi, stati, turno))
     }
 }

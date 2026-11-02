@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "docs/adr/0002-switch-con-congelamento-cgroup.md": {
-    "mtime": 1793614214.61361,
-    "seen": 1793614220.6256495,
-    "ast_hash": "6a83ac05a40f5d5c9d904e38a9d9ffb1",
+    "mtime": 1793619672.3857098,
+    "seen": 1793619673.9705234,
+    "ast_hash": "b92cc20f3432a59b277d87c57ca0b536",
     "semantic_hash": ""
   },
   "docs/adr/0003-rete-condivisa-con-host.md": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793618900.4753916,
-    "seen": 1793618903.7098076,
-    "ast_hash": "7f1d9fd1c19594919ba57865516f9577",
+    "mtime": 1793619529.6467733,
+    "seen": 1793619673.9705575,
+    "ast_hash": "a31558cfd0ae09536e6a00cb86e13526",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -180,15 +180,15 @@
     "semantic_hash": ""
   },
   "aracno/aracnod/src/list.rs": {
-    "mtime": 1793613419.3076847,
-    "seen": 1793613641.5502412,
-    "ast_hash": "8f642ca9cae776a67b680e631fa56988",
+    "mtime": 1793619571.172625,
+    "seen": 1793619673.9704435,
+    "ast_hash": "162707fa412dcc1a8a7c7803aaca3f76",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/main.rs": {
-    "mtime": 1793613419.3155878,
-    "seen": 1793613641.5502448,
-    "ast_hash": "ca114e0803ea6d1d6621945ff96aaf1c",
+    "mtime": 1793619608.3726766,
+    "seen": 1793619673.9704456,
+    "ast_hash": "745a1271ad4e83f6b5257b3ee5c65233",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/switch.rs": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "aracno/aracnod/src/systemd.rs": {
-    "mtime": 1793613419.31134,
-    "seen": 1793613641.5502515,
-    "ast_hash": "e71f7c3bf15d787196de8f56da5f5474",
+    "mtime": 1793619590.9045568,
+    "seen": 1793619673.9704504,
+    "ast_hash": "19f5bc8b29eb689c49c0f024e0f81949",
     "semantic_hash": ""
   },
   "aracno/spikes/layer-shell/Cargo.toml": {
@@ -258,9 +258,9 @@
     "semantic_hash": ""
   },
   "docs/security/2026-11-02-revisione-aracnod.md": {
-    "mtime": 1793613419.3055298,
-    "seen": 1793613641.5503702,
-    "ast_hash": "015d15b3fd9f2201eada4ebd3e0f3c26",
+    "mtime": 1793619672.3767095,
+    "seen": 1793619673.9705453,
+    "ast_hash": "2bbdb5af14b66307ef67361fd0d8f7f5",
     "semantic_hash": ""
   },
   "aracno/aracno-cli/Cargo.toml": {
@@ -318,15 +318,15 @@
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/main.rs": {
-    "mtime": 1793618809.066244,
-    "seen": 1793618903.7096286,
-    "ast_hash": "e0ab478a586cd575d3872e68ff9e1452",
+    "mtime": 1793619262.6076748,
+    "seen": 1793619673.9704213,
+    "ast_hash": "42a24359f40b734a7bab3a5391bd3f61",
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/view.rs": {
-    "mtime": 1793618556.7490158,
-    "seen": 1793618903.7096353,
-    "ast_hash": "afc3bbf96bb73b57c4e6eb1d222eb2ac",
+    "mtime": 1793619422.2310464,
+    "seen": 1793619673.9704266,
+    "ast_hash": "86b14e86b0f4872892b7d6a5d17606b9",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/src/client.rs": {
@@ -348,9 +348,9 @@
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/radial.rs": {
-    "mtime": 1793618842.126151,
-    "seen": 1793618903.7096322,
-    "ast_hash": "c652d5b5d4c72fdb881993e38692b15c",
+    "mtime": 1793619352.6105742,
+    "seen": 1793619673.9704244,
+    "ast_hash": "de1c1bab371d134416549380dafdd597",
     "semantic_hash": ""
   },
   "prototype/17-menu-switch-test.sh": {
@@ -360,15 +360,21 @@
     "semantic_hash": ""
   },
   "prototype/18-menu-grafica-test.sh": {
-    "mtime": 1793618889.9951973,
-    "seen": 1793618903.7097385,
-    "ast_hash": "a9cb1f306e8a837feadb05417c2b02d0",
+    "mtime": 1793619391.6211553,
+    "seen": 1793619673.970503,
+    "ast_hash": "39c70c3491fbc8ebd1a5bf0e86dbd1b3",
     "semantic_hash": ""
   },
   "docs/img/aracno-menu-t10.png": {
-    "mtime": 1793618889.921998,
-    "seen": 1793618903.7098107,
-    "ast_hash": "35859aeac926838ccb122d3a62193072",
+    "mtime": 1793619529.6314883,
+    "seen": 1793619673.9705596,
+    "ast_hash": "4d9e4778c9d746941a720d140cb6b419",
+    "semantic_hash": ""
+  },
+  "prototype/19-stato-disallineato-test.sh": {
+    "mtime": 1793619643.8001795,
+    "seen": 1793619673.9705057,
+    "ast_hash": "49c6ccd85d776e703df9f8404e4428d6",
     "semantic_hash": ""
   }
 }

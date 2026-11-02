@@ -67,6 +67,8 @@ pub trait Service {
     fn memory_current(&self) -> zbus::Result<u64>;
     #[zbus(property)]
     fn memory_max(&self) -> zbus::Result<u64>;
+    #[zbus(property)]
+    fn control_group(&self) -> zbus::Result<String>;
 }
 
 const NO_SUCH_UNIT: &str = "org.freedesktop.systemd1.NoSuchUnit";
@@ -100,11 +102,20 @@ pub async fn unit_info(conn: &Connection, name: &StrandName) -> zbus::Result<Opt
         .cache_properties(CacheProperties::No)
         .build()
         .await?;
+    // Stato di congelamento secondo il kernel: systemd 255 può restare indietro
+    // (vedi list::stato_reale). Se il file non si legge, si usa solo systemd.
+    let kernel_frozen = match svc.control_group().await {
+        Ok(cg) => crate::list::file_eventi(&cg, name)
+            .and_then(|f| std::fs::read_to_string(f).ok())
+            .and_then(|e| crate::list::congelato_da_eventi(&e)),
+        Err(_) => None,
+    };
     Ok(Some(UnitInfo {
         active_state: unit.active_state().await?,
         freezer_state: unit.freezer_state().await?,
         memory_current: svc.memory_current().await?,
         memory_max: svc.memory_max().await?,
+        kernel_frozen,
     }))
 }
 

@@ -50,3 +50,16 @@ fa perdere il lavoro aperto) e i permessi di `aracno` su systemd.
 
 - `cargo audit`: nessuna vulnerabilità nota su 56 dipendenze.
 - `cargo deny check`: advisories, bans, licenses, sources ok. Per farlo passare le crate sono segnate `publish = false` (non vanno su crates.io, quindi la dipendenza per percorso non è un wildcard) e la licenza Unlicense, non usata, è uscita dalla lista.
+
+## Aggiunta (2026-11-02, stato disallineato)
+
+aracnod ora legge `/sys/fs/cgroup/machine.slice/systemd-nspawn@NOME.service/cgroup.events`
+per sapere se un filo è davvero congelato (systemd 255 può restare indietro, vedi ADR-0002).
+- Il percorso nasce solo da un `StrandName` già validato e dal `ControlGroup` di systemd, che
+  deve essere esattamente `/machine.slice/systemd-nspawn@NOME.service` (`list::file_eventi`,
+  con test per `..` e nomi diversi). Nessun dato del chiamante entra nel percorso.
+- Sola lettura, dentro `ProtectSystem=strict` e `ProtectControlGroups=yes`. Se il file non si
+  legge si usa solo systemd, come prima.
+- Il riallineamento (thaw o freeze del filo disallineato) avviene solo in Switch e Stop, cioè
+  dopo il controllo di polkit, e usa gli stessi permessi di prima (`50-aracno.rules`).
+  `ListStrands` resta di sola lettura.
