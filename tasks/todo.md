@@ -78,8 +78,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Da T2: l'avvio a freddo (129–207 ms) è al limite di M1. Tenere il processo già avviato e mostrare o nascondere la finestra; misurare.
   - Da T2: controllare che il display sia Wayland prima di `is_supported()`, altrimenti la libreria 1.0.4 dà un CRITICAL su X11.
   - Dipendenze: T2, T5.
-- [ ] **T9: raggiera, tastiera e switch** (M)
-  - Fatto il 2026-11-02, da verificare: `radial.rs` (ellisse, primo filo in alto, senso orario; frecce = nodo più vicino in quella direzione), pulsanti accessibili, Switch e chiusura a switch fatto. Test: `prototype/17-menu-switch-test.sh` (guidato).
+- [x] **T9: raggiera, tastiera e switch** (M)
+  - PASS il 2026-11-02 (`17-menu-switch-test.sh`: frecce, Tab, Invio, clic, Invio sul filo attivo; switch 9–21 ms). Corretto al primo giro: le frecce non accendevano l'evidenziazione del focus. `radial.rs` (ellisse, primo filo in alto, senso orario; frecce = nodo più vicino in quella direzione), pulsanti accessibili, Switch e chiusura a switch fatto. Test: `prototype/17-menu-switch-test.sh` (guidato).
   - Lavoro: `radial.rs` (logica pura, test per 1–8 fili su 1366×768), navigazione con frecce, Tab e Invio, `Switch` tramite `aracnod`, chiusura a switch fatto.
   - Accettazione: M2, M3.
   - Dipendenze: T6, T8.
