@@ -37,3 +37,53 @@ T1 e T2 sono indipendenti. Il menù (T8) ha bisogno almeno di `ListStrands` (T5)
 
 ## Domande aperte
 Nessuna per ora. Se le prove T1 e T2 smentiscono le ipotesi, il piano si ferma e si rivede.
+
+---
+
+# Piano: fase 5, ISO di Aracno Linux
+
+Spec approvata: `docs/spec/SPEC-iso.md` (2026-11-02). Desktop KDE Plasma (da misurare), Calamares,
+nome Aracno Linux.
+
+## Sintesi
+Si costruisce in un container Debian trixie dedicato e si prova in QEMU/KVM. Prima le prove
+dei rischi che possono cambiare le decisioni (desktop, idmap nel sistema live, Calamares con
+LUKS2), poi le fette verticali: ISO che si avvia → Aracno dentro → fili offline → primo avvio
+automatico → installazione cifrata → chiavetta sul PC vero.
+
+## Decisioni
+- **Costruttore**: cartella Debian trixie creata con `debootstrap` dell'host in
+  `/var/lib/aracno/costruttore`, usata con `systemd-nspawn` senza boot e con le capability che
+  servono a live-build (mount, mknod). Non è un filo: sta fuori da `/var/lib/machines`, quindi
+  machined e aracnod non la vedono.
+- **I binari Rust si compilano nel costruttore** contro le librerie di trixie: niente rpath verso
+  `~/.local`, niente differenze di glibc.
+- **Prove automatiche dalla console seriale** della VM (`ttyS0`): il sistema live ha un getty
+  sulla seriale, lo script legge i risultati da lì. Gli occhi servono solo per desktop, menù e
+  installazione.
+- **La configurazione dei fili nasce da un solo generatore** (`iso/primo-avvio/`), che sostituisce
+  ciò che oggi fanno a mano i test 11, 15, 20, 24, 25.
+
+## Grafo delle dipendenze
+```
+T16 costruttore ──┬──► T18 ISO minima Plasma ──► T19 misura Plasma (decisione) ──► T20 Aracno nell'ISO
+T17 prova-vm ─────┘                                                                    │
+                                    T21 filo debian offline ◄───────────────────────────┤
+                                    T22 filo arch offline   ◄───────────────────────────┤
+                                    T23 idmap nel sistema live (rischio) ◄── T21        │
+                                    T24 generatore del primo avvio ◄── T20, T21, T22, T23
+                                    T25 Calamares: prova LUKS2 + swap cifrata ◄── T18
+                                    T26 installazione cifrata completa ◄── T24, T25
+                                    T27 chiavetta sul PC vero ◄── T24
+```
+
+## Rischi
+| Rischio | Impatto | Mitigazione |
+|---|---|---|
+| Plasma (KWin) non offre `wp_security_context_manager_v1` | Alto: ADR-0010 non vale | T19 lo misura subito; alternative già elencate nella spec (Sway, COSMIC) |
+| Nel sistema live la radice è overlayfs (squashfs + tmpfs): `PrivateUsersOwnership=map` potrebbe non funzionare e nspawn ripiegherebbe su `chown`, copiando 1,3 GB per filo in RAM | Alto per il live | T23 misura presto; ripieghi: fili su un'immagine ext4 montata in loop, oppure nel live i fili con `chown` su un tmpfs dedicato (RAM) solo se c'è spazio |
+| live-build nel container non ha i permessi che servono | Medio | T16 costruisce subito un'ISO vuota di prova |
+| Calamares non fa LUKS2 + swap cifrata + `/boot` in chiaro come chiede ADR-0009 | Medio | T25 prova prima su un disco virtuale; ripiego `debian-installer` con la ricetta "crypto" |
+| VM con Plasma + due fili in 3 GB di RAM su un PC da 5,7 GB | Medio | fili spenti all'avvio della VM, uno solo acceso nelle prove; ADR-0011: serve swap |
+| Arch offline: chiavi e firme di pacman senza rete | Basso | firma del tarball verificata in costruzione; `pacman-key --init/--populate` nel costruttore |
+| ISO sopra i 4 GB | Basso | fili minimi (senza documentazione e cache), squashfs xz |

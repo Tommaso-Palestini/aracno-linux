@@ -95,7 +95,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Dipendenze: T10.
 
 ### Checkpoint C
-- [ ] M1–M5 PASS, criteri di successo delle due spec verificati, revisione con te.
+- [x] M1–M5 PASS, criteri di successo delle due spec verificati, revisione con te (approvato il 2026-11-02; il ripiego senza layer-shell di M5 si prova in VM nella fase 5, T19).
 
 ## Prima della fase 5 (chiesto il 2026-11-02)
 
@@ -137,3 +137,70 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     socket Wayland etichettato è 0777 dentro `/run/user/UID` (0700).
   - Test: `prototype/25-private-users-test.sh` (I1–I3, G1–G2, W1–W2, A1), `--rimuovi` per tornare indietro.
   - Poi: ADR che aggiorna lo 0001.
+
+## Fase 5: ISO (spec `docs/spec/SPEC-iso.md`, piano in `tasks/plan.md`)
+
+### Fondamenta e rischi
+- [ ] **T16: costruttore** (M)
+  - Lavoro: `iso/costruttore.sh` crea `/var/lib/aracno/costruttore` (debootstrap trixie) con
+    live-build, xorriso, rustup/cargo e le librerie per compilare (gtk4, gtk4-layer-shell).
+  - Accettazione: nel costruttore `lb --version` risponde; `cargo build --release` del
+    workspace (aracnod, aracno, aracno-menu) riesce contro le librerie di trixie; un'ISO vuota
+    di prova (`lb build` minimo) viene prodotta.
+  - Verifica: `iso/costruttore.sh --verifica`.
+- [ ] **T17: prova-vm** (S)
+  - Lavoro: `iso/prova-vm.sh` (QEMU/KVM, OVMF, 3 GB, console seriale su file); serve `qemu-system-x86`
+    e `ovmf` sull'host (chiedere prima di installarli).
+  - Accettazione: l'ISO di prova di T16 si avvia; lo script vede il login sulla seriale ed esce
+    con l'esito.
+- [ ] **T18: ISO minima con Plasma** (M)
+  - Lavoro: `iso/config/` (trixie, amd64, UEFI+BIOS, plasma-desktop minimale, sddm, utente
+    live con login automatico, getty su ttyS0), `iso/costruisci.sh`.
+  - Accettazione: in VM, desktop Plasma in meno di 2 minuti; dalla seriale
+    `systemctl is-system-running` = running o degraded.
+- [ ] **T19: misura di Plasma** (S) — decide il desktop
+  - Lavoro: lo spike `wayland-globali` (compilato nel costruttore) dentro la sessione Plasma della VM.
+  - Accettazione: presenti `zwlr_layer_shell_v1` e `wp_security_context_manager_v1`; con il socket
+    etichettato spariscono i protocolli privilegiati (come T14). Altrimenti si torna alla spec.
+  - Anche: il menù nel ripiego senza layer-shell (M5) su un compositor diverso da COSMIC.
+
+### Checkpoint D
+- [ ] ISO minima in VM, desktop deciso sui numeri, revisione con te.
+
+### Aracno nell'ISO
+- [ ] **T20: aracnod, aracno, aracno-menu nell'ISO** (M)
+  - Lavoro: compilati nel costruttore; file di sistema (dbus, polkit, sysusers, unit, udev,
+    drop-in watchdog, .desktop, traduzione) in `iso/config/includes.chroot`.
+  - Accettazione: in VM `aracno web` risponde ("nessun filo"); il menù si apre.
+- [ ] **T21: filo debian offline** (M)
+  - Lavoro: debootstrap di trixie al momento della costruzione, pacchetti minimi (systemd,
+    dbus, mesa Vulkan, vulkan-tools), senza documentazione e cache.
+  - Accettazione: in VM senza rete il filo debian parte e `aracno web` lo elenca.
+- [ ] **T22: filo arch offline** (M)
+  - Lavoro: tarball `archlinux-bootstrap` con verifica della firma, chiavi di pacman inizializzate.
+  - Accettazione: in VM senza rete il filo arch parte; `aracno hop arch` e ritorno.
+- [ ] **T23: utenti separati nel sistema live** (S) — rischio
+  - Accettazione: nel live (radice overlayfs) un filo con `PrivateUsersOwnership=map` parte, e i
+    file non vengono copiati in RAM (memoria libera misurata prima e dopo). Altrimenti si
+    sceglie e si misura un ripiego (vedi rischi nel piano).
+- [ ] **T24: generatore del primo avvio** (M)
+  - Lavoro: `iso/primo-avvio/` genera `.nspawn` (ADR-0012), drop-in, regola udev, servizi utente
+    del socket Wayland (ADR-0010), scorciatoia Meta+Shift+A per Plasma.
+  - Accettazione: in VM, automaticamente: UID mappati (come T15), 36-ish protocolli e nessuno
+    privilegiato da dentro i fili (come T14), switch con aracno; a occhio: Meta+Shift+A apre il menù.
+
+### Checkpoint E
+- [ ] ISO live completa (criterio 2 della spec), costruzione sotto l'ora, revisione con te.
+
+### Installazione
+- [ ] **T25: Calamares con LUKS2** (S) — rischio
+  - Accettazione: su un disco virtuale Calamares crea `/boot` ed EFI in chiaro, root e swap dentro
+    LUKS2; al riavvio chiede la password del disco. Altrimenti ripiego `debian-installer`.
+- [ ] **T26: installazione cifrata completa** (M)
+  - Accettazione: criterio 3 della spec (password del disco, poi dell'utente; dopo il login vale il
+    criterio 2; `lsblk` mostra root e swap in `crypt`).
+- [ ] **T27: chiavetta sul PC vero** (S)
+  - Accettazione: criterio 4 della spec (avvio live fino al desktop e switch), senza installare.
+
+### Checkpoint F
+- [ ] Criteri 1–4 della spec, revisione con te.
