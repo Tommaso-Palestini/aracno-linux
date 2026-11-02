@@ -1,6 +1,6 @@
 [package]
 name = "aracnod"
-description = "Servizio di sistema di Aracno: elenca i tentacoli e fa lo switch per conto dei client"
+description = "Servizio di sistema di Aracno: elenca i fili e fa lo switch per conto dei client"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

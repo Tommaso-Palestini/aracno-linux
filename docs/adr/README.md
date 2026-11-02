@@ -7,13 +7,14 @@ Nome dei file: `NNNN-titolo-breve.md`, numerazione progressiva.
 
 | N. | Decisione | Stato |
 |----|-----------|-------|
-| [0001](0001-tentacoli-systemd-nspawn.md) | Tentacoli come container systemd-nspawn su un unico kernel | Accettata |
+| [0001](0001-fili-systemd-nspawn.md) | Fili come container systemd-nspawn su un unico kernel | Accettata |
 | [0002](0002-switch-con-congelamento-cgroup.md) | Switch con il freezer dei cgroup (`systemctl freeze`) | Accettata |
-| [0003](0003-rete-condivisa-con-host.md) | Rete dei tentacoli condivisa con l'host | Accettata |
-| [0004](0004-gpu-bind-dev-dri.md) | GPU nei tentacoli: bind di `/dev/dri` con drop-in systemd | Accettata |
-| [0005](0005-solo-socket-wayland.md) | Desktop: nei tentacoli si monta solo il socket Wayland | Accettata, da rivedere prima dell'uso quotidiano |
+| [0003](0003-rete-condivisa-con-host.md) | Rete dei fili condivisa con l'host | Accettata |
+| [0004](0004-gpu-bind-dev-dri.md) | GPU nei fili: bind di `/dev/dri` con drop-in systemd | Accettata |
+| [0005](0005-solo-socket-wayland.md) | Desktop: nei fili si monta solo il socket Wayland | Accettata, da rivedere prima dell'uso quotidiano |
 | [0006](0006-host-debian-trixie-live-build.md) | Host dell'ISO: Debian trixie costruita con `live-build` | Accettata |
-| [0007](0007-menu-a-tutto-schermo.md) | Menù a tentacoli come schermata a tutto schermo | Accettata |
+| [0007](0007-menu-a-tutto-schermo.md) | Menù a ragnatela come schermata a tutto schermo | Accettata |
 | [0008](0008-aracnod-servizio-di-sistema.md) | Lo switch passa da `aracnod`: servizio di sistema, utente dedicato, polkit, D-Bus, Rust | Accettata |
+| [0009](0009-disco-cifrato-doppia-password.md) | Disco cifrato con LUKS2: password del disco all'avvio, poi password dell'utente | Accettata, da fare nella fase 5 |
 
 Nota: le decisioni 0001–0005 sono state prese e verificate durante le fasi 0–4.4 del prototipo, tra ottobre e il 31/10/2026. Sono state messe per scritto il 01/11/2026, quindi le alternative sono una ricostruzione fatta dopo.

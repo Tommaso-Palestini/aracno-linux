@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Aracno prototipo — fase 4.3: la VRAM allocata da un tentacolo congelato resta occupata?
+# Aracno prototipo — fase 4.3: la VRAM allocata da un filo congelato resta occupata?
 # Sequenza: debian alloca → switch ad arch → arch alloca → pulizia.
 # Misura: VRAM (sysfs dell'host) a ogni passo, tempo di switch, esito di ogni allocazione.
 set -euo pipefail
@@ -33,7 +33,7 @@ start_alloc() {
   alloc_log "$1" | head -3
 }
 
-echo ">> Compilazione di vkalloc nei tentacoli"
+echo ">> Compilazione di vkalloc nei fili"
 for n in $A $B; do
   if ! systemctl is-active -q "systemd-nspawn@$n.service"; then
     echo "$n è spenta: avviala con aracno start"; exit 1

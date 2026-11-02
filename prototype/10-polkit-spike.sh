@@ -5,14 +5,14 @@
 #
 # Ipotesi e criteri (scritti prima del test):
 #   P1  come aracno, ThawUnit e FreezeUnit su systemd-nspawn@arch.service funzionano senza password
-#   P2  come aracno, RestartUnit e KillUnit sullo stesso tentacolo vengono rifiutati (verbi non concessi)
-#   P3  come aracno, StopUnit su una unit che non è un tentacolo viene rifiutato e la unit resta attiva
+#   P2  come aracno, RestartUnit e KillUnit sullo stesso filo vengono rifiutati (verbi non concessi)
+#   P3  come aracno, StopUnit su una unit che non è un filo viene rifiutato e la unit resta attiva
 #   P4  come aracno, StartUnit su un nome non valido (systemd-nspawn@Arch.service) viene rifiutato
-#   P5  come nobody, FreezeUnit sul tentacolo viene rifiutato (la regola non vale per altri utenti)
+#   P5  come nobody, FreezeUnit sul filo viene rifiutato (la regola non vale per altri utenti)
 #   P0  (aggiunta dopo il primo giro) la policy D-Bus di systemd 255 vieta FreezeUnit/ThawUnit ai
 #       non-root: aracno-systemd-freezer.conf li apre SOLO a aracno; decide comunque polkit
 #   P6  come aracno, ListImages di machined restituisce debian e arch, e la proprietà FreezerState
-#       e memory.current del tentacolo si leggono senza privilegi
+#       e memory.current del filo si leggono senza privilegi
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
@@ -78,13 +78,13 @@ allow() {  # allow DESCRIZIONE STATO_ATTESO ARGOMENTI... — deve riuscire e por
 allow ThawUnit   running ThawUnit s "$T"
 allow FreezeUnit frozen  FreezeUnit s "$T"
 
-echo; echo ">> P2: verbi non concessi sul tentacolo"
+echo; echo ">> P2: verbi non concessi sul filo"
 "$O" thaw arch
 deny "RestartUnit arch" aracno RestartUnit ss "$T" replace
 deny "KillUnit arch"    aracno KillUnit ssi "$T" all 18
 systemctl is-active -q "$T" && ok "arch ancora attiva" || fail "arch non è più attiva"
 
-echo; echo ">> P3: unit che non è un tentacolo"
+echo; echo ">> P3: unit che non è un filo"
 deny "StopUnit $DUMMY" aracno StopUnit ss "$DUMMY" replace
 systemctl is-active -q "$DUMMY" && ok "$DUMMY ancora attiva" || fail "$DUMMY è stata fermata"
 
@@ -115,7 +115,7 @@ systemctl stop "$DUMMY" 2>/dev/null || true
 
 echo
 if (( fails == 0 )); then
-  echo "ESITO T1: PASS (aracno può solo start/stop/freeze/thaw sui tentacoli; letture ok)"
+  echo "ESITO T1: PASS (aracno può solo start/stop/freeze/thaw sui fili; letture ok)"
   echo "Utente e regola restano installati per T5. Rimozione: stesso script con --rimuovi"
 else
   echo "ESITO T1: FAIL ($fails controlli). Incolla l'output completo."

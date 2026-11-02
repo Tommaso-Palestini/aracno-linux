@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Aracno prototipo — fase 2: verifica che lo switch dia "piena potenza" al tentacolo attivo.
-# Mette un carico CPU in entrambi i tentacoli, poi fa switch e misura.
+# Aracno prototipo — fase 2: verifica che lo switch dia "piena potenza" al filo attivo.
+# Mette un carico CPU in entrambi i fili, poi fa switch e misura.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 O="$(dirname "$0")/aracno"
 
 for n in debian arch; do "$O" start "$n"; done
 
-echo ">> Carico CPU (1 core) in entrambi i tentacoli"
+echo ">> Carico CPU (1 core) in entrambi i fili"
 for n in debian arch; do
   systemd-run -M "$n" --unit=aracno-burn --quiet /bin/sh -c 'while :; do :; done'
 done
@@ -31,4 +31,4 @@ for n in debian arch; do
   systemctl -M "$n" stop aracno-burn 2>/dev/null || true
 done
 "$O" list
-echo "Tentacoli lasciati accesi. Spegni con: sudo ./aracno stop debian ; sudo ./aracno stop arch"
+echo "Fili lasciati accesi. Spegni con: sudo ./aracno stop debian ; sudo ./aracno stop arch"

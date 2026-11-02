@@ -1,4 +1,4 @@
-# Mappa dei componenti: menù a tentacoli
+# Mappa dei componenti: menù a ragnatela
 
 Il menù (ADR-0007) contiene due capacità che si possono testare separatamente:
 1. un servizio di sistema che esegue lo switch;
@@ -8,8 +8,8 @@ Le separo perché il componente con i privilegi deve essere piccolo, verificabil
 
 | Id modulo | Responsabilità | Dipende da |
 |---|---|---|
-| `aracno-proto` | Interfaccia D-Bus condivisa: nomi, metodi, tipi, validazione dei nomi dei tentacoli | — |
-| `aracnod` | Demone di sistema: elenca i tentacoli, fa switch/stop tramite systemd, controlla i permessi con polkit | `aracno-proto` |
+| `aracno-proto` | Interfaccia D-Bus condivisa: nomi, metodi, tipi, validazione dei nomi dei fili | — |
+| `aracnod` | Demone di sistema: elenca i fili, fa switch/stop tramite systemd, controlla i permessi con polkit | `aracno-proto` |
 | `aracno-menu` | Schermata a tutto schermo per l'utente, client di `aracnod`, nessun privilegio | `aracno-proto` |
 
 Ordine di costruzione: `aracno-proto` → `aracnod` → `aracno-menu`.

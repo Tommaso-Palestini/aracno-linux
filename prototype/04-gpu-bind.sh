@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Aracno prototipo — fase 4.1: rende visibile la GPU (/dev/dri) dentro ogni tentacolo.
-# Scrive /etc/systemd/nspawn/NAME.nspawn, riavvia il tentacolo e verifica.
-# Nota: riavviare un tentacolo lo spegne; i processi in esecuzione si perdono.
+# Aracno prototipo — fase 4.1: rende visibile la GPU (/dev/dri) dentro ogni filo.
+# Scrive /etc/systemd/nspawn/NAME.nspawn, riavvia il filo e verifica.
+# Nota: riavviare un filo lo spegne; i processi in esecuzione si perdono.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
@@ -16,8 +16,8 @@ ls -l /dev/dri
 
 for n in $(names); do
   cat > "$CONF/$n.nspawn" <<EOF
-# Generato da prototype/04-gpu-bind.sh — GPU condivisa con il tentacolo
-# Le prime sezioni devono restare uguali a prototype/01-create-tentacles.sh:
+# Generato da prototype/04-gpu-bind.sh — GPU condivisa con il filo
+# Le prime sezioni devono restare uguali a prototype/01-create-strands.sh:
 # VirtualEthernet=no fa condividere la rete dell'host (senza, il container resta isolato e offline).
 [Exec]
 Boot=yes
@@ -33,7 +33,7 @@ EOF
   # e serve un drop-in della unit per permettere l'accesso ai device GPU.
   mkdir -p "/etc/systemd/system/systemd-nspawn@$n.service.d"
   cat > "/etc/systemd/system/systemd-nspawn@$n.service.d/gpu.conf" <<EOF
-# Generato da prototype/04-gpu-bind.sh — permette alla GPU di essere aperta dal tentacolo
+# Generato da prototype/04-gpu-bind.sh — permette alla GPU di essere aperta dal filo
 [Service]
 DeviceAllow=/dev/dri/card0 rw
 DeviceAllow=/dev/dri/renderD128 rw
@@ -42,7 +42,7 @@ EOF
 done
 systemctl daemon-reload
 
-echo; echo ">> Riavvio dei tentacoli per applicare la configurazione"
+echo; echo ">> Riavvio dei fili per applicare la configurazione"
 for n in $(names); do
   if systemctl is-active -q "systemd-nspawn@$n.service"; then
     machinectl poweroff "$n" >/dev/null
@@ -51,7 +51,7 @@ for n in $(names); do
   "$O" start "$n"
 done
 
-echo; echo ">> Verifica: /dev/dri visibile dentro ogni tentacolo"
+echo; echo ">> Verifica: /dev/dri visibile dentro ogni filo"
 FAIL=0
 for n in $(names); do
   if systemd-run -M "$n" --quiet --wait --collect /bin/ls /dev/dri >/dev/null 2>&1 \
@@ -65,8 +65,8 @@ done
 
 echo
 if (( FAIL == 0 )); then
-  echo "ESITO 4.1: PASS (GPU visibile in tutti i tentacoli)"
+  echo "ESITO 4.1: PASS (GPU visibile in tutti i fili)"
 else
-  echo "ESITO 4.1: FAIL ($FAIL tentacoli senza GPU). Incolla l'output completo."
+  echo "ESITO 4.1: FAIL ($FAIL fili senza GPU). Incolla l'output completo."
   exit 1
 fi

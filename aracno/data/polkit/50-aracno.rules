@@ -1,5 +1,5 @@
 // Aracno — permessi del servizio aracnod (utente di sistema "aracno").
-// aracnod può solo avviare, fermare, congelare e scongelare i tentacoli:
+// aracnod può solo avviare, fermare, congelare e scongelare i fili:
 //   - azione org.freedesktop.systemd1.manage-units
 //   - unit systemd-nspawn@NOME.service con NOME valido per Aracno
 //   - verbo "start" (StartUnit, ThawUnit) o "stop" (StopUnit, FreezeUnit)
@@ -15,8 +15,8 @@ polkit.addRule(function (action, subject) {
     }
     var unit = action.lookup("unit");
     var verb = action.lookup("verb");
-    var tentacolo = /^systemd-nspawn@[a-z0-9][a-z0-9-]{0,62}\.service$/;
-    if (typeof unit === "string" && tentacolo.test(unit) &&
+    var filo = /^systemd-nspawn@[a-z0-9][a-z0-9-]{0,62}\.service$/;
+    if (typeof unit === "string" && filo.test(unit) &&
         (verb === "start" || verb === "stop")) {
         return polkit.Result.YES;
     }

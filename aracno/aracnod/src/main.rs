@@ -1,6 +1,6 @@
 //! aracnod — servizio di sistema di Aracno (spec: docs/spec/SPEC-aracnod.md, ADR-0008).
 //! Gira come utente `aracno`, attivato via D-Bus.
-//! Metodi: ListTentacles (lettura libera), Switch (polkit: sessione attiva),
+//! Metodi: ListStrands (lettura libera), Switch (polkit: sessione attiva),
 //! Stop (polkit: password di amministratore).
 
 mod auth;
@@ -11,7 +11,7 @@ mod systemd;
 
 use error::AracnoError;
 use aracno_proto::{
-    TentacleName, TentacleState, ACTION_MANAGE, ACTION_SWITCH, BUS_NAME, OBJECT_PATH,
+    StrandName, StrandState, ACTION_MANAGE, ACTION_SWITCH, BUS_NAME, OBJECT_PATH,
 };
 use std::process::ExitCode;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -34,15 +34,15 @@ impl Drop for Turno<'_> {
     }
 }
 
-/// Stato attuale di tutti i tentacoli, insieme ai dati della unit (per ListTentacles).
-async fn tentacoli(
+/// Stato attuale di tutti i fili, insieme ai dati della unit (per ListStrands).
+async fn fili(
     conn: &Connection,
-) -> Result<Vec<(TentacleName, Option<list::UnitInfo>)>, AracnoError> {
+) -> Result<Vec<(StrandName, Option<list::UnitInfo>)>, AracnoError> {
     let imgs = systemd::image_names(conn)
         .await
         .map_err(|e| AracnoError::internal("machined", e))?;
     let mut out = Vec::new();
-    for n in list::tentacle_names(imgs) {
+    for n in list::strand_names(imgs) {
         let info = systemd::unit_info(conn, &n)
             .await
             .map_err(|e| AracnoError::internal("systemd", e))?;
@@ -51,10 +51,10 @@ async fn tentacoli(
     Ok(out)
 }
 
-fn stato(info: Option<&list::UnitInfo>) -> Result<TentacleState, AracnoError> {
+fn stato(info: Option<&list::UnitInfo>) -> Result<StrandState, AracnoError> {
     match info {
-        None => Ok(TentacleState::Off),
-        Some(u) => TentacleState::from_systemd(&u.active_state, &u.freezer_state)
+        None => Ok(StrandState::Off),
+        Some(u) => StrandState::from_systemd(&u.active_state, &u.freezer_state)
             .map_err(|e| AracnoError::internal("stato", e)),
     }
 }
@@ -64,12 +64,12 @@ fn stato(info: Option<&list::UnitInfo>) -> Result<TentacleState, AracnoError> {
 #[interface(name = "io.github.tommaso_palestini.Aracno1.Manager")]
 impl Manager {
     /// a(sstt): nome, stato (active|frozen|off), RAM in byte, limite in byte (0 = nessuno).
-    async fn list_tentacles(
+    async fn list_strands(
         &self,
         #[zbus(connection)] conn: &Connection,
     ) -> Result<Vec<list::Entry>, AracnoError> {
         let mut righe = Vec::new();
-        for (n, info) in tentacoli(conn).await? {
+        for (n, info) in fili(conn).await? {
             righe.push(
                 list::entry(&n, info.as_ref()).map_err(|e| AracnoError::internal("elenco", e))?,
             );
@@ -77,7 +77,7 @@ impl Manager {
         Ok(righe)
     }
 
-    /// Congela gli altri tentacoli attivi e attiva `name`. Restituisce i millisecondi.
+    /// Congela gli altri fili attivi e attiva `name`. Restituisce i millisecondi.
     /// Permesso: azione `switch` (sessione attiva, senza password).
     async fn switch(
         &self,
@@ -108,7 +108,7 @@ impl Manager {
         esegui(op, &target, &chi, &piano, conn, &emitter).await
     }
 
-    /// Emesso a ogni cambio di stato di un tentacolo causato da aracnod.
+    /// Emesso a ogni cambio di stato di un filo causato da aracnod.
     #[zbus(signal)]
     async fn state_changed(
         emitter: &SignalEmitter<'_>,
@@ -143,15 +143,15 @@ impl Operazione {
 }
 
 type Preparato<'a> = (
-    TentacleName,
+    StrandName,
     String,
-    Vec<(TentacleName, TentacleState)>,
+    Vec<(StrandName, StrandState)>,
     Turno<'a>,
 );
 
 impl Manager {
     /// Controlli comuni, in quest'ordine: nome valido, permesso polkit, nessuna
-    /// operazione in corso. Restituisce anche lo stato di tutti i tentacoli.
+    /// operazione in corso. Restituisce anche lo stato di tutti i fili.
     async fn prepara(
         &self,
         op: Operazione,
@@ -163,9 +163,9 @@ impl Manager {
         let chi = uid.map_or("uid ?".to_string(), |u| format!("uid {u}"));
         let o = op.nome();
 
-        let target = TentacleName::try_from(name).map_err(|_| {
+        let target = StrandName::try_from(name).map_err(|_| {
             eprintln!("aracnod: {o} rifiutato ({chi}): nome non valido {}", per_log(name));
-            AracnoError::InvalidName("nome di tentacolo non valido".into())
+            AracnoError::InvalidName("nome di filo non valido".into())
         })?;
         if let Err(e) = auth::authorize(conn, header, op.azione(), op.interattiva()).await {
             eprintln!("aracnod: {o} {target} rifiutato ({chi}): non autorizzato");
@@ -181,7 +181,7 @@ impl Manager {
         }
         let turno = Turno(&self.occupato);
 
-        let stati = tentacoli(conn)
+        let stati = fili(conn)
             .await?
             .iter()
             .map(|(n, i)| stato(i.as_ref()).map(|s| (n.clone(), s)))
@@ -203,18 +203,18 @@ fn per_log(name: &str) -> String {
     s
 }
 
-fn inesistente(op: Operazione, target: &TentacleName, chi: &str) -> AracnoError {
+fn inesistente(op: Operazione, target: &StrandName, chi: &str) -> AracnoError {
     eprintln!(
-        "aracnod: {} {target} rifiutato ({chi}): tentacolo inesistente",
+        "aracnod: {} {target} rifiutato ({chi}): filo inesistente",
         op.nome()
     );
-    AracnoError::NotFound("tentacolo inesistente".into())
+    AracnoError::NotFound("filo inesistente".into())
 }
 
 /// Esegue i passi in ordine, emette StateChanged dopo ognuno e registra l'esito.
 async fn esegui(
     op: Operazione,
-    target: &TentacleName,
+    target: &StrandName,
     chi: &str,
     piano: &[switch::Step],
     conn: &Connection,
@@ -237,27 +237,27 @@ async fn esegui(
                 systemd::freeze(conn, n)
                     .await
                     .map_err(|e| AracnoError::internal(&format!("freeze {n}"), e))?;
-                (n, TentacleState::Frozen)
+                (n, StrandState::Frozen)
             }
             switch::Step::Thaw(n) => {
                 systemd::thaw(conn, n)
                     .await
                     .map_err(|e| AracnoError::internal(&format!("thaw {n}"), e))?;
-                (n, TentacleState::Active)
+                (n, StrandState::Active)
             }
             switch::Step::Start(n) => {
                 let ok = systemd::start(conn, n)
                     .await
                     .map_err(|e| AracnoError::internal(&format!("start {n}"), e))?;
                 job_ok(ok, &format!("start {n}"))?;
-                (n, TentacleState::Active)
+                (n, StrandState::Active)
             }
             switch::Step::Stop(n) => {
                 let ok = systemd::stop(conn, n)
                     .await
                     .map_err(|e| AracnoError::internal(&format!("stop {n}"), e))?;
                 job_ok(ok, &format!("stop {n}"))?;
-                (n, TentacleState::Off)
+                (n, StrandState::Off)
             }
         };
         // Un segnale perso non deve far fallire l'operazione, che è già avvenuta.

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # aracno — CLI minimale del prototipo Aracno
-#   aracno list                 stato, RAM e swap di ogni tentacolo
+#   aracno list                 stato, RAM e swap di ogni filo
 #   aracno start|stop NAME
 #   aracno freeze|thaw NAME
 #   aracno switch NAME          congela tutti gli altri, attiva NAME (misura il tempo)
-#   aracno cpu NAME [SEC]       uso CPU del tentacolo (% di un core)
+#   aracno cpu NAME [SEC]       uso CPU del filo (% di un core)
 #   aracno limit NAME SIZE      tetto RAM (es. 2G, oppure "infinity" per toglierlo)
 #   aracno shell NAME
-#   aracno upgrade [NAME...]    aggiorna i pacchetti dei tentacoli (default: tutti), poi rimette lo stato
+#   aracno upgrade [NAME...]    aggiorna i pacchetti dei fili (default: tutti), poi rimette lo stato
 set -euo pipefail
 M=/var/lib/machines
 
@@ -28,7 +28,7 @@ cpu_pct() {  # campiona usage_usec del cgroup
   echo $(( (b - a) / (s * 10000) ))
 }
 
-wait_ready() {  # aspetta che systemd dentro il tentacolo sia su
+wait_ready() {  # aspetta che systemd dentro il filo sia su
   for _ in $(seq 60); do
     s=$(systemctl -M "$1" is-system-running 2>/dev/null || true)
     [[ $s == running || $s == degraded ]] && return 0
@@ -37,7 +37,7 @@ wait_ready() {  # aspetta che systemd dentro il tentacolo sia su
   echo "timeout avvio $1" >&2; return 1
 }
 
-upgrade_cmd() {  # comando di aggiornamento non interattivo, scelto da /etc/os-release del tentacolo
+upgrade_cmd() {  # comando di aggiornamento non interattivo, scelto da /etc/os-release del filo
   local id like
   id=$(. "$M/$1/etc/os-release"; echo "${ID:-}")
   like=$(. "$M/$1/etc/os-release"; echo "${ID_LIKE:-}")
@@ -53,7 +53,7 @@ upgrade_cmd() {  # comando di aggiornamento non interattivo, scelto da /etc/os-r
 
 upgrade_one() {  # scongela/avvia, aggiorna, rimette lo stato di prima anche se l'aggiornamento fallisce
   local n=$1 prev c rc=0 t0
-  [[ -d $M/$n/etc ]] || { echo "$n: tentacolo inesistente"; return 1; }
+  [[ -d $M/$n/etc ]] || { echo "$n: filo inesistente"; return 1; }
   c=$(upgrade_cmd "$n") || { echo "$n: distro non supportata da aracno upgrade"; return 1; }
   prev=$(state "$n")
   echo ">> $n ($prev)"
@@ -75,7 +75,7 @@ upgrade_one() {  # scongela/avvia, aggiorna, rimette lo stato di prima anche se 
 cmd=${1:-list}; shift || true
 case $cmd in
   list)
-    printf "%-10s %-10s %10s %10s %10s\n" TENTACOLO STATO RAM SWAP LIMITE
+    printf "%-10s %-10s %10s %10s %10s\n" FILO STATO RAM SWAP LIMITE
     for n in $(names); do
       st=$(state "$n"); ram=- sw=- lim=-
       if [[ $st != spenta ]]; then
@@ -110,6 +110,6 @@ case $cmd in
     need_root "$cmd" "$@"; falliti=0
     if (( $# == 0 )); then set -- $(names); fi
     for n in "$@"; do upgrade_one "$n" || falliti=$((falliti + 1)); echo; done
-    if (( falliti == 0 )); then echo "upgrade: tutti i tentacoli aggiornati"; else echo "upgrade: $falliti tentacoli falliti"; exit 1; fi ;;
+    if (( falliti == 0 )); then echo "upgrade: tutti i fili aggiornati"; else echo "upgrade: $falliti fili falliti"; exit 1; fi ;;
   *) sed -n '2,10p' "$0"; exit 1 ;;
 esac

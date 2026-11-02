@@ -1,10 +1,10 @@
 //! Proxy D-Bus verso systemd-machined e systemd.
 //! Letture: permesse a un utente non privilegiato (T1, P6).
-//! Freeze/Thaw/Start: permessi a `aracno` solo sui tentacoli da 50-aracno.rules (T1, P1–P4).
+//! Freeze/Thaw/Start: permessi a `aracno` solo sui fili da 50-aracno.rules (T1, P1–P4).
 
 use crate::list::UnitInfo;
 use futures_core::Stream;
-use aracno_proto::TentacleName;
+use aracno_proto::StrandName;
 use std::pin::Pin;
 use zbus::proxy::CacheProperties;
 use zbus::{proxy, Connection, OwnedObjectPath};
@@ -78,8 +78,8 @@ pub async fn image_names(conn: &Connection) -> zbus::Result<Vec<String>> {
     Ok(imgs.into_iter().map(|i| i.0).collect())
 }
 
-/// Stato e memoria della unit del tentacolo; `None` se systemd non l'ha caricata (spento).
-pub async fn unit_info(conn: &Connection, name: &TentacleName) -> zbus::Result<Option<UnitInfo>> {
+/// Stato e memoria della unit del filo; `None` se systemd non l'ha caricata (spento).
+pub async fn unit_info(conn: &Connection, name: &StrandName) -> zbus::Result<Option<UnitInfo>> {
     let path = match SystemdProxy::new(conn)
         .await?
         .get_unit(&name.unit_name())
@@ -108,36 +108,36 @@ pub async fn unit_info(conn: &Connection, name: &TentacleName) -> zbus::Result<O
     }))
 }
 
-/// Congela il tentacolo. systemd risponde a congelamento finito.
-pub async fn freeze(conn: &Connection, name: &TentacleName) -> zbus::Result<()> {
+/// Congela il filo. systemd risponde a congelamento finito.
+pub async fn freeze(conn: &Connection, name: &StrandName) -> zbus::Result<()> {
     SystemdProxy::new(conn)
         .await?
         .freeze_unit(&name.unit_name())
         .await
 }
 
-/// Scongela il tentacolo. systemd risponde a scongelamento finito.
-pub async fn thaw(conn: &Connection, name: &TentacleName) -> zbus::Result<()> {
+/// Scongela il filo. systemd risponde a scongelamento finito.
+pub async fn thaw(conn: &Connection, name: &StrandName) -> zbus::Result<()> {
     SystemdProxy::new(conn)
         .await?
         .thaw_unit(&name.unit_name())
         .await
 }
 
-/// Avvia il tentacolo e aspetta la fine del job. Vero se il job è riuscito.
-pub async fn start(conn: &Connection, name: &TentacleName) -> zbus::Result<bool> {
+/// Avvia il filo e aspetta la fine del job. Vero se il job è riuscito.
+pub async fn start(conn: &Connection, name: &StrandName) -> zbus::Result<bool> {
     job(conn, name, true).await
 }
 
-/// Spegne il tentacolo e aspetta la fine del job. Vero se il job è riuscito.
-pub async fn stop(conn: &Connection, name: &TentacleName) -> zbus::Result<bool> {
+/// Spegne il filo e aspetta la fine del job. Vero se il job è riuscito.
+pub async fn stop(conn: &Connection, name: &StrandName) -> zbus::Result<bool> {
     job(conn, name, false).await
 }
 
 /// StartUnit/StopUnit rispondono subito con un job: si aspetta il segnale `JobRemoved`.
 /// Il flusso dei segnali si apre PRIMA della chiamata, così la fine del job non può
 /// sfuggire. Il tempo massimo è quello di systemd per la unit (TimeoutStartSec/StopSec).
-async fn job(conn: &Connection, name: &TentacleName, avvio: bool) -> zbus::Result<bool> {
+async fn job(conn: &Connection, name: &StrandName, avvio: bool) -> zbus::Result<bool> {
     let mgr = SystemdProxy::new(conn).await?;
     // Subscribe vale per tutta la connessione: dal secondo job in poi systemd risponde
     // AlreadySubscribed, che significa "già iscritto" e va bene (bug trovato in T7).

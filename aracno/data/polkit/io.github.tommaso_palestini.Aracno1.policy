@@ -12,10 +12,10 @@
   <vendor_url>https://github.com/Tommaso-Palestini/aracno-linux</vendor_url>
 
   <action id="io.github.tommaso_palestini.Aracno1.switch">
-    <description>Switch to another tentacle</description>
-    <description xml:lang="it">Passare a un altro tentacolo</description>
-    <message>Authentication is required to switch tentacle</message>
-    <message xml:lang="it">Serve l'autenticazione per cambiare tentacolo</message>
+    <description>Switch to another strand</description>
+    <description xml:lang="it">Passare a un altro filo</description>
+    <message>Authentication is required to switch strand</message>
+    <message xml:lang="it">Serve l'autenticazione per cambiare filo</message>
     <defaults>
       <allow_any>no</allow_any>
       <allow_inactive>no</allow_inactive>
@@ -25,10 +25,10 @@
   </action>
 
   <action id="io.github.tommaso_palestini.Aracno1.manage">
-    <description>Manage tentacles (stop and other administrative operations)</description>
-    <description xml:lang="it">Gestire i tentacoli (spegnimento e altre operazioni di amministrazione)</description>
-    <message>Authentication is required to manage tentacles</message>
-    <message xml:lang="it">Serve l'autenticazione per gestire i tentacoli</message>
+    <description>Manage strands (stop and other administrative operations)</description>
+    <description xml:lang="it">Gestire i fili (spegnimento e altre operazioni di amministrazione)</description>
+    <message>Authentication is required to manage strands</message>
+    <message xml:lang="it">Serve l'autenticazione per gestire i fili</message>
     <defaults>
       <allow_any>no</allow_any>
       <allow_inactive>no</allow_inactive>

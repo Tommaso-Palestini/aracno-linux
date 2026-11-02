@@ -5,46 +5,40 @@
     "ast_hash": "2a7ef0f8b42979e6870293f539d5fde4",
     "semantic_hash": ""
   },
-  "prototype/01-create-tentacles.sh": {
-    "mtime": 1793610261.9049146,
-    "seen": 1793610324.2532084,
-    "ast_hash": "cac6c9dd74e74c32d4e353e374bf8e04",
-    "semantic_hash": ""
-  },
   "prototype/02-test-freeze.sh": {
-    "mtime": 1793610261.8984976,
-    "seen": 1793610324.2532115,
-    "ast_hash": "f3dc05f5ad7b0cd8beb6f3d855a16d22",
+    "mtime": 1793613419.3086033,
+    "seen": 1793613641.550272,
+    "ast_hash": "113eadc3c250f257793aa6affbbfde9a",
     "semantic_hash": ""
   },
   "prototype/03-bench-switch.sh": {
-    "mtime": 1793610261.9023986,
-    "seen": 1793610324.253214,
-    "ast_hash": "6637cf24baad9f043ad25b85eb97b931",
+    "mtime": 1793613419.3083837,
+    "seen": 1793613641.5502756,
+    "ast_hash": "c398095c5b1da2757acd94767f03e7ac",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793610261.900661,
-    "seen": 1793610324.2532482,
-    "ast_hash": "7248e756732b8bb7c2840226aa11b74d",
+    "mtime": 1793613419.3018692,
+    "seen": 1793613641.5503297,
+    "ast_hash": "a17fc9f0c129dc19aa1ecf464781b4ad",
     "semantic_hash": ""
   },
   "prototype/04-gpu-bind.sh": {
-    "mtime": 1793610261.8978202,
-    "seen": 1793610324.2532163,
-    "ast_hash": "26aac25d8ed3aa4ff3eca921bbbf7ff9",
+    "mtime": 1793613419.305275,
+    "seen": 1793613641.5502791,
+    "ast_hash": "7901ddf519f0c39db74027de069240d9",
     "semantic_hash": ""
   },
   "prototype/05-gpu-driver.sh": {
-    "mtime": 1793610261.8992445,
-    "seen": 1793610324.2532187,
-    "ast_hash": "c4eb8f50179f179030b63a43dcc04810",
+    "mtime": 1793613419.3035831,
+    "seen": 1793613641.5502827,
+    "ast_hash": "eed9e332b96ef9c4e43fc4174c52f02a",
     "semantic_hash": ""
   },
   "prototype/06-vram-test.sh": {
-    "mtime": 1793610261.9040136,
-    "seen": 1793610324.253221,
-    "ast_hash": "0aa694a65f9ae8f2e623d02e023f4aad",
+    "mtime": 1793613419.3091304,
+    "seen": 1793613641.550286,
+    "ast_hash": "e4be29f1d02aafcb57c14ca432de109c",
     "semantic_hash": ""
   },
   "prototype/vkalloc.c": {
@@ -54,63 +48,57 @@
     "semantic_hash": ""
   },
   "prototype/07-wayland-bind.sh": {
-    "mtime": 1793610261.8990257,
-    "seen": 1793610324.2532234,
-    "ast_hash": "4564f3c8c50bd4bcb9320cc77d79c2d4",
+    "mtime": 1793613419.3032534,
+    "seen": 1793613641.5502894,
+    "ast_hash": "37dda766ccace7f9b6c5f9d5cac3a942",
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793610261.904389,
-    "seen": 1793610324.253251,
-    "ast_hash": "da4288abe21f992830f049b3f683dc6e",
-    "semantic_hash": ""
-  },
-  "docs/adr/0001-tentacoli-systemd-nspawn.md": {
-    "mtime": 1793610261.9052749,
-    "seen": 1793610324.2532535,
-    "ast_hash": "98816c94aef7999ad3bbc4323a85f280",
+    "mtime": 1793613473.3560877,
+    "seen": 1793613641.550333,
+    "ast_hash": "8319a96127204a5310fd1fc7fd950ef1",
     "semantic_hash": ""
   },
   "docs/adr/0002-switch-con-congelamento-cgroup.md": {
-    "mtime": 1793610261.9015763,
-    "seen": 1793610324.2532556,
-    "ast_hash": "ce703a00689e4a8b735c7eb2a28e03f3",
+    "mtime": 1793613419.3095844,
+    "seen": 1793613641.55034,
+    "ast_hash": "87783cbe18f8cd9be10dc5dd708445a0",
     "semantic_hash": ""
   },
   "docs/adr/0003-rete-condivisa-con-host.md": {
-    "mtime": 1793527282.7997785,
-    "seen": 1793527292.7301686,
-    "ast_hash": "35d38db3320c95951947eb76bb01f05f",
+    "mtime": 1793613419.3049881,
+    "seen": 1793613641.5503433,
+    "ast_hash": "af3fe9037cb30d21f393106fb245a8ef",
     "semantic_hash": ""
   },
   "docs/adr/0004-gpu-bind-dev-dri.md": {
-    "mtime": 1793527283.2337942,
-    "seen": 1793527292.7301717,
-    "ast_hash": "21f05f5537e6a4e506a03e04394276ee",
+    "mtime": 1793613419.3089628,
+    "seen": 1793613641.5503466,
+    "ast_hash": "d9b363d6347d46a2917cdc171dfb2a5e",
     "semantic_hash": ""
   },
   "docs/adr/0005-solo-socket-wayland.md": {
-    "mtime": 1793610261.9045777,
-    "seen": 1793610324.2532642,
-    "ast_hash": "c4dc20e91b22378cce6c1dd1061be525",
+    "mtime": 1793613419.304701,
+    "seen": 1793613641.5503497,
+    "ast_hash": "7640e4478e01c070acd260a062782a70",
     "semantic_hash": ""
   },
   "docs/adr/0006-host-debian-trixie-live-build.md": {
-    "mtime": 1793610261.8995955,
-    "seen": 1793610324.253266,
-    "ast_hash": "89969c5ce19adcc688af1b0cf3fdc330",
+    "mtime": 1793613419.3057735,
+    "seen": 1793613641.5503528,
+    "ast_hash": "39685a1e0766c374f4a33544c0f32f03",
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793610261.9107754,
-    "seen": 1793610324.2532742,
-    "ast_hash": "7ee18f0fb5d33b85714305f608737224",
+    "mtime": 1793613473.350858,
+    "seen": 1793613641.5503669,
+    "ast_hash": "e84ddecede9c61d5db3d78201784885d",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
-    "mtime": 1793610261.9021206,
-    "seen": 1793610324.2532258,
-    "ast_hash": "80b06210f10354d0ee9dedb800697b90",
+    "mtime": 1793613419.3072636,
+    "seen": 1793613641.5502934,
+    "ast_hash": "9ef333c45497f13474c00e05328b36b2",
     "semantic_hash": ""
   },
   "prototype/memhog.c": {
@@ -120,45 +108,45 @@
     "semantic_hash": ""
   },
   "prototype/09-upgrade-test.sh": {
-    "mtime": 1793610261.9004655,
-    "seen": 1793610324.2532282,
-    "ast_hash": "9d4ae206c27f25ce67df057ec0b10384",
+    "mtime": 1793613419.309353,
+    "seen": 1793613641.5502973,
+    "ast_hash": "750e096676d9648a059d4e672e6c5b93",
     "semantic_hash": ""
   },
   "docs/adr/0007-menu-a-tutto-schermo.md": {
-    "mtime": 1793610261.9060435,
-    "seen": 1793610324.2532685,
-    "ast_hash": "4a02eb9ffa7d6e4d94bf483a0dfccaf1",
+    "mtime": 1793613419.3106992,
+    "seen": 1793613641.5503566,
+    "ast_hash": "8b533c6b1e73eabc40e9f23eb923bc3d",
     "semantic_hash": ""
   },
   "docs/spec/CAPABILITY-MAP.md": {
-    "mtime": 1793610261.9003122,
-    "seen": 1793610324.2532763,
-    "ast_hash": "4e37636d476aacd9d1fd74b2061596f3",
+    "mtime": 1793613419.3070412,
+    "seen": 1793613641.5503738,
+    "ast_hash": "f7c4cb932f240145a70883bf5119ddcd",
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1793610261.8988347,
-    "seen": 1793610324.2532825,
-    "ast_hash": "1578ae71ab501e2edb0b28c5b3e005ab",
+    "mtime": 1793613419.3039136,
+    "seen": 1793613641.5503838,
+    "ast_hash": "4eb89935ad9b48d7d50839b8099b19e3",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793611883.493951,
-    "seen": 1793611889.9606676,
-    "ast_hash": "3de231280579f874e3f1b7e9ca9d4014",
+    "mtime": 1793613640.2519746,
+    "seen": 1793613641.5503871,
+    "ast_hash": "7d56cda97ae5e137b3ac1be7953c9927",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
-    "mtime": 1793610261.9008138,
-    "seen": 1793610324.253231,
-    "ast_hash": "20c2fcaa7189c682cad6aa5a26990c68",
+    "mtime": 1793613419.3059757,
+    "seen": 1793613641.5503008,
+    "ast_hash": "5041dfb17ad6ef5ead17d2db7acf887c",
     "semantic_hash": ""
   },
   "aracno/Cargo.toml": {
-    "mtime": 1793611742.1925416,
-    "seen": 1793611889.9604986,
-    "ast_hash": "6b18ad53ee5dab75543cd6b5671198e7",
+    "mtime": 1793613551.0960104,
+    "seen": 1793613641.550186,
+    "ast_hash": "74dbd0b36ed89f63cf715e9dc932d632",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/Cargo.toml": {
@@ -168,15 +156,15 @@
     "semantic_hash": ""
   },
   "aracno/aracno-proto/src/lib.rs": {
-    "mtime": 1793610261.9073963,
-    "seen": 1793610324.2531729,
-    "ast_hash": "ec41f5e84088ccfdf5f3907a9cb73642",
+    "mtime": 1793613419.3137221,
+    "seen": 1793613641.5502222,
+    "ast_hash": "7ae8a881fd7a91e8dab95544d5a76f53",
     "semantic_hash": ""
   },
   "aracno/aracnod/Cargo.toml": {
-    "mtime": 1793611742.1964564,
-    "seen": 1793611889.960521,
-    "ast_hash": "f7b342ec3fc6f5d9f0ff1c3fb400eee9",
+    "mtime": 1793613419.3151045,
+    "seen": 1793613641.5502264,
+    "ast_hash": "4226ec022c62f93665ff1d43a4db9ba4",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/auth.rs": {
@@ -192,27 +180,27 @@
     "semantic_hash": ""
   },
   "aracno/aracnod/src/list.rs": {
-    "mtime": 1793610261.902902,
-    "seen": 1793610324.253191,
-    "ast_hash": "066755145757161f5f6d4f128ecfbc24",
+    "mtime": 1793613419.3076847,
+    "seen": 1793613641.5502412,
+    "ast_hash": "8f642ca9cae776a67b680e631fa56988",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/main.rs": {
-    "mtime": 1793611667.9512675,
-    "seen": 1793611889.9605372,
-    "ast_hash": "71f38668ee1f6923676749ba3e23a15d",
+    "mtime": 1793613419.3155878,
+    "seen": 1793613641.5502448,
+    "ast_hash": "ca114e0803ea6d1d6621945ff96aaf1c",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/switch.rs": {
-    "mtime": 1793610261.9062173,
-    "seen": 1793610324.253195,
-    "ast_hash": "21f07d9a5f4934ccfb3e291b6e8369e4",
+    "mtime": 1793613419.3147914,
+    "seen": 1793613641.5502481,
+    "ast_hash": "2e8607681f6d01bb3b81b129e9c51060",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/systemd.rs": {
-    "mtime": 1793610261.9078822,
-    "seen": 1793610324.253197,
-    "ast_hash": "1f2a2a13c379f6d93bda1d9b804b5374",
+    "mtime": 1793613419.31134,
+    "seen": 1793613641.5502515,
+    "ast_hash": "e71f7c3bf15d787196de8f56da5f5474",
     "semantic_hash": ""
   },
   "aracno/spikes/layer-shell/Cargo.toml": {
@@ -228,51 +216,93 @@
     "semantic_hash": ""
   },
   "prototype/11-install-aracnod.sh": {
-    "mtime": 1793610261.8997614,
-    "seen": 1793610324.2532332,
-    "ast_hash": "2db18c89fc3827bf6f450eb3b41c8b44",
+    "mtime": 1793613596.1118321,
+    "seen": 1793613641.5503042,
+    "ast_hash": "a1e470b56c1fc33ab4a800fea94d456a",
     "semantic_hash": ""
   },
   "prototype/12-aracnod-test.sh": {
-    "mtime": 1793610261.9026132,
-    "seen": 1793610324.2532353,
-    "ast_hash": "d2762789d59fb4201a8642adb8e98640",
+    "mtime": 1793613419.3129716,
+    "seen": 1793613641.5503078,
+    "ast_hash": "2a89e09422af03756ac4e0f96326e13d",
     "semantic_hash": ""
   },
   "prototype/13-aracnod-stop-test.sh": {
-    "mtime": 1793610261.9037654,
-    "seen": 1793610324.2532375,
-    "ast_hash": "0bdaecd96dfd9270e6feed8e68ce6a3d",
+    "mtime": 1793613419.3127098,
+    "seen": 1793613641.550311,
+    "ast_hash": "8faa1799c5dc69a883ea0099f7ec0ae0",
     "semantic_hash": ""
   },
   "prototype/aracno": {
-    "mtime": 1793610261.9017391,
-    "seen": 1793610324.2532396,
-    "ast_hash": "40ced41269ae3faf4d121ae6ea8e51f5",
+    "mtime": 1793613419.3066022,
+    "seen": 1793613641.550318,
+    "ast_hash": "23dff5bfa06cd45d8217e6a2a7cc9d18",
     "semantic_hash": ""
   },
   "docs/adr/0008-aracnod-servizio-di-sistema.md": {
-    "mtime": 1793610261.908962,
-    "seen": 1793610324.2532706,
-    "ast_hash": "8fb350d7f6830596b52cb7541f52e459",
+    "mtime": 1793613419.312041,
+    "seen": 1793613641.55036,
+    "ast_hash": "d2cbd321a9b5b2ae82266a8cbe2846a7",
     "semantic_hash": ""
   },
   "docs/spec/SPEC-aracno-menu.md": {
-    "mtime": 1793610261.9067626,
-    "seen": 1793610324.2532783,
-    "ast_hash": "d0ad3f7b3938c0edea7c6cf065047434",
+    "mtime": 1793613419.3118157,
+    "seen": 1793613641.5503771,
+    "ast_hash": "49e1161e47232eed1c53ce953cf58e80",
     "semantic_hash": ""
   },
   "docs/spec/SPEC-aracnod.md": {
-    "mtime": 1793610261.9034202,
-    "seen": 1793610324.2532802,
-    "ast_hash": "b982185958eadd9727ef01d6ef6634b2",
+    "mtime": 1793613419.3100433,
+    "seen": 1793613641.5503805,
+    "ast_hash": "e3a0da4a7874c186011b129585fd6976",
     "semantic_hash": ""
   },
   "docs/security/2026-11-02-revisione-aracnod.md": {
-    "mtime": 1793611748.397119,
-    "seen": 1793611889.9606504,
-    "ast_hash": "d97749bab9f624ca08d82ae357c51a22",
+    "mtime": 1793613419.3055298,
+    "seen": 1793613641.5503702,
+    "ast_hash": "015d15b3fd9f2201eada4ebd3e0f3c26",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-cli/Cargo.toml": {
+    "mtime": 1793613550.7893105,
+    "seen": 1793613641.5501974,
+    "ast_hash": "b79132e692945df327ec2c51738db326",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-cli/src/main.rs": {
+    "mtime": 1793613576.8887959,
+    "seen": 1793613641.5502036,
+    "ast_hash": "26f8f4471bd5a457f5490222517ced8a",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-cli/src/ragnatela.rs": {
+    "mtime": 1793613576.9597971,
+    "seen": 1793613641.5502088,
+    "ast_hash": "b25f3dc5ac3683a4156ff9ed1bdc4be6",
+    "semantic_hash": ""
+  },
+  "prototype/01-create-strands.sh": {
+    "mtime": 1793613419.3063562,
+    "seen": 1793613641.550268,
+    "ast_hash": "3decc26029dcb6105edbe93941597e51",
+    "semantic_hash": ""
+  },
+  "prototype/14-aracno-cli-test.sh": {
+    "mtime": 1793613625.3216968,
+    "seen": 1793613641.5503142,
+    "ast_hash": "5b059f5b354bacf8430270c952f79570",
+    "semantic_hash": ""
+  },
+  "docs/adr/0001-fili-systemd-nspawn.md": {
+    "mtime": 1793613419.3109138,
+    "seen": 1793613641.5503364,
+    "ast_hash": "126ce61261cf4306417f247f5df38ee9",
+    "semantic_hash": ""
+  },
+  "docs/adr/0009-disco-cifrato-doppia-password.md": {
+    "mtime": 1793613473.2638705,
+    "seen": 1793613641.5503633,
+    "ast_hash": "4bac7667f1d94125f2f13197fcdb6a65",
     "semantic_hash": ""
   }
 }

@@ -4,7 +4,7 @@
 # di polkit con la richiesta della password: inseriscila (è parte del test).
 # Usa sudo solo per la prova con "nobody" (O7d).
 # Prima: reinstallare aracnod con prototype/11-install-aracnod.sh e rilanciare 12-aracnod-test.sh
-# (le restrizioni nuove della unit non devono rompere ListTentacles e Switch).
+# (le restrizioni nuove della unit non devono rompere ListStrands e Switch).
 #
 # Ipotesi e criteri (scritti prima del test):
 #   O6  systemd-analyze security aracnod.service ≤ 2.0
@@ -28,7 +28,7 @@ fail() { echo "  FAIL: $*"; fails=$((fails + 1)); }
 
 # timeout lungo: il tempo per scrivere la password nella finestra di polkit
 call()   { gdbus call --system --timeout 120 --dest "$NAME" --object-path "$OPATH" --method "$NAME.Manager.$1" "${@:2}"; }
-stati()  { busctl call --system --json=short "$NAME" "$OPATH" "$NAME.Manager" ListTentacles \
+stati()  { busctl call --system --json=short "$NAME" "$OPATH" "$NAME.Manager" ListStrands \
            | python3 -c 'import sys,json; print(" ".join(f"{r[0]}={r[1]}" for r in json.load(sys.stdin)["data"][0]))'; }
 stato_di() { stati | tr ' ' '\n' | sed -n "s/^$1=//p"; }
 attesa_errore() {  # attesa_errore NOME_ERRORE DESCRIZIONE METODO ARGOMENTI...

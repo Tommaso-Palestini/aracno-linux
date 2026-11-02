@@ -1,8 +1,8 @@
-# Workspace di Aracno: aracno-proto (interfaccia condivisa), poi aracnod e aracno-menu.
+# Workspace di Aracno: aracno-proto (interfaccia condivisa), aracnod, aracno-cli, poi aracno-menu.
 # Le prove in spikes/ restano fuori (ognuna è un progetto a sé).
 [workspace]
 resolver = "2"
-members = ["aracno-proto", "aracnod"]
+members = ["aracno-proto", "aracnod", "aracno-cli"]
 exclude = ["spikes"]
 
 [workspace.package]

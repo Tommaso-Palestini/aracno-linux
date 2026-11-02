@@ -6,15 +6,15 @@
 #
 # Ipotesi e criteri (scritti prima del test):
 #   O2  20 switch alternati arch/debian dalla sessione attiva, senza password: tutti riusciti,
-#       mediana del tempo misurato da aracnod < 150 ms; alla fine il tentacolo scelto è l'unico attivo
+#       mediana del tempo misurato da aracnod < 150 ms; alla fine il filo scelto è l'unico attivo
 #   O2b durante uno switch aracnod emette StateChanged; il journal registra lo switch con l'uid del chiamante
 #   O3  Switch chiamato come nobody da un servizio (fuori da ogni sessione): NotAuthorized, stato invariato
 #       (correzione dopo il primo giro: `sudo runuser -u nobody` dal terminale resta DENTRO la sessione
 #       attiva e polkit, con allow_active, guarda la sessione del processo, non l'utente)
 #   O4  nomi non validi ("../etc", "Debian", "a b", "") → InvalidName; "fedora" (inesistente) → NotFound
 #   O5  30 giri di due Switch lanciati nello stesso istante (arch e debian): ogni chiamata riesce o
-#       riceve Busy (nessun altro errore), almeno un Busy in tutto, dopo ogni giro un solo tentacolo attivo
-#       (correzione dopo il primo giro: l'avvio di un tentacolo spento dura ~100 ms, troppo poco per
+#       riceve Busy (nessun altro errore), almeno un Busy in tutto, dopo ogni giro un solo filo attivo
+#       (correzione dopo il primo giro: l'avvio di un filo spento dura ~100 ms, troppo poco per
 #       sovrapporre due switch lanciati a 0,2 s di distanza)
 set -euo pipefail
 [[ $EUID -ne 0 ]] || { echo "Lancia SENZA sudo, dalla sessione grafica"; exit 1; }
@@ -32,8 +32,8 @@ fail() { echo "  FAIL: $*"; fails=$((fails + 1)); }
 call()   { gdbus call --system --dest "$NAME" --object-path "$OPATH" --method "$NAME.Manager.$1" "${@:2}"; }
 switch() { call Switch "$1"; }
 ms_of()  { sed -n 's/^(uint32 \([0-9]*\),)$/\1/p'; }
-# stati come "nome=stato" ordinati, da ListTentacles
-stati()  { busctl call --system --json=short "$NAME" "$OPATH" "$NAME.Manager" ListTentacles \
+# stati come "nome=stato" ordinati, da ListStrands
+stati()  { busctl call --system --json=short "$NAME" "$OPATH" "$NAME.Manager" ListStrands \
            | python3 -c 'import sys,json; print(" ".join(f"{r[0]}={r[1]}" for r in json.load(sys.stdin)["data"][0]))'; }
 stato_di() { stati | tr ' ' '\n' | sed -n "s/^$1=//p"; }
 attesa_errore() {  # attesa_errore NOME_ERRORE DESCRIZIONE ARGOMENTI_SWITCH...
@@ -114,7 +114,7 @@ rm -rf "$d"
 echo "  Busy: $busy su 60 chiamate; altri errori: $altri; giri con stato incoerente: $incoerenti"
 (( altri == 0 ))      && ok "solo successi o Busy"           || fail "$altri errori diversi da Busy"
 (( busy > 0 ))        && ok "Busy osservato ($busy volte)"   || fail "nessun Busy: la sovrapposizione non è dimostrata"
-(( incoerenti == 0 )) && ok "un solo tentacolo attivo dopo ogni giro" || fail "$incoerenti giri con più o nessun attivo"
+(( incoerenti == 0 )) && ok "un solo filo attivo dopo ogni giro" || fail "$incoerenti giri con più o nessun attivo"
 
 echo; echo ">> Ripristino: debian attiva"
 switch debian >/dev/null && echo "  $(stati)"

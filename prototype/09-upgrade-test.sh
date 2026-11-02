@@ -6,8 +6,8 @@
 #       Dopo: debian ancora attiva, arch ancora congelata (lo stato di prima è rimesso).
 #   U2  Dopo l'aggiornamento non restano pacchetti da aggiornare:
 #       debian `apt list --upgradable` vuoto, arch `pacman -Qu` vuoto.
-#   U3  Un tentacolo spento viene avviato, aggiornato e rispento.
-#   U4  Un nome inesistente fa uscire con errore, senza toccare gli altri tentacoli.
+#   U3  Un filo spento viene avviato, aggiornato e rispento.
+#   U4  Un nome inesistente fa uscire con errore, senza toccare gli altri fili.
 # Il tempo di ogni aggiornamento viene stampato da aracno (solo misura, senza soglia).
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
@@ -41,7 +41,7 @@ echo "  $B: ${nb:-?} pacchetti da aggiornare"
 [[ $nb == 0 ]] || fail "$B ha ancora pacchetti da aggiornare"
 "$O" switch "$A" >/dev/null
 
-echo; echo ">> U3: tentacolo spento"
+echo; echo ">> U3: filo spento"
 "$O" stop "$B" >/dev/null
 for _ in $(seq 20); do [[ $(state_of "$B") == spenta ]] && break; sleep 0.5; done
 [[ $(state_of "$B") == spenta ]] || fail "$B non si è spenta per il test"
@@ -50,7 +50,7 @@ for _ in $(seq 20); do [[ $(state_of "$B") == spenta ]] && break; sleep 0.5; don
 [[ $(state_of "$B") == spenta ]] || fail "$B non è stata rispenta ($(state_of "$B"))"
 
 echo; echo ">> U4: nome inesistente"
-if "$O" upgrade nonesiste; then fail "nessun errore per un tentacolo inesistente"; else echo "  errore come atteso"; fi
+if "$O" upgrade nonesiste; then fail "nessun errore per un filo inesistente"; else echo "  errore come atteso"; fi
 [[ $(state_of "$A") == attiva ]] || fail "$A cambiata dal tentativo con nome inesistente"
 
 echo; echo ">> Ripristino: $B riaccesa e congelata"
@@ -59,7 +59,7 @@ echo; echo ">> Ripristino: $B riaccesa e congelata"
 
 echo
 if (( fails == 0 )); then
-  echo "ESITO 4.6: PASS (aracno upgrade aggiorna e rimette lo stato di ogni tentacolo)"
+  echo "ESITO 4.6: PASS (aracno upgrade aggiorna e rimette lo stato di ogni filo)"
 else
   echo "ESITO 4.6: FAIL ($fails controlli). Incolla l'output completo."
   exit 1

@@ -1,6 +1,6 @@
-//! Logica pura di ListTentacles: niente D-Bus qui, così si testa senza systemd.
+//! Logica pura di ListStrands: niente D-Bus qui, così si testa senza systemd.
 
-use aracno_proto::{ProtoError, TentacleName, TentacleState};
+use aracno_proto::{ProtoError, StrandName, StrandState};
 
 /// Valori di una unit `systemd-nspawn@NOME.service` letti da systemd.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -13,29 +13,29 @@ pub struct UnitInfo {
     pub memory_max: u64,
 }
 
-/// Una riga di ListTentacles, firma D-Bus `(sstt)`: nome, stato, RAM in byte, limite in byte (0 = nessuno).
+/// Una riga di ListStrands, firma D-Bus `(sstt)`: nome, stato, RAM in byte, limite in byte (0 = nessuno).
 pub type Entry = (String, String, u64, u64);
 
-/// Tiene solo i nomi validi come tentacolo (scarta per esempio `.host`), ordinati e senza doppioni.
-pub fn tentacle_names<I: IntoIterator<Item = String>>(images: I) -> Vec<TentacleName> {
-    let mut nomi: Vec<TentacleName> = images
+/// Tiene solo i nomi validi come filo (scarta per esempio `.host`), ordinati e senza doppioni.
+pub fn strand_names<I: IntoIterator<Item = String>>(images: I) -> Vec<StrandName> {
+    let mut nomi: Vec<StrandName> = images
         .into_iter()
-        .filter_map(|s| TentacleName::try_from(s.as_str()).ok())
+        .filter_map(|s| StrandName::try_from(s.as_str()).ok())
         .collect();
     nomi.sort_by(|a, b| a.as_str().cmp(b.as_str()));
     nomi.dedup();
     nomi
 }
 
-/// Riga dell'elenco. `None` = unit non caricata in systemd, cioè tentacolo spento.
-pub fn entry(name: &TentacleName, unit: Option<&UnitInfo>) -> Result<Entry, ProtoError> {
+/// Riga dell'elenco. `None` = unit non caricata in systemd, cioè filo spento.
+pub fn entry(name: &StrandName, unit: Option<&UnitInfo>) -> Result<Entry, ProtoError> {
     let Some(u) = unit else {
-        return Ok((name.to_string(), TentacleState::Off.as_str().into(), 0, 0));
+        return Ok((name.to_string(), StrandState::Off.as_str().into(), 0, 0));
     };
-    let stato = TentacleState::from_systemd(&u.active_state, &u.freezer_state)?;
+    let stato = StrandState::from_systemd(&u.active_state, &u.freezer_state)?;
     let noto = |v: u64| if v == u64::MAX { 0 } else { v };
     let (ram, limite) = match stato {
-        TentacleState::Off => (0, 0),
+        StrandState::Off => (0, 0),
         _ => (noto(u.memory_current), noto(u.memory_max)),
     };
     Ok((name.to_string(), stato.as_str().into(), ram, limite))
@@ -45,8 +45,8 @@ pub fn entry(name: &TentacleName, unit: Option<&UnitInfo>) -> Result<Entry, Prot
 mod tests {
     use super::*;
 
-    fn n(s: &str) -> TentacleName {
-        TentacleName::try_from(s).unwrap()
+    fn n(s: &str) -> StrandName {
+        StrandName::try_from(s).unwrap()
     }
 
     fn info(a: &str, f: &str, cur: u64, max: u64) -> UnitInfo {
@@ -61,12 +61,12 @@ mod tests {
     #[test]
     fn nomi_delle_immagini() {
         let imgs = ["debian", ".host", "arch", "Bad Name", "debian", "a/b"].map(String::from);
-        let nomi: Vec<String> = tentacle_names(imgs).iter().map(|t| t.to_string()).collect();
+        let nomi: Vec<String> = strand_names(imgs).iter().map(|t| t.to_string()).collect();
         assert_eq!(nomi, ["arch", "debian"]);
     }
 
     #[test]
-    fn tentacolo_non_caricato_e_spento() {
+    fn filo_non_caricato_e_spento() {
         assert_eq!(
             entry(&n("arch"), None),
             Ok(("arch".into(), "off".into(), 0, 0))

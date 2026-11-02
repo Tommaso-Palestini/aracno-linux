@@ -1,4 +1,4 @@
-# ADR-0001: Tentacoli come container systemd-nspawn su un unico kernel
+# ADR-0001: Fili come container systemd-nspawn su un unico kernel
 
 ## Stato
 Accettata
@@ -16,10 +16,10 @@ Requisiti:
 - strumenti già presenti in una distro standard, senza un hypervisor da mantenere.
 
 ## Decisione
-Ogni tentacolo è una cartella in `/var/lib/machines/NOME` avviata con `systemd-nspawn` (`Boot=yes`) e gestita come unit `systemd-nspawn@NOME.service`. Tutti i tentacoli usano il kernel dell'host. La configurazione sta in `/etc/systemd/nspawn/NOME.nspawn`.
+Ogni filo è una cartella in `/var/lib/machines/NOME` avviata con `systemd-nspawn` (`Boot=yes`) e gestita come unit `systemd-nspawn@NOME.service`. Tutti i fili usano il kernel dell'host. La configurazione sta in `/etc/systemd/nspawn/NOME.nspawn`.
 
-- Il tentacolo Debian si crea con `debootstrap` (trixie).
-- Il tentacolo Arch si crea esportando l'immagine Docker ufficiale `archlinux:latest` (`prototype/01-create-tentacles.sh`).
+- Il filo Debian si crea con `debootstrap` (trixie).
+- Il filo Arch si crea esportando l'immagine Docker ufficiale `archlinux:latest` (`prototype/01-create-strands.sh`).
 - `PrivateUsers=no`: gli UID del container coincidono con quelli dell'host (vedi Conseguenze).
 
 ## Alternative considerate
@@ -45,7 +45,7 @@ Ogni tentacolo è una cartella in `/var/lib/machines/NOME` avviata con `systemd-
 - Scartato per semplicità. Resta un'opzione se nspawn dovesse mostrare limiti.
 
 ## Conseguenze
-- Tutti i tentacoli condividono kernel e moduli dell'host, compreso il driver amdgpu. Un tentacolo non può avere un kernel diverso né moduli propri.
-- Con `PrivateUsers=no` il root del container ha lo stesso UID del root dell'host. nspawn toglie comunque alcune capability, ma l'isolamento non vale come confine di sicurezza: un tentacolo è di fiducia quanto l'host.
-- Creare il tentacolo Arch richiede oggi Docker e la rete. Per l'ISO serve un'altra strada (fase 5b: immagini già dentro l'ISO).
-- I tentacoli usano gli strumenti standard: `machinectl`, `systemctl -M`, `systemd-run -M`. La CLI `prototype/aracno` ci aggiunge sopra solo uno strato sottile.
+- Tutti i fili condividono kernel e moduli dell'host, compreso il driver amdgpu. Un filo non può avere un kernel diverso né moduli propri.
+- Con `PrivateUsers=no` il root del container ha lo stesso UID del root dell'host. nspawn toglie comunque alcune capability, ma l'isolamento non vale come confine di sicurezza: un filo è di fiducia quanto l'host.
+- Creare il filo Arch richiede oggi Docker e la rete. Per l'ISO serve un'altra strada (fase 5b: immagini già dentro l'ISO).
+- I fili usano gli strumenti standard: `machinectl`, `systemctl -M`, `systemd-run -M`. La CLI `prototype/aracno` ci aggiunge sopra solo uno strato sottile.

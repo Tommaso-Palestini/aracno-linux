@@ -9,7 +9,7 @@ use std::str::FromStr;
 pub const BUS_NAME: &str = "io.github.tommaso_palestini.Aracno1";
 /// Percorso dell'oggetto esportato da `aracnod`.
 pub const OBJECT_PATH: &str = "/io/github/tommaso_palestini/Aracno1";
-/// Interfaccia con i metodi `ListTentacles`, `Switch`, `Stop`.
+/// Interfaccia con i metodi `ListStrands`, `Switch`, `Stop`.
 pub const INTERFACE: &str = "io.github.tommaso_palestini.Aracno1.Manager";
 
 /// Azione polkit per lo switch: senza password nella sessione attiva.
@@ -31,30 +31,30 @@ pub const MAX_NAME_LEN: usize = 63;
 
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 pub enum ProtoError {
-    #[error("nome di tentacolo non valido")]
+    #[error("nome di filo non valido")]
     InvalidName,
     #[error("stato di systemd sconosciuto: {0}")]
     UnknownState(String),
 }
 
-/// Nome di tentacolo già validato: `^[a-z0-9][a-z0-9-]{0,62}$`.
+/// Nome di filo già validato: `^[a-z0-9][a-z0-9-]{0,62}$`.
 /// È l'unico tipo accettato dalle operazioni, quindi un nome non validato
 /// non può arrivare a systemd. Lo stesso schema è nella regola polkit.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct TentacleName(String);
+pub struct StrandName(String);
 
-impl TentacleName {
+impl StrandName {
     pub fn as_str(&self) -> &str {
         &self.0
     }
 
-    /// Unit systemd del tentacolo, es. `systemd-nspawn@arch.service`.
+    /// Unit systemd del filo, es. `systemd-nspawn@arch.service`.
     pub fn unit_name(&self) -> String {
         format!("systemd-nspawn@{}.service", self.0)
     }
 }
 
-impl TryFrom<&str> for TentacleName {
+impl TryFrom<&str> for StrandName {
     type Error = ProtoError;
     fn try_from(s: &str) -> Result<Self, Self::Error> {
         let ammesso = |b: u8| b.is_ascii_lowercase() || b.is_ascii_digit();
@@ -71,21 +71,21 @@ impl TryFrom<&str> for TentacleName {
     }
 }
 
-impl fmt::Display for TentacleName {
+impl fmt::Display for StrandName {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(&self.0)
     }
 }
 
-/// Stato di un tentacolo come lo vede l'utente.
+/// Stato di un filo come lo vede l'utente.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TentacleState {
+pub enum StrandState {
     Active,
     Frozen,
     Off,
 }
 
-impl TentacleState {
+impl StrandState {
     /// Forma usata sul bus: `active`, `frozen`, `off`.
     pub fn as_str(self) -> &'static str {
         match self {
@@ -115,7 +115,7 @@ impl TentacleState {
     }
 }
 
-impl FromStr for TentacleState {
+impl FromStr for StrandState {
     type Err = ProtoError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -144,7 +144,7 @@ mod tests {
             lungo.as_str(),
         ] {
             assert_eq!(
-                TentacleName::try_from(n).map(|t| t.as_str().to_owned()),
+                StrandName::try_from(n).map(|t| t.as_str().to_owned()),
                 Ok(n.to_owned()),
                 "{n:?}"
             );
@@ -172,7 +172,7 @@ mod tests {
             troppo_lungo.as_str(),
         ] {
             assert_eq!(
-                TentacleName::try_from(n),
+                StrandName::try_from(n),
                 Err(ProtoError::InvalidName),
                 "{n:?}"
             );
@@ -180,14 +180,14 @@ mod tests {
     }
 
     #[test]
-    fn unit_del_tentacolo() {
-        let t = TentacleName::try_from("arch").unwrap();
+    fn unit_del_filo() {
+        let t = StrandName::try_from("arch").unwrap();
         assert_eq!(t.unit_name(), "systemd-nspawn@arch.service");
     }
 
     #[test]
     fn stato_da_systemd() {
-        use TentacleState::*;
+        use StrandState::*;
         let casi = [
             ("active", "running", Active),
             ("active", "thawing", Active),
@@ -201,23 +201,23 @@ mod tests {
             ("inactive", "", Off),
         ];
         for (a, f, atteso) in casi {
-            assert_eq!(TentacleState::from_systemd(a, f), Ok(atteso), "{a}/{f}");
+            assert_eq!(StrandState::from_systemd(a, f), Ok(atteso), "{a}/{f}");
         }
     }
 
     #[test]
     fn stato_sconosciuto_non_viene_nascosto() {
         assert_eq!(
-            TentacleState::from_systemd("boh", "running"),
+            StrandState::from_systemd("boh", "running"),
             Err(ProtoError::UnknownState("boh".into()))
         );
         assert_eq!(
-            TentacleState::from_systemd("active", "boh"),
+            StrandState::from_systemd("active", "boh"),
             Err(ProtoError::UnknownState("boh".into()))
         );
     }
 
-    /// La regola polkit deve usare lo stesso schema di `TentacleName`:
+    /// La regola polkit deve usare lo stesso schema di `StrandName`:
     /// se uno dei due cambia e l'altro no, questo test fallisce.
     #[test]
     fn regola_polkit_coerente_con_i_nomi() {
@@ -235,12 +235,12 @@ mod tests {
     #[test]
     fn stato_andata_e_ritorno_sul_bus() {
         for s in [
-            TentacleState::Active,
-            TentacleState::Frozen,
-            TentacleState::Off,
+            StrandState::Active,
+            StrandState::Frozen,
+            StrandState::Off,
         ] {
-            assert_eq!(s.as_str().parse::<TentacleState>(), Ok(s));
+            assert_eq!(s.as_str().parse::<StrandState>(), Ok(s));
         }
-        assert!("Active".parse::<TentacleState>().is_err());
+        assert!("Active".parse::<StrandState>().is_err());
     }
 }

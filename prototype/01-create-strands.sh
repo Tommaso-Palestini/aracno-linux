@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Aracno prototipo — fase 1: crea due tentacoli (Debian e Arch) come cartelle
+# Aracno prototipo — fase 1: crea due fili (Debian e Arch) come cartelle
 #   /var/lib/machines/debian   (via debootstrap)
 #   /var/lib/machines/arch     (via immagine ufficiale archlinux esportata da Docker)
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 M=/var/lib/machines
 
-write_nspawn() {  # configurazione comune di un tentacolo
+write_nspawn() {  # configurazione comune di un filo
   cat > "/etc/systemd/nspawn/$1.nspawn" <<EOF
 [Exec]
 Boot=yes
@@ -19,7 +19,7 @@ EOF
 
 # --- Debian -------------------------------------------------------------
 if [[ ! -d $M/debian/etc ]]; then
-  echo ">> Creo tentacolo debian (qualche minuto)..."
+  echo ">> Creo filo debian (qualche minuto)..."
   debootstrap --include=systemd,systemd-sysv,dbus,procps,iproute2 \
     trixie "$M/debian" http://deb.debian.org/debian
   echo debian > "$M/debian/etc/hostname"
@@ -28,7 +28,7 @@ write_nspawn debian
 
 # --- Arch ---------------------------------------------------------------
 if [[ ! -d $M/arch/etc ]]; then
-  echo ">> Creo tentacolo arch..."
+  echo ">> Creo filo arch..."
   docker pull archlinux:latest
   cid=$(docker create archlinux:latest /bin/true)
   mkdir -p "$M/arch"
@@ -40,5 +40,5 @@ fi
 write_nspawn arch
 
 echo
-echo "Tentacoli creati:"
+echo "Fili creati:"
 du -sh "$M"/debian "$M"/arch

@@ -2,7 +2,7 @@
 # Utente dedicato senza capability: i permessi su systemd vengono solo da
 # polkit (50-aracno.rules) e dalla policy D-Bus per freeze/thaw.
 [Unit]
-Description=Aracno: gestione dei tentacoli
+Description=Aracno: gestione dei fili
 Documentation=https://github.com/Tommaso-Palestini/aracno-linux
 After=dbus.service
 

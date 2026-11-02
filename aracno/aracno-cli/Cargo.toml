@@ -1,0 +1,17 @@
+[package]
+name = "aracno-cli"
+description = "Comando aracno: la ragnatela dei fili, salti, tagli, ascolto in diretta"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "aracno"
+path = "src/main.rs"
+
+[dependencies]
+aracno-proto.workspace = true
+zbus.workspace = true
+futures-core = "0.3"

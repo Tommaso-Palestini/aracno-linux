@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
-# Aracno prototipo — T5: installa aracnod (installazione di sviluppo) e verifica ListTentacles.
-# Prima compila come utente:  cd aracno && cargo build --release -p aracnod
+# Aracno prototipo — T5: installa aracnod (installazione di sviluppo) e verifica ListStrands.
+# Prima compila come utente:  cd aracno && cargo build --release
 # Percorsi di sviluppo (i pacchetti useranno /usr/share e /usr/lib):
 #   /usr/local/libexec/aracnod                                        binario
 #   /etc/dbus-1/system.d/io.github.tommaso_palestini.Aracno1.conf  policy del nome
 #   /usr/local/share/dbus-1/system-services/…Aracno1.service       attivazione via D-Bus
 #   /etc/systemd/system/aracnod.service                               unit con restrizioni
 #   /usr/share/polkit-1/actions/…Aracno1.policy                    azioni switch e manage
+#   /usr/local/bin/aracno                                           comando per l'utente (aracno-cli)
 # Reinstalla anche i file di T1 (utente aracno, regola polkit, policy freeze/thaw).
 #
 # Ipotesi e criteri (scritti prima del test):
-#   O1a ListTentacles, chiamato da un utente normale, restituisce debian e arch con lo stesso
+#   O1a ListStrands, chiamato da un utente normale, restituisce debian e arch con lo stesso
 #       stato di `aracno list` (attiva→active, congelata→frozen, spenta→off)
-#   O1b RAM > 0 per i tentacoli accesi, 0 per quelli spenti
+#   O1b RAM > 0 per i fili accesi, 0 per quelli spenti
 #   O1c con arch spenta, arch risulta "off" (caso della unit non caricata o inattiva)
 #   O1d aracnod gira come utente aracno, attivato dal bus, senza errori nel journal
 set -euo pipefail
@@ -22,6 +23,8 @@ R="$(cd "$(dirname "$0")/.." && pwd)"
 D="$R/aracno/data"
 O="$R/prototype/aracno"
 BIN_SRC="$R/aracno/target/release/aracnod"
+CLI_SRC="$R/aracno/target/release/aracno"
+CLI=/usr/local/bin/aracno
 NAME=io.github.tommaso_palestini.Aracno1
 BIN=/usr/local/libexec/aracnod
 BUSCONF=/etc/dbus-1/system.d/$NAME.conf
@@ -37,13 +40,15 @@ case ${1:-} in
   "") ;;
   --rimuovi)
     systemctl stop aracnod.service 2>/dev/null || true
-    rm -f "$BIN" "$BUSCONF" "$ACTIV" "$UNIT" "$ACTIONS"
+    rm -f "$BIN" "$CLI" "$BUSCONF" "$ACTIV" "$UNIT" "$ACTIONS"
     systemctl daemon-reload; reload_bus
     echo "aracnod rimosso (i file di T1 restano: prototype/10-polkit-spike.sh --rimuovi)"; exit 0 ;;
   *) echo "Opzione sconosciuta: $*  (uso: $0 [--rimuovi])"; exit 2 ;;
 esac
 
-[[ -x $BIN_SRC ]] || { echo "Manca $BIN_SRC. Compila prima: cd $R/aracno && cargo build --release -p aracnod"; exit 1; }
+for b in "$BIN_SRC" "$CLI_SRC"; do
+  [[ -x $b ]] || { echo "Manca $b. Compila prima: cd $R/aracno && cargo build --release"; exit 1; }
+done
 
 echo ">> Installazione"
 install -D -m 644 "$D/sysusers/aracno.conf" /etc/sysusers.d/aracno.conf
@@ -51,6 +56,7 @@ systemd-sysusers /etc/sysusers.d/aracno.conf
 install -D -m 644 "$D/polkit/50-aracno.rules" /etc/polkit-1/rules.d/50-aracno.rules
 install -D -m 644 "$D/dbus/aracno-systemd-freezer.conf" /etc/dbus-1/system.d/aracno-systemd-freezer.conf
 install -D -m 755 -o root -g root "$BIN_SRC" "$BIN"
+install -D -m 755 -o root -g root "$CLI_SRC" "$CLI"
 install -D -m 644 "$D/dbus/$NAME.conf" "$BUSCONF"
 install -D -m 644 "$D/dbus/$NAME.service" "$ACTIV"
 install -D -m 644 "$D/systemd/aracnod.service" "$UNIT"
@@ -65,22 +71,22 @@ fails=0
 ok()   { echo "  ok: $*"; }
 fail() { echo "  FAIL: $*"; fails=$((fails + 1)); }
 
-# ListTentacles chiamato dall'utente normale; stampa "nome stato ram limite" per riga
+# ListStrands chiamato dall'utente normale; stampa "nome stato ram limite" per riga
 lista() {
   runuser -u "$UTENTE" -- busctl call --system --json=short "$NAME" /io/github/tommaso_palestini/Aracno1 \
-    "$NAME.Manager" ListTentacles \
+    "$NAME.Manager" ListStrands \
   | python3 -c 'import sys,json; [print(*r) for r in json.load(sys.stdin)["data"][0]]'
 }
 atteso() { case $1 in attiva) echo active ;; congelata) echo frozen ;; spenta) echo off ;; *) echo "?" ;; esac; }
 aracno_stato() { "$O" list | awk -v n="$1" '$1 == n {print $2}'; }
 
 confronta() {  # confronta lo stato di aracnod con quello di aracno list per debian e arch
-  local out; out=$(lista) || { fail "ListTentacles fallita"; return; }
+  local out; out=$(lista) || { fail "ListStrands fallita"; return; }
   echo "$out" | sed 's/^/    aracnod: /'
   for n in debian arch; do
     local riga st ram exp
     riga=$(awk -v n="$n" '$1 == n' <<<"$out")
-    [[ -n $riga ]] || { fail "$n assente da ListTentacles"; continue; }
+    [[ -n $riga ]] || { fail "$n assente da ListStrands"; continue; }
     read -r _ st ram _ <<<"$riga"
     exp=$(atteso "$(aracno_stato "$n")")
     [[ $st == "$exp" ]] && ok "$n: $st (aracno list: $(aracno_stato "$n"))" || fail "$n: aracnod dice $st, aracno list $exp"
@@ -111,7 +117,7 @@ echo; echo ">> Ripristino: arch riaccesa e congelata"
 
 echo
 if (( fails == 0 )); then
-  echo "ESITO T5: PASS (aracnod installato, ListTentacles coerente con aracno list)"
+  echo "ESITO T5: PASS (aracnod installato, ListStrands coerente con aracno list)"
 else
   echo "ESITO T5: FAIL ($fails controlli). Incolla l'output completo."
   exit 1

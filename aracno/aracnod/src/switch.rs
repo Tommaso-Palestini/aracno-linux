@@ -1,56 +1,56 @@
 //! Logica pura dello switch: quali operazioni fare, in che ordine. Niente D-Bus qui.
 //! Stessa sequenza di `aracno switch` (prototype/aracno): prima si congelano gli altri
-//! attivi, poi si scongela o si avvia il tentacolo scelto.
+//! attivi, poi si scongela o si avvia il filo scelto.
 
-use aracno_proto::{TentacleName, TentacleState};
+use aracno_proto::{StrandName, StrandState};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Step {
-    Freeze(TentacleName),
-    Thaw(TentacleName),
-    Start(TentacleName),
-    Stop(TentacleName),
+    Freeze(StrandName),
+    Thaw(StrandName),
+    Start(StrandName),
+    Stop(StrandName),
 }
 
-/// Piano dello switch verso `target`, dato lo stato attuale di tutti i tentacoli.
-/// `None` se `target` non è tra i tentacoli conosciuti.
-pub fn plan(all: &[(TentacleName, TentacleState)], target: &TentacleName) -> Option<Vec<Step>> {
+/// Piano dello switch verso `target`, dato lo stato attuale di tutti i fili.
+/// `None` se `target` non è tra i fili conosciuti.
+pub fn plan(all: &[(StrandName, StrandState)], target: &StrandName) -> Option<Vec<Step>> {
     let (_, stato) = all.iter().find(|(n, _)| n == target)?;
     let mut passi: Vec<Step> = all
         .iter()
-        .filter(|(n, s)| n != target && *s == TentacleState::Active)
+        .filter(|(n, s)| n != target && *s == StrandState::Active)
         .map(|(n, _)| Step::Freeze(n.clone()))
         .collect();
     match stato {
-        TentacleState::Frozen => passi.push(Step::Thaw(target.clone())),
-        TentacleState::Off => passi.push(Step::Start(target.clone())),
-        TentacleState::Active => {}
+        StrandState::Frozen => passi.push(Step::Thaw(target.clone())),
+        StrandState::Off => passi.push(Step::Start(target.clone())),
+        StrandState::Active => {}
     }
     Some(passi)
 }
 
-/// Piano dello stop di `target`: un tentacolo congelato va prima scongelato
+/// Piano dello stop di `target`: un filo congelato va prima scongelato
 /// (come `aracno stop`), uno già spento non richiede nulla.
-/// `None` se `target` non è tra i tentacoli conosciuti.
+/// `None` se `target` non è tra i fili conosciuti.
 pub fn plan_stop(
-    all: &[(TentacleName, TentacleState)],
-    target: &TentacleName,
+    all: &[(StrandName, StrandState)],
+    target: &StrandName,
 ) -> Option<Vec<Step>> {
     let (_, stato) = all.iter().find(|(n, _)| n == target)?;
     Some(match stato {
-        TentacleState::Off => vec![],
-        TentacleState::Frozen => vec![Step::Thaw(target.clone()), Step::Stop(target.clone())],
-        TentacleState::Active => vec![Step::Stop(target.clone())],
+        StrandState::Off => vec![],
+        StrandState::Frozen => vec![Step::Thaw(target.clone()), Step::Stop(target.clone())],
+        StrandState::Active => vec![Step::Stop(target.clone())],
     })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use TentacleState::*;
+    use StrandState::*;
 
-    fn n(s: &str) -> TentacleName {
-        TentacleName::try_from(s).unwrap()
+    fn n(s: &str) -> StrandName {
+        StrandName::try_from(s).unwrap()
     }
 
     #[test]
@@ -92,7 +92,7 @@ mod tests {
     }
 
     #[test]
-    fn tentacolo_sconosciuto() {
+    fn filo_sconosciuto() {
         let all = [(n("debian"), Active)];
         assert_eq!(plan(&all, &n("arch")), None);
     }

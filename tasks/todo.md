@@ -1,4 +1,4 @@
-# Task: menù a tentacoli
+# Task: menù a ragnatela
 
 Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (principio 2 di CLAUDE.md). Gli script con `sudo` li lancia l'utente, con il percorso assoluto.
 
@@ -8,7 +8,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Lavoro: `aracno/data/sysusers/aracno.conf`, `aracno/data/polkit/50-aracno.rules`, `prototype/10-polkit-spike.sh` (installa, prova, rimuove).
   - Accettazione:
     - come `aracno`, `busctl call … FreezeUnit/ThawUnit systemd-nspawn@arch.service` funziona senza password;
-    - come `aracno`, `RestartUnit` sullo stesso tentacolo e `StopUnit` su un'altra unit (per esempio `cron.service`) vengono **rifiutati**;
+    - come `aracno`, `RestartUnit` sullo stesso filo e `StopUnit` su un'altra unit (per esempio `cron.service`) vengono **rifiutati**;
     - come `aracno`, `machine1 ListImages` restituisce debian e arch.
   - Verifica: `sudo /home/xenon/Desktop/progetti-personal/idea-linux/prototype/10-polkit-spike.sh` → PASS.
   - Dipendenze: nessuna.
@@ -29,13 +29,13 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 - [x] **T3: ADR-0008** (XS): demone di sistema + D-Bus + polkit, utente dedicato, Rust. Con i risultati di T1 e T2.
 - [x] **T4: workspace e `aracno-proto`** (S): 7 test verdi (nomi, stati, coerenza con la regola polkit), clippy e fmt puliti
-  - Lavoro: `aracno/Cargo.toml`, `aracno/aracno-proto/` con i nomi D-Bus, `TentacleName`, `TentacleState` e gli errori.
+  - Lavoro: `aracno/Cargo.toml`, `aracno/aracno-proto/` con i nomi D-Bus, `StrandName`, `StrandState` e gli errori.
   - Accettazione: test unitari della validazione dei nomi (validi, vuoto, maiuscole, `../`, spazi, 64 caratteri).
   - Verifica: `cargo test -p aracno-proto`, `cargo clippy -- -D warnings`.
-- [x] **T5: `aracnod` con `ListTentacles`** (M): PASS il 2026-11-01 (O1a–O1d). Senza tokio: zbus 6 ha il suo runtime; RAM e limite dalle proprietà di systemd, nessun file letto
+- [x] **T5: `aracnod` con `ListStrands`** (M): PASS il 2026-11-01 (O1a–O1d). Senza tokio: zbus 6 ha il suo runtime; RAM e limite dalle proprietà di systemd, nessun file letto
   - Lavoro: `aracno/aracnod/`; i file `data/dbus/`, `data/systemd/aracnod.service`; `prototype/11-install-aracnod.sh`.
-  - Accettazione: O1. `ListTentacles` restituisce nome, stato, RAM e limite giusti con debian attiva e arch congelata, confrontati con `aracno list`.
-  - Verifica: `cargo test`; installazione; `busctl call io.github.tommaso_palestini.Aracno1 … ListTentacles`.
+  - Accettazione: O1. `ListStrands` restituisce nome, stato, RAM e limite giusti con debian attiva e arch congelata, confrontati con `aracno list`.
+  - Verifica: `cargo test`; installazione; `busctl call io.github.tommaso_palestini.Aracno1 … ListStrands`.
   - Dipendenze: T1, T4.
 - [x] **T6: `Switch`** (M): PASS il 2026-11-01. Mediana 13 ms, nobody fuori dalla sessione rifiutato, 12 Busy su 60 chiamate in contemporanea, stato sempre coerente. Le azioni polkit hanno come proprietario `unix-user:aracno`
   - Accettazione:
@@ -56,19 +56,29 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Dipendenze: T6.
   - PASS il 2026-11-02: `13-aracnod-stop-test.sh` (Stop con password, esposizione 0.2), `cargo audit` e `cargo deny check` puliti, revisione in `docs/security/2026-11-02-revisione-aracnod.md`.
 
+- [ ] **T7b: comando `aracno` per l'utente** (S) — chiesto il 2026-11-02
+  - Lavoro: crate `aracno-cli` (binario `aracno`, client di `aracnod`, nessun permesso proprio):
+    `ragnatela`, `salta FILO`, `taglia FILO`, `dove`, `ascolta`, `aiuto`. Installato in `/usr/local/bin` da `11-install-aracnod.sh`.
+  - Accettazione: C1–C5 di `prototype/14-aracno-cli-test.sh`.
+  - Idee per dopo (servono metodi nuovi in `aracnod`, con polkit `manage`):
+    `aracno tessi NOME DISTRO` (crea un filo dalle immagini dell'ISO, fase 5b),
+    `aracno riposa FILO SIZE` (tetto di RAM a un filo congelato, oggi `aracno limit` del prototipo),
+    `aracno rammenda [FILO]` (aggiorna i pacchetti, oggi `aracno upgrade` del prototipo).
+  - Dipendenze: T7.
+
 ### Checkpoint B
-- [ ] O1–O6 PASS, test e clippy verdi, revisione con te.
+- [x] O1–O6 PASS, test e clippy verdi, revisione con te (approvato il 2026-11-02).
 
 ## Fase 3: `aracno-menu`
 
 - [ ] **T8: menù base** (M)
-  - Lavoro: istanza unica (lanciato di nuovo si chiude), layer-shell o ripiego, elenco testuale da `ListTentacles`, Esc.
+  - Lavoro: istanza unica (lanciato di nuovo si chiude), layer-shell o ripiego, elenco testuale da `ListStrands`, Esc.
   - Accettazione: M4, cioè un messaggio chiaro se `aracnod` non risponde o rifiuta.
   - Da T2: l'avvio a freddo (129–207 ms) è al limite di M1. Tenere il processo già avviato e mostrare o nascondere la finestra; misurare.
   - Da T2: controllare che il display sia Wayland prima di `is_supported()`, altrimenti la libreria 1.0.4 dà un CRITICAL su X11.
   - Dipendenze: T2, T5.
 - [ ] **T9: raggiera, tastiera e switch** (M)
-  - Lavoro: `radial.rs` (logica pura, test per 1–8 tentacoli su 1366×768), navigazione con frecce, Tab e Invio, `Switch` tramite `aracnod`, chiusura a switch fatto.
+  - Lavoro: `radial.rs` (logica pura, test per 1–8 fili su 1366×768), navigazione con frecce, Tab e Invio, `Switch` tramite `aracnod`, chiusura a switch fatto.
   - Accettazione: M2, M3.
   - Dipendenze: T6, T8.
 - [ ] **T10: grafica** (M)

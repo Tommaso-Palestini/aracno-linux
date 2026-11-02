@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
-# Aracno prototipo — fase 4.5: verifica `aracno limit` (tetto RAM per tentacolo).
+# Aracno prototipo — fase 4.5: verifica `aracno limit` (tetto RAM per filo).
 #
 # Perché: il congelamento libera solo la CPU, non la RAM (ADR-0002). Con 5,7 GB
-# serve un modo per togliere RAM a un tentacolo, soprattutto quando è congelato.
+# serve un modo per togliere RAM a un filo, soprattutto quando è congelato.
 #
 # Ipotesi e criteri (scritti prima del test):
 #   T1  `aracno limit debian 512M` scrive memory.max = 536870912 e `aracno list` lo mostra;
 #       `aracno limit debian infinity` lo riporta a "max".
 #   T2  Con un tetto di 512M, un processo che riempie 768 MB NON viene ucciso:
 #       il kernel manda in swap l'eccesso. Attese: memhog "ok", swap del
-#       tentacolo >= 200 MB, nessun oom_kill, tentacolo ancora attivo.
-#   T3  Il caso d'uso vero: tentacolo congelato con 768 MB occupati, si abbassa
+#       filo >= 200 MB, nessun oom_kill, filo ancora attivo.
+#   T3  Il caso d'uso vero: filo congelato con 768 MB occupati, si abbassa
 #       il tetto a 256M. Attese: memory.current <= 256M senza oom_kill, tempo
 #       misurato; allo switch di ritorno il processo è vivo e i dati sono
 #       intatti (verify ok). Solo misura, senza soglia: quanta RAM l'host
 #       recupera davvero, dato che lo swap principale è zram (compresso, ma in RAM).
 #
-# Usa i tentacoli debian (alloca) e arch (destinazione dello switch).
+# Usa i fili debian (alloca) e arch (destinazione dello switch).
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
@@ -77,15 +77,15 @@ echo; echo ">> T2: tetto 512M, il processo riempie 768 MB"
 o0=$(ooms)
 start_hog 768
 if wait_log '^(ok:|ERRORE)'; then cat "$LOG" | sed 's/^/  memhog: /'; else echo "  memhog: nessuna risposta in 60 s"; fi
-echo "  RAM tentacolo: $(cur) MB, swap tentacolo: $(swp) MB, oom_kill: $(( $(ooms) - o0 ))"
+echo "  RAM filo: $(cur) MB, swap filo: $(swp) MB, oom_kill: $(( $(ooms) - o0 ))"
 grep -q '^ok:' "$LOG" 2>/dev/null || fail "memhog non ha finito il riempimento"
-(( $(swp) >= 200 ))              || fail "swap del tentacolo sotto 200 MB"
+(( $(swp) >= 200 ))              || fail "swap del filo sotto 200 MB"
 (( $(ooms) == o0 ))              || fail "il kernel ha ucciso processi (oom_kill)"
-systemctl is-active -q "systemd-nspawn@$A.service" || fail "il tentacolo $A si è spento"
+systemctl is-active -q "systemd-nspawn@$A.service" || fail "il filo $A si è spento"
 stop_hog
 "$O" limit "$A" infinity >/dev/null
 
-echo; echo ">> T3: tetto abbassato su un tentacolo congelato"
+echo; echo ">> T3: tetto abbassato su un filo congelato"
 start_hog 768
 wait_log '^(ok:|ERRORE)' || true
 grep -q '^ok:' "$LOG" 2>/dev/null || { fail "memhog senza tetto non ha finito"; exit 1; }
@@ -98,8 +98,8 @@ ms_lim=$(( ($(date +%s%N) - t0) / 1000000 ))
 sleep 1
 c1=$(cur); a1=$(avail)
 echo "  dopo:   RAM $A $c1 MB, swap $A $(swp) MB, MemAvailable host $a1 MB, $(zram)"
-echo "  tetto applicato in $ms_lim ms; RAM tolta al tentacolo: $((c0 - c1)) MB; RAM guadagnata dall'host: $((a1 - a0)) MB"
-(( c1 <= 256 ))     || fail "RAM del tentacolo congelato sopra 256 MB"
+echo "  tetto applicato in $ms_lim ms; RAM tolta al filo: $((c0 - c1)) MB; RAM guadagnata dall'host: $((a1 - a0)) MB"
+(( c1 <= 256 ))     || fail "RAM del filo congelato sopra 256 MB"
 (( $(ooms) == o0 )) || fail "oom_kill durante l'abbassamento del tetto"
 
 out=$("$O" switch "$A"); echo "  $out" | tail -1
@@ -112,7 +112,7 @@ echo "  dopo il rientro: RAM $A $(cur) MB, swap $A $(swp) MB"
 
 echo
 if (( fails == 0 )); then
-  echo "ESITO 4.5: PASS (aracno limit funziona, anche su tentacolo congelato; dati intatti)"
+  echo "ESITO 4.5: PASS (aracno limit funziona, anche su filo congelato; dati intatti)"
 else
   echo "ESITO 4.5: FAIL ($fails controlli). Incolla l'output completo."
   exit 1

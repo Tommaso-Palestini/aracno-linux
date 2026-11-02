@@ -2,10 +2,10 @@
 # Aracno prototipo — fase 3: misura lo switch ripetuto e verifica che i processi
 # congelati si fermino davvero e riprendano dopo lo switch.
 #
-# Ogni tentacolo ha un contatore che incrementa ogni 10 ms e scrive il valore
-# in /var/tmp (sul filesystem del tentacolo, leggibile dall'host).
-#   - tentacolo USCITO: il contatore deve restare fermo dopo lo switch (congelato)
-#   - tentacolo ENTRATO: il contatore deve avanzare (ripreso dal punto in cui era)
+# Ogni filo ha un contatore che incrementa ogni 10 ms e scrive il valore
+# in /var/tmp (sul filesystem del filo, leggibile dall'host).
+#   - filo USCITO: il contatore deve restare fermo dopo lo switch (congelato)
+#   - filo ENTRATO: il contatore deve avanzare (ripreso dal punto in cui era)
 #
 # Criterio di passaggio: nessun fallimento e mediana < 150 ms.
 set -euo pipefail
@@ -85,7 +85,7 @@ echo "  fallimenti (congelamento o ripresa): $FAILS"
 MEDIANA=$(sort -n "$TIMES" | awk '{v[NR]=$1} END{print (NR%2)?v[(NR+1)/2]:(v[NR/2]+v[NR/2+1])/2}')
 rm -f "$TIMES"
 
-echo; echo ">> Pulizia contatori (i tentacoli restano accesi)"
+echo; echo ">> Pulizia contatori (i fili restano accesi)"
 for n in $A $B; do systemctl -M "$n" stop aracno-count 2>/dev/null || true; done
 
 echo

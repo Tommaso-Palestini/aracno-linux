@@ -3,20 +3,20 @@
 Stato: **approvata** il 2026-11-01.
 
 ## Obiettivo
-Un servizio di sistema che fa le operazioni privilegiate sui tentacoli per conto di programmi senza privilegi: il menù (`aracno-menu`) e in futuro la CLI.
+Un servizio di sistema che fa le operazioni privilegiate sui fili per conto di programmi senza privilegi: il menù (`aracno-menu`) e in futuro la CLI.
 Utente: chi è seduto davanti al PC, nella sessione grafica attiva.
 Successo: dalla sessione grafica l'utente fa lo switch senza password e senza `sudo`. Nessun altro processo può usare `aracnod` per fare altro che le operazioni previste.
 
 User story:
-- Come utente della sessione attiva, voglio vedere i tentacoli con il loro stato e passare a uno di loro, senza password.
-- Come utente, voglio spegnere un tentacolo, confermando con la password di amministratore.
+- Come utente della sessione attiva, voglio vedere i fili con il loro stato e passare a uno di loro, senza password.
+- Come utente, voglio spegnere un filo, confermando con la password di amministratore.
 - Come amministratore che installa Aracno su un'altra distro, voglio che funzioni con systemd, D-Bus e polkit standard, senza dipendenze legate a una distro.
 
 ## Assunzioni
 1. L'host ha systemd con cgroup v2 e freezer: systemd ≥ 252, quello di Debian bookworm. Trixie, Arch, Fedora e Ubuntu ≥ 23.04 lo soddisfano.
-2. I tentacoli sono macchine nspawn in `/var/lib/machines/NOME`, avviate come `systemd-nspawn@NOME.service` (ADR-0001).
+2. I fili sono macchine nspawn in `/var/lib/machines/NOME`, avviate come `systemd-nspawn@NOME.service` (ADR-0001).
 3. polkit è presente: lo è su tutte le distro desktop principali.
-4. Fuori dalla v1: `limit`, `upgrade`, creazione di tentacoli. Si aggiungono dopo, con la stessa interfaccia.
+4. Fuori dalla v1: `limit`, `upgrade`, creazione di fili. Si aggiungono dopo, con la stessa interfaccia.
 
 ## Interfaccia D-Bus (`aracno-proto`)
 - Bus: **di sistema**. Nome: `io.github.tommaso_palestini.Aracno1`. Il nome è in DNS inverso del repo GitHub, come vuole la convenzione di D-Bus e Flatpak.
@@ -24,14 +24,14 @@ User story:
 
 | Membro | Firma | Permesso polkit | Note |
 |---|---|---|---|
-| `ListTentacles()` | → `a(sstt)` nome, stato, RAM byte, limite byte (0 = nessuno) | nessuno, sola lettura | stato ∈ `active`, `frozen`, `off` |
+| `ListStrands()` | → `a(sstt)` nome, stato, RAM byte, limite byte (0 = nessuno) | nessuno, sola lettura | stato ∈ `active`, `frozen`, `off` |
 | `Switch(s nome)` | → `u` millisecondi | `…Aracno1.switch` | congela gli altri attivi, scongela o avvia `nome` |
 | `Stop(s nome)` | → nulla | `…Aracno1.manage` | scongela se serve, poi spegne |
 | `StateChanged` (segnale) | `s nome, s stato` | — | per aggiornare il menù senza interrogare di continuo |
 
 Errori D-Bus con nome: `…Aracno1.Error.NotFound`, `.InvalidName`, `.NotAuthorized`, `.Busy`, `.Failed`.
 
-Regole sui nomi dei tentacoli, validate **nel demone** prima di tutto il resto: `^[a-z0-9][a-z0-9-]{0,62}$`, e deve esistere come immagine di systemd-machined (`org.freedesktop.machine1.Manager.ListImages`). `aracnod` non legge `/var/lib/machines`, che ha permessi 0700 root. I nomi non passano mai per una shell.
+Regole sui nomi dei fili, validate **nel demone** prima di tutto il resto: `^[a-z0-9][a-z0-9-]{0,62}$`, e deve esistere come immagine di systemd-machined (`org.freedesktop.machine1.Manager.ListImages`). `aracnod` non legge `/var/lib/machines`, che ha permessi 0700 root. I nomi non passano mai per una shell.
 
 ## Sicurezza (`security-and-hardening`)
 - **Azioni polkit** in `io.github.tommaso_palestini.Aracno1.policy`:
@@ -47,7 +47,7 @@ Regole sui nomi dei tentacoli, validate **nel demone** prima di tutto il resto: 
   - Verificato sul sorgente di systemd v255 (`src/core/dbus-unit.c`, `dbus-util.c`, `bus-convenience.c`): `FreezeUnit` passa a polkit i dettagli `unit` e `verb=stop`, `ThawUnit` passa `verb=start`. `StartUnit` e `StopUnit` usano `start` e `stop`. Se manca `CAP_SYS_ADMIN`, anche root passa da polkit: per questo "root senza capability" non funzionerebbe.
   - **Policy D-Bus per freeze e thaw** (`aracno-systemd-freezer.conf`): su systemd 255 la policy del bus di systemd non permette `FreezeUnit` e `ThawUnit` a chi non è root, e la chiamata viene rifiutata prima di arrivare a polkit (verificato in T1 il 2026-11-01). Il file apre questi due metodi **solo** all'utente `aracno`, mentre la decisione resta a polkit. Nelle versioni recenti di systemd questi metodi sono già nella policy predefinita, quindi il file non serve più ma non fa danni.
   - Se un giorno serve `aracno limit` (`SetUnitProperties`), il verbo è diverso: va aggiunto in modo esplicito alla regola, con una nuova decisione.
-- **Log**: ogni operazione va nel journal con chi l'ha chiesta (UID e PID del chiamante), tentacolo, esito e durata. Nessun dato della sessione.
+- **Log**: ogni operazione va nel journal con chi l'ha chiesta (UID e PID del chiamante), filo, esito e durata. Nessun dato della sessione.
 - **Dipendenze Rust** ridotte e controllate: `Cargo.lock` nel repo, `cargo audit` e `cargo deny` prima di ogni rilascio.
 
 ## Tech stack
@@ -81,10 +81,10 @@ prototype/10-aracnod-test.sh  prova sul PC reale
 
 ## Stile del codice
 ```rust
-/// Un nome di tentacolo già validato: l'unico tipo accettato dalle operazioni.
-pub struct TentacleName(String);
+/// Un nome di filo già validato: l'unico tipo accettato dalle operazioni.
+pub struct StrandName(String);
 
-impl TryFrom<&str> for TentacleName {
+impl TryFrom<&str> for StrandName {
     type Error = ProtoError;
     fn try_from(s: &str) -> Result<Self, Self::Error> {
         let ok = !s.is_empty() && s.len() <= 63
@@ -99,11 +99,11 @@ Convenzioni: tipi che rendono impossibili gli stati sbagliati (un nome non valid
 ## Strategia di test
 - **Unitari** (`cargo test`): validazione dei nomi (casi validi, vuoto, maiuscole, `../`, spazi, 64 caratteri), lettura dello stato dai file cgroup (con cartelle finte), logica dello switch con un systemd finto (trait).
 - **Sul PC** (`prototype/10-aracnod-test.sh`, criteri scritti nello script prima di lanciarlo):
-  - O1: `busctl call … ListTentacles` restituisce debian e arch con lo stato giusto.
+  - O1: `busctl call … ListStrands` restituisce debian e arch con lo stato giusto.
   - O2: `Switch` dalla sessione attiva funziona senza password. Mediana su 20 switch < 150 ms, contro i 69 ms della fase 3, più il costo del D-Bus.
   - O3: `Switch` lanciato come `nobody`, da fuori della sessione, riceve `NotAuthorized` e lo stato non cambia.
   - O4: nomi non validi (`../etc`, `Debian`, `a b`, stringa vuota) ricevono `InvalidName`, e nessuna unit viene toccata.
-  - O5: due `Switch` in contemporanea: uno riesce, l'altro riceve `Busy`, e alla fine c'è esattamente un tentacolo attivo.
+  - O5: due `Switch` in contemporanea: uno riesce, l'altro riceve `Busy`, e alla fine c'è esattamente un filo attivo.
   - O6: `systemd-analyze security aracnod.service` dà un punteggio ≤ 2.0 (OK).
 
 ## Confini

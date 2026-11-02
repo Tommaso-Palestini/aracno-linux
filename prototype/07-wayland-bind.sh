@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Aracno prototipo — fase 4.4: rende visibile al tentacolo il socket Wayland dell'utente.
+# Aracno prototipo — fase 4.4: rende visibile al filo il socket Wayland dell'utente.
 # Monta SOLO il socket (non D-Bus, non PulseAudio): il container può disegnare finestre
 # sul desktop, ma non accede al resto della sessione. Compromesso da tenere presente.
-# Aggiunge una riga Bind= al file .nspawn di ogni tentacolo e li riavvia.
+# Aggiunge una riga Bind= al file .nspawn di ogni filo e li riavvia.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
@@ -28,7 +28,7 @@ for n in $(names); do
   fi
 done
 
-echo; echo ">> Riavvio dei tentacoli"
+echo; echo ">> Riavvio dei fili"
 for n in $(names); do
   if systemctl is-active -q "systemd-nspawn@$n.service"; then
     machinectl poweroff "$n" >/dev/null
@@ -37,7 +37,7 @@ for n in $(names); do
   "$O" start "$n"
 done
 
-echo; echo ">> Verifica: socket visibile dentro ogni tentacolo"
+echo; echo ">> Verifica: socket visibile dentro ogni filo"
 FAIL=0
 for n in $(names); do
   if systemd-run -M "$n" --quiet --wait --pipe /bin/sh -c 'test -S /run/aracno-wayland/wayland-1' >/dev/null 2>&1; then
@@ -52,6 +52,6 @@ echo
 if (( FAIL == 0 )); then
   echo "ESITO 4.4 (bind): PASS. Prossimo passo: aprire una finestra, vedi le istruzioni."
 else
-  echo "ESITO 4.4 (bind): FAIL ($FAIL tentacoli)."
+  echo "ESITO 4.4 (bind): FAIL ($FAIL fili)."
   exit 1
 fi

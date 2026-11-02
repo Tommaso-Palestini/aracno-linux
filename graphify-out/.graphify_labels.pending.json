@@ -10,7 +10,7 @@
   "8": "ADR-0002: Switch con il freezer dei cgroup (`systemctl freeze`)",
   "9": "switch.rs",
   "10": "ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con utente dedicato, polkit e D-Bus",
-  "11": "ADR-0005: Desktop: nei tentacoli si monta solo il socket Wayland",
+  "11": "ragnatela.rs",
   "12": "lib.rs",
   "13": "README.md",
   "14": "08-ram-limit.sh",
@@ -33,7 +33,9 @@
   "31": "aracno-proto",
   "32": "aracno-spike-layer-shell",
   "33": "Revisione di sicurezza di aracnod (T7) — 2026-11-02",
-  "70": "01-create-tentacles.sh",
+  "34": "ADR-0003: Rete dei fili condivisa con l'host",
+  "35": "14-aracno-cli-test.sh",
+  "36": "01-create-strands.sh",
   "72": "00-setup.sh",
   "73": "02-test-freeze.sh"
 }
