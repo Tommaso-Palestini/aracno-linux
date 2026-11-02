@@ -99,7 +99,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 ## Prima della fase 5 (chiesto il 2026-11-02)
 
-- [ ] **T12: copia di sicurezza prima di `aracno upgrade`** (S)
+- [x] **T12: copia di sicurezza prima di `aracno upgrade`** (S)
   - Ipotesi: su ext4 non ci sono snapshot, ma una copia completa in `/var/lib/aracno/copie/`
     (stesso filesystem di `/var/lib/machines`, fuori dalla vista di machined) costa pochi
     secondi per filo e il ripristino è uno scambio di cartelle, istantaneo. Con btrfs
@@ -108,7 +108,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     copia coerente come dopo uno spegnimento brusco); una copia per filo, la più recente;
     rifiuta se lo spazio libero è meno di 1,2 volte il filo; `aracno ripristina NOME`.
   - Accettazione: `prototype/22-upgrade-copia-test.sh` (U1–U4) con tempi misurati.
-  - Fatto il 2026-11-02, da verificare: `aracno upgrade` copia prima di aggiornare (`--senza-copia` per saltare), `aracno ripristina`, `aracno copie`.
+  - PASS il 2026-11-02 (`22-upgrade-copia-test.sh`: copia di 1,3 GB in 8,8–9,2 s, filo attivo congelato per quel tempo; ripristino ok). `aracno upgrade` copia prima di aggiornare (`--senza-copia` per saltare), `aracno ripristina`, `aracno copie`.
 - [ ] **T13: politica della RAM per i fili congelati** (S)
   - Domanda: serve un tetto automatico allo switch, o il kernel sacrifica già da solo i
     fili congelati quando la memoria scarseggia? Dato di partenza: fase 4.5 (con zram si

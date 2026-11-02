@@ -29,7 +29,7 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 - [x] **ADR:** decisioni registrate in `docs/adr/` (0001–0006: nspawn, freezer, rete condivisa, GPU, socket Wayland, base ISO)
 - [x] **Scelta del menù a ragnatela:** schermata a tutto schermo con tasto rapido (ADR-0007)
 - [ ] **Menù a ragnatela:** spec approvate (`docs/spec/`), ora piano e implementazione (`spec-driven-development`, `security-and-hardening`, `frontend-ui-engineering`, `design-taste-frontend`)
-- [ ] **`aracno upgrade`, copia di sicurezza:** snapshot del filo prima di aggiornare (su ext4 costa una copia intera; valutare btrfs per l'ISO)
+- [x] **`aracno upgrade`, copia di sicurezza:** copia completa in `/var/lib/aracno/copie` prima di aggiornare, `aracno ripristina` (T12, 9 s per 1,3 GB su ext4; con btrfs nell'ISO `cp --reflink` la rende quasi gratis)
 - [ ] **RAM dei fili congelati:** decidere la politica (tetto automatico allo switch? quanto basso? zram o swap su disco per i congelati?). Dato di partenza: fase 4.5
 - [ ] **Socket Wayland:** rivedere il compromesso prima di un uso quotidiano
 
