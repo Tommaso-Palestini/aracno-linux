@@ -1,0 +1,17 @@
+[package]
+name = "aracno-menu"
+description = "Il menù a ragnatela di Aracno: mostra i fili e passa da uno all'altro tramite aracnod"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+# Serve gtk4-layer-shell (1.0.4, compilata in ~/.local in T2): per compilare
+#   PKG_CONFIG_PATH=$HOME/.local/lib/x86_64-linux-gnu/pkgconfig cargo build --release -p aracno-menu
+[dependencies]
+aracno-proto.workspace = true
+zbus.workspace = true
+# stesse versioni della prova di T2 (aracno/spikes/layer-shell), verificate su COSMIC
+gtk = { package = "gtk4", version = "0.11" }
+gtk4-layer-shell = "0.8"

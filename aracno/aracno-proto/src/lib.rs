@@ -5,6 +5,8 @@
 use std::fmt;
 use std::str::FromStr;
 
+pub mod client;
+
 /// Nome sul bus di sistema (DNS inverso del repo GitHub).
 pub const BUS_NAME: &str = "io.github.tommaso_palestini.Aracno1";
 /// Percorso dell'oggetto esportato da `aracnod`.

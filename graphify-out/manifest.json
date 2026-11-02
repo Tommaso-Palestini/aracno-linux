@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793613924.138906,
-    "seen": 1793613940.5172288,
-    "ast_hash": "d895e40ecfdb670c5837168df00e1c40",
+    "mtime": 1793615390.5191536,
+    "seen": 1793615422.5913985,
+    "ast_hash": "f5ae30accfe53e9e10382a1c8239cfec",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -144,21 +144,21 @@
     "semantic_hash": ""
   },
   "aracno/Cargo.toml": {
-    "mtime": 1793613551.0960104,
-    "seen": 1793613641.550186,
-    "ast_hash": "74dbd0b36ed89f63cf715e9dc932d632",
+    "mtime": 1793615089.2159529,
+    "seen": 1793615422.5911572,
+    "ast_hash": "4f1af13275bfb4ea207bc001a5383ccc",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/Cargo.toml": {
-    "mtime": 1793611742.2010815,
-    "seen": 1793611889.9605086,
-    "ast_hash": "cdac7b332fcd5564ac8749d1992e955c",
+    "mtime": 1793615010.532668,
+    "seen": 1793615422.5912125,
+    "ast_hash": "f685d306e57c11d01afd83bab7574ed9",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/src/lib.rs": {
-    "mtime": 1793613419.3137221,
-    "seen": 1793613641.5502222,
-    "ast_hash": "7ae8a881fd7a91e8dab95544d5a76f53",
+    "mtime": 1793615010.5393865,
+    "seen": 1793615422.5912197,
+    "ast_hash": "1d33eefb7d3916c86fb43435aac32060",
     "semantic_hash": ""
   },
   "aracno/aracnod/Cargo.toml": {
@@ -246,9 +246,9 @@
     "semantic_hash": ""
   },
   "docs/spec/SPEC-aracno-menu.md": {
-    "mtime": 1793613419.3118157,
-    "seen": 1793613641.5503771,
-    "ast_hash": "49e1161e47232eed1c53ce953cf58e80",
+    "mtime": 1793615390.523604,
+    "seen": 1793615422.591388,
+    "ast_hash": "7b93a711d82a6b5eadc6daf0ff24d026",
     "semantic_hash": ""
   },
   "docs/spec/SPEC-aracnod.md": {
@@ -270,15 +270,15 @@
     "semantic_hash": ""
   },
   "aracno/aracno-cli/src/main.rs": {
-    "mtime": 1793613914.9800851,
-    "seen": 1793613940.517041,
-    "ast_hash": "499d0373e95c935b902970e7f8d036a9",
+    "mtime": 1793615010.5108297,
+    "seen": 1793615422.5911891,
+    "ast_hash": "9082e36d7aa257c16c034bc5daf6e65c",
     "semantic_hash": ""
   },
   "aracno/aracno-cli/src/ragnatela.rs": {
-    "mtime": 1793613924.1255865,
-    "seen": 1793613940.517046,
-    "ast_hash": "d105ad615ebb932a156a4efe6aeefc6d",
+    "mtime": 1793615000.9720166,
+    "seen": 1793615422.5911956,
+    "ast_hash": "441751aa5ee8d31d3edb6e687cffebc9",
     "semantic_hash": ""
   },
   "prototype/01-create-strands.sh": {
@@ -306,9 +306,39 @@
     "semantic_hash": ""
   },
   "prototype/15-watchdog-freeze.sh": {
-    "mtime": 1793614207.6484823,
-    "seen": 1793614220.6256204,
-    "ast_hash": "b3ccaa00bf318582f342bce208827420",
+    "mtime": 1793614844.3819203,
+    "seen": 1793615422.5913177,
+    "ast_hash": "55b66d38b5b8b31a4c17a3bfd42900e3",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-menu/Cargo.toml": {
+    "mtime": 1793615066.3092136,
+    "seen": 1793615422.5912004,
+    "ast_hash": "7cc2e203dd9ac149de9857d4cfba2ccb",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-menu/src/main.rs": {
+    "mtime": 1793615406.0569701,
+    "seen": 1793615422.591205,
+    "ast_hash": "3af283f797df6bb2f3d767dc04fa9202",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-menu/src/view.rs": {
+    "mtime": 1793615066.547218,
+    "seen": 1793615422.5912085,
+    "ast_hash": "a06633e74f87e87ef65d19d34314b16f",
+    "semantic_hash": ""
+  },
+  "aracno/aracno-proto/src/client.rs": {
+    "mtime": 1793615000.6980116,
+    "seen": 1793615422.5912158,
+    "ast_hash": "924cf84f0ff922d8f83a8f6c655206e7",
+    "semantic_hash": ""
+  },
+  "prototype/16-menu-base-test.sh": {
+    "mtime": 1793615406.0722978,
+    "seen": 1793615422.5913208,
+    "ast_hash": "a7bdb282a863738be038ea5b7604cb82",
     "semantic_hash": ""
   }
 }

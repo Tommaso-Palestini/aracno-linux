@@ -3,7 +3,7 @@
 Stato: **approvata** il 2026-11-01. Decisione di forma: ADR-0007.
 
 ## Obiettivo
-Una schermata a tutto schermo che si apre con un tasto rapido, mostra i fili a raggiera intorno alla testa e fa lo switch con un tasto o un clic. Non ha privilegi: chiede tutto a `aracnod` (SPEC-aracnod.md).
+Una schermata a tutto schermo che si apre con un tasto rapido, mostra i fili a raggiera intorno al centro della ragnatela e fa lo switch con un tasto o un clic. Non ha privilegi: chiede tutto a `aracnod` (SPEC-aracnod.md).
 Successo: aprire il menù, scegliere e tornare al lavoro richiede meno di un secondo e nessuna password, su qualsiasi desktop Wayland con layer-shell. Sugli altri desktop il menù degrada senza rompersi.
 
 User story:

@@ -4,12 +4,13 @@
 
 mod ragnatela;
 
+use aracno_proto::client::{self, messaggio, stato_it, ManagerProxy};
 use futures_core::Stream;
-use ragnatela::{attivi, da_righe, disegna, messaggio_errore, stato_it};
+use ragnatela::{attivi, disegna};
 use std::io::IsTerminal;
 use std::pin::Pin;
 use std::process::ExitCode;
-use zbus::{proxy, Connection};
+use zbus::Connection;
 
 const AIUTO: &str = "\
 aracno — i fili di Aracno Linux
@@ -22,32 +23,12 @@ aracno — i fili di Aracno Linux
   aracno help            questo messaggio
 ";
 
-#[proxy(
-    interface = "io.github.tommaso_palestini.Aracno1.Manager",
-    default_service = "io.github.tommaso_palestini.Aracno1",
-    default_path = "/io/github/tommaso_palestini/Aracno1"
-)]
-trait Manager {
-    fn list_strands(&self) -> zbus::Result<Vec<(String, String, u64, u64)>>;
-    fn switch(&self, name: &str) -> zbus::Result<u32>;
-    #[zbus(allow_interactive_auth)]
-    fn stop(&self, name: &str) -> zbus::Result<u32>;
-    #[zbus(signal)]
-    fn state_changed(&self, name: String, state: String) -> zbus::Result<()>;
-}
-
 /// Errore già pronto da mostrare all'utente.
 struct Errore(String);
 
 impl From<zbus::Error> for Errore {
     fn from(e: zbus::Error) -> Self {
-        use zbus::DBusError;
-        match &e {
-            zbus::Error::MethodError(nome, _, _) => Errore(messaggio_errore(nome.as_str()).into()),
-            // errori standard di D-Bus (servizio assente, metodo sconosciuto, …)
-            zbus::Error::FDO(f) => Errore(messaggio_errore(f.name().as_str()).into()),
-            _ => Errore(format!("bus di sistema non raggiungibile: {e}")),
-        }
+        Errore(messaggio(&e))
     }
 }
 
@@ -55,8 +36,8 @@ fn colori() -> bool {
     std::io::stdout().is_terminal() && std::env::var_os("NO_COLOR").is_none()
 }
 
-async fn fili(m: &ManagerProxy<'_>) -> Result<Vec<ragnatela::Filo>, Errore> {
-    da_righe(m.list_strands().await?).map_err(Errore)
+async fn fili(m: &ManagerProxy<'_>) -> Result<Vec<client::Filo>, Errore> {
+    client::fili(m).await.map_err(Errore)
 }
 
 async fn esegui(args: &[String]) -> Result<(), Errore> {
@@ -124,16 +105,5 @@ fn main() -> ExitCode {
             eprintln!("aracno: {msg}");
             ExitCode::FAILURE
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn proxy_coerente_con_proto() {
-        let s = include_str!("main.rs");
-        assert!(s.contains(&format!("interface = \"{}\"", aracno_proto::INTERFACE)));
-        assert!(s.contains(&format!("default_service = \"{}\"", aracno_proto::BUS_NAME)));
-        assert!(s.contains(&format!("default_path = \"{}\"", aracno_proto::OBJECT_PATH)));
     }
 }

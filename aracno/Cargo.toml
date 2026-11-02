@@ -1,8 +1,10 @@
-# Workspace di Aracno: aracno-proto (interfaccia condivisa), aracnod, aracno-cli, poi aracno-menu.
+# Workspace di Aracno: aracno-proto (interfaccia condivisa), aracnod, aracno-cli, aracno-menu.
 # Le prove in spikes/ restano fuori (ognuna è un progetto a sé).
 [workspace]
 resolver = "2"
-members = ["aracno-proto", "aracnod", "aracno-cli"]
+members = ["aracno-proto", "aracnod", "aracno-cli", "aracno-menu"]
+# `cargo build` senza -p non compila il menù, che richiede gtk4-layer-shell (vedi aracno-menu/Cargo.toml)
+default-members = ["aracno-proto", "aracnod", "aracno-cli"]
 exclude = ["spikes"]
 
 [workspace.package]
