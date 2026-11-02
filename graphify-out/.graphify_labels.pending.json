@@ -50,8 +50,11 @@
   "48": "Vista",
   "49": "ragnatela.rs",
   "50": "19-stato-disallineato-test.sh",
-  "51": "StrandState",
+  "51": "Filo",
   "52": "18-menu-grafica-test.sh",
+  "53": "estrai.py",
+  "54": "21-menu-t11-test.sh",
+  "55": "20-tasto-rapido.sh",
   "72": "00-setup.sh",
   "73": "02-test-freeze.sh"
 }

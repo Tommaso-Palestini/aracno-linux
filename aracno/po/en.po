@@ -1,0 +1,97 @@
+# Aracno — English translation.
+# Aggiornare con: python3 po/estrai.py && msgmerge --update po/en.po po/aracno.pot
+msgid ""
+msgstr ""
+"Project-Id-Version: aracno\n"
+"Report-Msgid-Bugs-To: https://github.com/Tommaso-Palestini/aracno-linux/"
+"issues\n"
+"PO-Revision-Date: 2026-11-02 12:00+0100\n"
+"Last-Translator: Aracno\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aracno-proto/src/client.rs:61
+msgid "stato sconosciuto da aracnod"
+msgstr "unknown state from aracnod"
+
+#: aracno-proto/src/client.rs:85
+msgid "attivo"
+msgstr "active"
+
+#: aracno-proto/src/client.rs:86
+msgid "congelato"
+msgstr "frozen"
+
+#: aracno-proto/src/client.rs:87
+msgid "spento"
+msgstr "off"
+
+#: aracno-proto/src/client.rs:108
+msgid "questo filo non esiste"
+msgstr "this strand does not exist"
+
+#: aracno-proto/src/client.rs:109
+msgid "nome non valido: solo minuscole, cifre e trattini"
+msgstr "invalid name: lowercase letters, digits and hyphens only"
+
+#: aracno-proto/src/client.rs:110
+msgid "permesso negato"
+msgstr "permission denied"
+
+#: aracno-proto/src/client.rs:111
+msgid "c'è già un cambio di filo in corso, riprova tra un attimo"
+msgstr "a strand switch is already in progress, try again in a moment"
+
+#: aracno-proto/src/client.rs:112
+msgid "aracnod non è riuscito (dettagli: journalctl -u aracnod)"
+msgstr "aracnod failed (details: journalctl -u aracnod)"
+
+#: aracno-proto/src/client.rs:113
+msgid "aracnod non risponde: è installato?"
+msgstr "aracnod is not responding: is it installed?"
+
+#: aracno-proto/src/client.rs:115
+msgid ""
+"aracnod installato è di un'altra versione: reinstallalo (prototype/11-"
+"install-aracnod.sh)"
+msgstr ""
+"the installed aracnod is a different version: reinstall it (prototype/11-"
+"install-aracnod.sh)"
+
+#: aracno-proto/src/client.rs:117
+msgid "il bus di sistema ha rifiutato la chiamata"
+msgstr "the system bus refused the call"
+
+#: aracno-proto/src/client.rs:118
+msgid "errore inatteso da aracnod"
+msgstr "unexpected error from aracnod"
+
+#: aracno-proto/src/client.rs:129
+msgid "bus di sistema non raggiungibile"
+msgstr "system bus unreachable"
+
+#. {} è il nome di un filo, da lasciare com'è
+#: aracno-menu/src/view.rs:41
+msgid "sei su {}"
+msgstr "you are on {}"
+
+#: aracno-menu/src/view.rs:42
+msgid "nessun filo"
+msgstr "no strands"
+
+#: aracno-menu/src/view.rs:43
+msgid "nessun filo attivo"
+msgstr "no active strand"
+
+#: aracno-menu/src/view.rs:122
+msgid ""
+"frecce o Tab per scegliere · Invio per passare al filo · Esc per chiudere"
+msgstr "arrows or Tab to choose · Enter to switch strand · Esc to close"
+
+#: aracno-menu/src/view.rs:360
+msgid "passo a questo filo…"
+msgstr "switching to this strand…"

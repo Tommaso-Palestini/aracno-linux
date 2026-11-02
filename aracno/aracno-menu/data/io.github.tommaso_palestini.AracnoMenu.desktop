@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Aracno
+Comment=Switch strand from the web menu
+Comment[it]=Passa da un filo all'altro con il menù a ragnatela
+Exec=aracno-menu
+Icon=applications-system
+Terminal=false
+Categories=System;
+Keywords=distro;container;strand;switch;filo;ragnatela;
+StartupNotify=false

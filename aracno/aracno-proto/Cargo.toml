@@ -9,4 +9,10 @@ publish.workspace = true
 
 [dependencies]
 thiserror.workspace = true
-zbus.workspace = true
+# solo per i client (aracno, aracno-menu): aracnod non le usa
+zbus = { workspace = true, optional = true }
+# traduzioni: gettext di sistema (glibc), nessuna libreria C da compilare
+gettext-rs = { version = "0.8", features = ["gettext-system"], optional = true }
+
+[features]
+client = ["dep:zbus", "dep:gettext-rs"]

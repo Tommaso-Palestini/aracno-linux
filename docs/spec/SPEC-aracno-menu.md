@@ -70,4 +70,4 @@ aracno/aracno-menu/
 3. La revisione grafica è superata (nessun aspetto "da template"), con lo screenshot nel commit.
 
 ## Domande aperte
-- ~~Tasto rapido?~~ Deciso il 2026-11-01: **`Super+A`** (era `Super+O` ai tempi di Octopus; cambiato il 2026-11-02; da verificare che su COSMIC sia libero).
+- ~~Tasto rapido?~~ Deciso il 2026-11-01: **`Super+Shift+A`** (era `Super+O` ai tempi di Octopus; poi Super+A, ma su COSMIC apre la libreria applicazioni: scelto Super+Shift+A il 2026-11-02).

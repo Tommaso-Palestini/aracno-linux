@@ -89,7 +89,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Accettazione: M1 (< 200 ms dal tasto alla schermata).
   - Dipendenze: T9.
 - [ ] **T11: aggiornamenti live, traduzioni e tasto rapido** (S)
-  - Lavoro: `StateChanged`, gettext (`po/`), file `.desktop`, `Super+A` su COSMIC.
+  - Fatto il 2026-11-02, da verificare: aggiornamenti in diretta da StateChanged (nodi aggiornati al loro posto), gettext (dominio "aracno", testi originali in italiano, `po/en.po`; estrazione con `po/estrai.py` perché xgettext 0.21 non conosce il Rust), voce `.desktop`, tasto **Super+Shift+A** (Super+A su COSMIC è la libreria applicazioni) con `prototype/20-tasto-rapido.sh`. gettext-rs 0.8 (la 0.7 ha RUSTSEC-2026-0244); niente setlocale nostro, lo fa GTK. Test: `prototype/21-menu-t11-test.sh`.
+  - Lavoro: `StateChanged`, gettext (`po/`), file `.desktop`, `Super+Shift+A` su COSMIC (Super+A è la libreria applicazioni).
   - Accettazione: M5 su COSMIC; il ripiego si prova in VM più avanti.
   - Dipendenze: T10.
 

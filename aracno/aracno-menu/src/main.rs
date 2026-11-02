@@ -28,6 +28,7 @@ const APP_ID: &str = "io.github.tommaso_palestini.AracnoMenu";
 
 fn main() -> glib::ExitCode {
     let avvio = Instant::now();
+    client::inizializza_traduzioni();
     // Motore di disegno cairo, se nessuno ne ha scelto un altro. Misurato il 2026-11-02
     // (T10) sul PC di riferimento (Radeon Vega integrata, COSMIC): con il motore OpenGL
     // predefinito il menù compare in 135 ms e l'apertura animata va a ~30 fotogrammi al
@@ -165,12 +166,41 @@ fn mostra(win: &gtk::ApplicationWindow, vista: Rc<Vista>) {
         .await;
         match esito {
             Ok((fili, p)) => {
-                let scelta = scelta(vista.clone(), p);
-                vista.mostra_fili(&fili, scelta);
+                let scelta = scelta(vista.clone(), p.clone());
+                vista.mostra_fili(&fili, scelta.clone());
+                ascolta(vista, p, scelta).await;
             }
             Err(e) => vista.mostra_errore(&e),
         }
     });
+}
+
+/// Aggiornamenti in diretta: a ogni StateChanged di aracnod (anche per uno switch
+/// fatto da un altro programma, per esempio `aracno hop`) si rilegge l'elenco.
+async fn ascolta(vista: Rc<Vista>, p: ManagerProxy<'static>, scelta: Scelta) {
+    let mut eventi = match p.receive_state_changed().await {
+        Ok(e) => e,
+        Err(e) => {
+            eprintln!("aracno-menu: aggiornamenti in diretta non disponibili: {e}");
+            return;
+        }
+    };
+    while prossimo(&mut eventi).await.is_some() {
+        match client::fili(&p).await {
+            Ok(fili) => {
+                eprintln!("aracno-menu: aggiornato in diretta ({})", view::testo_dove(&fili));
+                if !vista.aggiorna(&fili) {
+                    vista.mostra_fili(&fili, scelta.clone());
+                }
+            }
+            Err(e) => vista.mostra_errore(&e),
+        }
+    }
+}
+
+/// Prossimo elemento di uno stream, senza dipendere da futures-util.
+async fn prossimo<S: futures_core::Stream + Unpin>(s: &mut S) -> Option<S::Item> {
+    std::future::poll_fn(|cx| std::pin::Pin::new(&mut *s).poll_next(cx)).await
 }
 
 /// Invio o clic su un filo: se è già attivo si chiude e basta, altrimenti Switch.

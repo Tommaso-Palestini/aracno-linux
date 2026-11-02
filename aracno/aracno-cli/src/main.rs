@@ -79,7 +79,7 @@ async fn esegui(args: &[String]) -> Result<(), Errore> {
             let mut eventi = m.receive_state_changed().await?;
             while let Some(e) = prossimo(&mut eventi).await {
                 let a = e.args()?;
-                let stato = a.state.parse().map(stato_it).unwrap_or("?");
+                let stato = a.state.parse().map(stato_it).unwrap_or_else(|_| "?".into());
                 println!("  {} → {stato}", a.name);
             }
         }

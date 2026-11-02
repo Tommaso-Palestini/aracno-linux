@@ -12,6 +12,6 @@ name = "aracno"
 path = "src/main.rs"
 
 [dependencies]
-aracno-proto.workspace = true
+aracno-proto = { workspace = true, features = ["client"] }
 zbus.workspace = true
 futures-core = "0.3"

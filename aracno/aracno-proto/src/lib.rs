@@ -5,6 +5,7 @@
 use std::fmt;
 use std::str::FromStr;
 
+#[cfg(feature = "client")]
 pub mod client;
 
 /// Nome sul bus di sistema (DNS inverso del repo GitHub).

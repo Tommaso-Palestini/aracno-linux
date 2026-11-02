@@ -5,7 +5,7 @@
 //! Aspetto in data/style.css (T10).
 
 use crate::radial::{self, Direzione, Rett};
-use aracno_proto::client::{mib, ordina, simbolo, stato_it, Filo};
+use aracno_proto::client::{mib, ordina, simbolo, stato_it, tr, Filo};
 use aracno_proto::StrandState;
 use gtk::prelude::*;
 use std::cell::RefCell;
@@ -33,6 +33,15 @@ pub fn testo_stato(f: &Filo) -> String {
         t.push_str(&format!(" · {}", mib(f.ram)));
     }
     t
+}
+
+/// Riga sotto "aracno" al centro: dove sei adesso.
+pub fn testo_dove(fili: &[Filo]) -> String {
+    match fili.iter().find(|f| f.stato == StrandState::Active) {
+        Some(f) => tr("sei su {}").replacen("{}", &f.nome, 1),
+        None if fili.is_empty() => tr("nessun filo"),
+        None => tr("nessun filo attivo"),
+    }
 }
 
 /// Testo per il lettore di schermo: "debian, attivo, 22 MiB".
@@ -110,9 +119,9 @@ impl Vista {
         avviso.add_css_class("avviso");
         avviso.set_wrap(true);
         avviso.set_visible(false);
-        let aiuto = gtk::Label::new(Some(
+        let aiuto = gtk::Label::new(Some(&tr(
             "frecce o Tab per scegliere · Invio per passare al filo · Esc per chiudere",
-        ));
+        )));
         aiuto.add_css_class("aiuto");
         fondo.append(&avviso);
         fondo.append(&aiuto);
@@ -171,12 +180,7 @@ impl Vista {
         self.avviso.set_visible(false);
         let mut fili = fili.to_vec();
         ordina(&mut fili); // il filo attivo è il primo, quindi in alto
-        let dove = match fili.first() {
-            None => "nessun filo".to_string(),
-            Some(f) if f.stato == StrandState::Active => format!("sei su {}", f.nome),
-            Some(_) => "nessun filo attivo".to_string(),
-        };
-        self.metti_centro(&dove);
+        self.metti_centro(&testo_dove(&fili));
 
         let (l, a) = self.misura();
         let posti = radial::posizioni(fili.len(), l, a, NODO_W, NODO_H);
@@ -290,6 +294,37 @@ impl Vista {
         });
     }
 
+    /// Aggiornamento in diretta (StateChanged): stessi fili, stati nuovi. Nodi,
+    /// ragnatela e centro si aggiornano al loro posto: niente animazione, la
+    /// selezione resta dov'è. Se i fili sono cambiati (aggiunti o tolti) restituisce
+    /// falso e il chiamante ricostruisce il menù.
+    pub fn aggiorna(&self, fili: &[Filo]) -> bool {
+        let mut nodi = self.nodi.borrow_mut();
+        let stessi = nodi.len() == fili.len()
+            && nodi.iter().all(|n| fili.iter().any(|f| f.nome == n.filo.nome));
+        if !stessi {
+            return false;
+        }
+        for n in nodi.iter_mut() {
+            let Some(f) = fili.iter().find(|f| f.nome == n.filo.nome) else { continue };
+            if *f == n.filo {
+                continue;
+            }
+            n.bottone.remove_css_class(classe(n.filo.stato));
+            n.bottone.add_css_class(classe(f.stato));
+            n.stato.set_text(&testo_stato(f));
+            n.bottone
+                .update_property(&[gtk::accessible::Property::Label(&testo_accessibile(f))]);
+            n.filo = f.clone();
+        }
+        self.disegno.borrow_mut().nodi =
+            nodi.iter().map(|n| (n.rett.centro(), n.filo.stato)).collect();
+        drop(nodi);
+        self.dove.set_text(&testo_dove(fili));
+        self.area.queue_draw();
+        true
+    }
+
     /// Sposta il focus con una freccia. Vero se la freccia è stata usata.
     /// Si usa `is_focus` e non `has_focus`, che è vero solo a finestra attiva.
     pub fn muovi(&self, dir: Direzione) -> bool {
@@ -322,7 +357,7 @@ impl Vista {
         for n in self.nodi.borrow().iter() {
             n.bottone.set_sensitive(false);
             if n.filo.nome == nome {
-                n.stato.set_text("passo a questo filo…");
+                n.stato.set_text(&tr("passo a questo filo…"));
             }
         }
     }
@@ -414,6 +449,14 @@ mod tests {
         assert_eq!(testo_stato(&f("debian", StrandState::Active, 23_146_496)), "● attivo · 22 MiB");
         assert_eq!(testo_stato(&f("arch", StrandState::Frozen, 1 << 20)), "◌ congelato · 1 MiB");
         assert_eq!(testo_stato(&f("fedora", StrandState::Off, 0)), "· spento");
+    }
+
+    #[test]
+    fn dove_sei() {
+        let fili = [f("arch", StrandState::Frozen, 0), f("debian", StrandState::Active, 0)];
+        assert_eq!(testo_dove(&fili), "sei su debian");
+        assert_eq!(testo_dove(&fili[..1]), "nessun filo attivo");
+        assert_eq!(testo_dove(&[]), "nessun filo");
     }
 
     #[test]

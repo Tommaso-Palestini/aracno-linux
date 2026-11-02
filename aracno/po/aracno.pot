@@ -1,0 +1,85 @@
+# Testi di Aracno da tradurre. Generato da po/estrai.py: non modificare a mano.
+msgid ""
+msgstr ""
+"Project-Id-Version: aracno\n"
+"Report-Msgid-Bugs-To: https://github.com/Tommaso-Palestini/aracno-linux/issues\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: aracno-proto/src/client.rs:61
+msgid "stato sconosciuto da aracnod"
+msgstr ""
+
+#: aracno-proto/src/client.rs:85
+msgid "attivo"
+msgstr ""
+
+#: aracno-proto/src/client.rs:86
+msgid "congelato"
+msgstr ""
+
+#: aracno-proto/src/client.rs:87
+msgid "spento"
+msgstr ""
+
+#: aracno-proto/src/client.rs:108
+msgid "questo filo non esiste"
+msgstr ""
+
+#: aracno-proto/src/client.rs:109
+msgid "nome non valido: solo minuscole, cifre e trattini"
+msgstr ""
+
+#: aracno-proto/src/client.rs:110
+msgid "permesso negato"
+msgstr ""
+
+#: aracno-proto/src/client.rs:111
+msgid "c'è già un cambio di filo in corso, riprova tra un attimo"
+msgstr ""
+
+#: aracno-proto/src/client.rs:112
+msgid "aracnod non è riuscito (dettagli: journalctl -u aracnod)"
+msgstr ""
+
+#: aracno-proto/src/client.rs:113
+msgid "aracnod non risponde: è installato?"
+msgstr ""
+
+#: aracno-proto/src/client.rs:115
+msgid "aracnod installato è di un'altra versione: reinstallalo (prototype/11-install-aracnod.sh)"
+msgstr ""
+
+#: aracno-proto/src/client.rs:117
+msgid "il bus di sistema ha rifiutato la chiamata"
+msgstr ""
+
+#: aracno-proto/src/client.rs:118
+msgid "errore inatteso da aracnod"
+msgstr ""
+
+#: aracno-proto/src/client.rs:129
+msgid "bus di sistema non raggiungibile"
+msgstr ""
+
+#: aracno-menu/src/view.rs:41
+#. {} è il nome di un filo, da lasciare com'è
+msgid "sei su {}"
+msgstr ""
+
+#: aracno-menu/src/view.rs:42
+msgid "nessun filo"
+msgstr ""
+
+#: aracno-menu/src/view.rs:43
+msgid "nessun filo attivo"
+msgstr ""
+
+#: aracno-menu/src/view.rs:122
+msgid "frecce o Tab per scegliere · Invio per passare al filo · Esc per chiudere"
+msgstr ""
+
+#: aracno-menu/src/view.rs:360
+msgid "passo a questo filo…"
+msgstr ""

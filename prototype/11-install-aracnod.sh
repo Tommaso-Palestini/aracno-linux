@@ -8,6 +8,8 @@
 #   /etc/systemd/system/aracnod.service                               unit con restrizioni
 #   /usr/share/polkit-1/actions/…Aracno1.policy                    azioni switch e manage
 #   /usr/local/bin/aracno                                           comando per l'utente (aracno-cli)
+#   /usr/local/bin/aracno-menu, .desktop, traduzione inglese (.mo)  menù a ragnatela (T8–T11)
+#   /etc/systemd/system/systemd-nspawn@.service.d/aracno-watchdog.conf  niente watchdog per i fili
 # Reinstalla anche i file di T1 (utente aracno, regola polkit, policy freeze/thaw).
 #
 # Ipotesi e criteri (scritti prima del test):
@@ -25,6 +27,11 @@ O="$R/prototype/aracno"
 BIN_SRC="$R/aracno/target/release/aracnod"
 CLI_SRC="$R/aracno/target/release/aracno"
 CLI=/usr/local/bin/aracno
+MENU_SRC="$R/aracno/target/release/aracno-menu"
+MENU=/usr/local/bin/aracno-menu
+DESKTOP=/usr/local/share/applications/io.github.tommaso_palestini.AracnoMenu.desktop
+MO=/usr/local/share/locale/en/LC_MESSAGES/aracno.mo
+WATCHDOG=/etc/systemd/system/systemd-nspawn@.service.d/aracno-watchdog.conf
 NAME=io.github.tommaso_palestini.Aracno1
 BIN=/usr/local/libexec/aracnod
 BUSCONF=/etc/dbus-1/system.d/$NAME.conf
@@ -40,7 +47,7 @@ case ${1:-} in
   "") ;;
   --rimuovi)
     systemctl stop aracnod.service 2>/dev/null || true
-    rm -f "$BIN" "$CLI" "$BUSCONF" "$ACTIV" "$UNIT" "$ACTIONS"
+    rm -f "$BIN" "$CLI" "$MENU" "$DESKTOP" "$MO" "$BUSCONF" "$ACTIV" "$UNIT" "$ACTIONS"
     systemctl daemon-reload; reload_bus
     echo "aracnod rimosso (i file di T1 restano: prototype/10-polkit-spike.sh --rimuovi)"; exit 0 ;;
   *) echo "Opzione sconosciuta: $*  (uso: $0 [--rimuovi])"; exit 2 ;;
@@ -49,6 +56,8 @@ esac
 for b in "$BIN_SRC" "$CLI_SRC"; do
   [[ -x $b ]] || { echo "Manca $b. Compila prima: cd $R/aracno && cargo build --release"; exit 1; }
 done
+[[ -x $MENU_SRC ]] || { echo "Manca $MENU_SRC. Compila prima (come utente):"
+  echo "  cd $R/aracno && PKG_CONFIG_PATH=\$HOME/.local/lib/x86_64-linux-gnu/pkgconfig cargo build --release -p aracno-menu"; exit 1; }
 
 echo ">> Installazione"
 install -D -m 644 "$D/sysusers/aracno.conf" /etc/sysusers.d/aracno.conf
@@ -57,6 +66,11 @@ install -D -m 644 "$D/polkit/50-aracno.rules" /etc/polkit-1/rules.d/50-aracno.ru
 install -D -m 644 "$D/dbus/aracno-systemd-freezer.conf" /etc/dbus-1/system.d/aracno-systemd-freezer.conf
 install -D -m 755 -o root -g root "$BIN_SRC" "$BIN"
 install -D -m 755 -o root -g root "$CLI_SRC" "$CLI"
+install -D -m 755 -o root -g root "$MENU_SRC" "$MENU"
+install -D -m 644 "$R/aracno/aracno-menu/data/io.github.tommaso_palestini.AracnoMenu.desktop" "$DESKTOP"
+install -d "$(dirname "$MO")" && msgfmt -o "$MO" "$R/aracno/po/en.po"
+# i fili non devono avere il watchdog di systemd-nspawn (ADR-0002): vale dal prossimo avvio di ogni filo
+install -D -m 644 "$D/systemd/systemd-nspawn@.service.d/aracno-watchdog.conf" "$WATCHDOG"
 install -D -m 644 "$D/dbus/$NAME.conf" "$BUSCONF"
 install -D -m 644 "$D/dbus/$NAME.service" "$ACTIV"
 install -D -m 644 "$D/systemd/aracnod.service" "$UNIT"

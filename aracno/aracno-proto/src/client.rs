@@ -4,6 +4,31 @@
 use crate::{error_names as en, StrandState};
 use zbus::proxy;
 
+/// Dominio delle traduzioni (file `aracno.mo`).
+pub const DOMINIO: &str = "aracno";
+/// Dove stanno le traduzioni installate; `ARACNO_LOCALEDIR` lo cambia (sviluppo).
+pub const CARTELLA_TRADUZIONI: &str = "/usr/local/share/locale";
+
+/// Collega il dominio "aracno" alla cartella delle traduzioni. Da chiamare all'avvio.
+/// I testi originali sono in italiano: senza traduzione per la lingua scelta
+/// restano in italiano.
+///
+/// Non chiama `setlocale`: lo fa già GTK al suo avvio (il menù), e in gettext-rs
+/// 0.8 è `unsafe` (RUSTSEC-2026-0244). Un programma senza GTK che vuole i testi
+/// tradotti deve impostare la lingua da sé prima di creare thread.
+pub fn inizializza_traduzioni() {
+    use gettextrs::{bind_textdomain_codeset, bindtextdomain};
+    let cartella =
+        std::env::var("ARACNO_LOCALEDIR").unwrap_or_else(|_| CARTELLA_TRADUZIONI.to_string());
+    let _ = bindtextdomain(DOMINIO, cartella);
+    let _ = bind_textdomain_codeset(DOMINIO, "UTF-8");
+}
+
+/// Testo tradotto nella lingua dell'utente (dominio "aracno").
+pub fn tr(testo: &str) -> String {
+    gettextrs::dgettext(DOMINIO, testo)
+}
+
 // Le stringhe devono essere letterali per la macro: il test `proxy_coerente`
 // controlla che coincidano con BUS_NAME, INTERFACE e OBJECT_PATH.
 #[proxy(
@@ -36,7 +61,7 @@ pub fn da_righe(righe: Vec<(String, String, u64, u64)>) -> Result<Vec<Filo>, Str
         .map(|(nome, stato, ram, limite)| {
             let stato = stato
                 .parse()
-                .map_err(|_| format!("stato sconosciuto da aracnod: {stato:?}"))?;
+                .map_err(|_| format!("{}: {stato:?}", tr("stato sconosciuto da aracnod")))?;
             Ok(Filo { nome, stato, ram, limite })
         })
         .collect()
@@ -57,11 +82,12 @@ pub fn ordina(fili: &mut [Filo]) {
     fili.sort_by(|a, b| (rango(a.stato), &a.nome).cmp(&(rango(b.stato), &b.nome)));
 }
 
-pub fn stato_it(s: StrandState) -> &'static str {
+/// Nome dello stato per l'utente, tradotto ("attivo", "congelato", "spento").
+pub fn stato_it(s: StrandState) -> String {
     match s {
-        StrandState::Active => "attivo",
-        StrandState::Frozen => "congelato",
-        StrandState::Off => "spento",
+        StrandState::Active => tr("attivo"),
+        StrandState::Frozen => tr("congelato"),
+        StrandState::Off => tr("spento"),
     }
 }
 
@@ -79,20 +105,20 @@ pub fn mib(byte: u64) -> String {
     format!("{} MiB", (byte + (1 << 19)) >> 20)
 }
 
-/// Messaggio per l'utente a partire dal nome dell'errore D-Bus.
-pub fn messaggio_errore(nome: &str) -> &'static str {
+/// Messaggio per l'utente a partire dal nome dell'errore D-Bus, tradotto.
+pub fn messaggio_errore(nome: &str) -> String {
     match nome {
-        en::NOT_FOUND => "questo filo non esiste",
-        en::INVALID_NAME => "nome non valido: solo minuscole, cifre e trattini",
-        en::NOT_AUTHORIZED => "permesso negato",
-        en::BUSY => "c'è già un cambio di filo in corso, riprova tra un attimo",
-        en::FAILED => "aracnod non è riuscito (dettagli: journalctl -u aracnod)",
-        "org.freedesktop.DBus.Error.ServiceUnknown" => "aracnod non risponde: è installato?",
+        en::NOT_FOUND => tr("questo filo non esiste"),
+        en::INVALID_NAME => tr("nome non valido: solo minuscole, cifre e trattini"),
+        en::NOT_AUTHORIZED => tr("permesso negato"),
+        en::BUSY => tr("c'è già un cambio di filo in corso, riprova tra un attimo"),
+        en::FAILED => tr("aracnod non è riuscito (dettagli: journalctl -u aracnod)"),
+        "org.freedesktop.DBus.Error.ServiceUnknown" => tr("aracnod non risponde: è installato?"),
         "org.freedesktop.DBus.Error.UnknownMethod" => {
-            "aracnod installato è di un'altra versione: reinstallalo (prototype/11-install-aracnod.sh)"
+            tr("aracnod installato è di un'altra versione: reinstallalo (prototype/11-install-aracnod.sh)")
         }
-        "org.freedesktop.DBus.Error.AccessDenied" => "il bus di sistema ha rifiutato la chiamata",
-        _ => "errore inatteso da aracnod",
+        "org.freedesktop.DBus.Error.AccessDenied" => tr("il bus di sistema ha rifiutato la chiamata"),
+        _ => tr("errore inatteso da aracnod"),
     }
 }
 
@@ -100,10 +126,10 @@ pub fn messaggio_errore(nome: &str) -> &'static str {
 pub fn messaggio(e: &zbus::Error) -> String {
     use zbus::DBusError;
     match e {
-        zbus::Error::MethodError(nome, _, _) => messaggio_errore(nome.as_str()).into(),
+        zbus::Error::MethodError(nome, _, _) => messaggio_errore(nome.as_str()),
         // errori standard di D-Bus (servizio assente, metodo sconosciuto, …)
-        zbus::Error::FDO(f) => messaggio_errore(f.name().as_str()).into(),
-        _ => format!("bus di sistema non raggiungibile: {e}"),
+        zbus::Error::FDO(f) => messaggio_errore(f.name().as_str()),
+        _ => format!("{}: {e}", tr("bus di sistema non raggiungibile")),
     }
 }
 
