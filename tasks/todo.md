@@ -56,14 +56,14 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Dipendenze: T6.
   - PASS il 2026-11-02: `13-aracnod-stop-test.sh` (Stop con password, esposizione 0.2), `cargo audit` e `cargo deny check` puliti, revisione in `docs/security/2026-11-02-revisione-aracnod.md`.
 
-- [ ] **T7b: comando `aracno` per l'utente** (S) — chiesto il 2026-11-02
+- [x] **T7b: comando `aracno` per l'utente** (S) — chiesto il 2026-11-02
   - Lavoro: crate `aracno-cli` (binario `aracno`, client di `aracnod`, nessun permesso proprio):
-    `ragnatela`, `salta FILO`, `taglia FILO`, `dove`, `ascolta`, `aiuto`. Installato in `/usr/local/bin` da `11-install-aracnod.sh`.
-  - Accettazione: C1–C5 di `prototype/14-aracno-cli-test.sh`.
+    `web`, `hop FILO`, `snip FILO`, `where`, `watch`, `help` (nomi dei comandi in inglese, chiesto il 2026-11-02; i messaggi restano in italiano fino alle traduzioni di T11). Installato in `/usr/local/bin` da `11-install-aracnod.sh`.
+  - Accettazione: C1–C5 di `prototype/14-aracno-cli-test.sh`. PASS il 2026-11-02 (con i nomi italiani; da rilanciare con quelli inglesi).
   - Idee per dopo (servono metodi nuovi in `aracnod`, con polkit `manage`):
-    `aracno tessi NOME DISTRO` (crea un filo dalle immagini dell'ISO, fase 5b),
-    `aracno riposa FILO SIZE` (tetto di RAM a un filo congelato, oggi `aracno limit` del prototipo),
-    `aracno rammenda [FILO]` (aggiorna i pacchetti, oggi `aracno upgrade` del prototipo).
+    `aracno weave NOME DISTRO` (crea un filo dalle immagini dell'ISO, fase 5b),
+    `aracno rest FILO SIZE` (tetto di RAM a un filo congelato, oggi `aracno limit` del prototipo),
+    `aracno mend [FILO]` (aggiorna i pacchetti, oggi `aracno upgrade` del prototipo).
   - Dipendenze: T7.
 
 ### Checkpoint B

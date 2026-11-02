@@ -111,7 +111,7 @@ pub fn messaggio_errore(nome: &str) -> &'static str {
         en::NOT_FOUND => "questo filo non esiste",
         en::INVALID_NAME => "nome non valido: solo minuscole, cifre e trattini",
         en::NOT_AUTHORIZED => "permesso negato",
-        en::BUSY => "c'è già un salto in corso, riprova tra un attimo",
+        en::BUSY => "c'è già un cambio di filo in corso, riprova tra un attimo",
         en::FAILED => "aracnod non è riuscito (dettagli: journalctl -u aracnod)",
         "org.freedesktop.DBus.Error.ServiceUnknown" => {
             "aracnod non risponde: è installato?"
@@ -178,7 +178,7 @@ mod tests {
 
     #[test]
     fn errori_tradotti() {
-        assert_eq!(messaggio_errore(en::BUSY), "c'è già un salto in corso, riprova tra un attimo");
+        assert_eq!(messaggio_errore(en::BUSY), "c'è già un cambio di filo in corso, riprova tra un attimo");
         assert_eq!(messaggio_errore("x.y.Z"), "errore inatteso da aracnod");
     }
 

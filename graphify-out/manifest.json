@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793613640.2519746,
-    "seen": 1793613641.5503871,
-    "ast_hash": "7d56cda97ae5e137b3ac1be7953c9927",
+    "mtime": 1793613924.138906,
+    "seen": 1793613940.5172288,
+    "ast_hash": "d895e40ecfdb670c5837168df00e1c40",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -270,15 +270,15 @@
     "semantic_hash": ""
   },
   "aracno/aracno-cli/src/main.rs": {
-    "mtime": 1793613576.8887959,
-    "seen": 1793613641.5502036,
-    "ast_hash": "26f8f4471bd5a457f5490222517ced8a",
+    "mtime": 1793613914.9800851,
+    "seen": 1793613940.517041,
+    "ast_hash": "499d0373e95c935b902970e7f8d036a9",
     "semantic_hash": ""
   },
   "aracno/aracno-cli/src/ragnatela.rs": {
-    "mtime": 1793613576.9597971,
-    "seen": 1793613641.5502088,
-    "ast_hash": "b25f3dc5ac3683a4156ff9ed1bdc4be6",
+    "mtime": 1793613924.1255865,
+    "seen": 1793613940.517046,
+    "ast_hash": "d105ad615ebb932a156a4efe6aeefc6d",
     "semantic_hash": ""
   },
   "prototype/01-create-strands.sh": {
@@ -288,9 +288,9 @@
     "semantic_hash": ""
   },
   "prototype/14-aracno-cli-test.sh": {
-    "mtime": 1793613625.3216968,
-    "seen": 1793613641.5503142,
-    "ast_hash": "5b059f5b354bacf8430270c952f79570",
+    "mtime": 1793613924.1321561,
+    "seen": 1793613940.517142,
+    "ast_hash": "06619ab37d367450eb572826376b5bdd",
     "semantic_hash": ""
   },
   "docs/adr/0001-fili-systemd-nspawn.md": {

@@ -14,12 +14,12 @@ use zbus::{proxy, Connection};
 const AIUTO: &str = "\
 aracno — i fili di Aracno Linux
 
-  aracno [ragnatela]     disegna la ragnatela: ogni filo con stato e RAM
-  aracno salta FILO      passa a FILO: congela gli altri, attiva lui
-  aracno taglia FILO     spegne FILO (chiede la password di amministratore)
-  aracno dove            nome del filo attivo (utile nel prompt della shell)
-  aracno ascolta         segue la ragnatela in diretta (Ctrl+C per uscire)
-  aracno aiuto           questo messaggio
+  aracno [web]           disegna la ragnatela: ogni filo con stato e RAM
+  aracno hop FILO        passa a FILO: congela gli altri, attiva lui
+  aracno snip FILO       spegne FILO (chiede la password di amministratore)
+  aracno where           nome del filo attivo (utile nel prompt della shell)
+  aracno watch           segue la ragnatela in diretta (Ctrl+C per uscire)
+  aracno help            questo messaggio
 ";
 
 #[proxy(
@@ -60,39 +60,39 @@ async fn fili(m: &ManagerProxy<'_>) -> Result<Vec<ragnatela::Filo>, Errore> {
 }
 
 async fn esegui(args: &[String]) -> Result<(), Errore> {
-    let comando = args.first().map(String::as_str).unwrap_or("ragnatela");
+    let comando = args.first().map(String::as_str).unwrap_or("web");
     let filo = |verbo: &str| -> Result<&str, Errore> {
         match args {
             [_, f] => Ok(f.as_str()),
             _ => Err(Errore(format!("uso: aracno {verbo} FILO"))),
         }
     };
-    if matches!(comando, "aiuto" | "-h" | "--help") {
+    if matches!(comando, "help" | "-h" | "--help") {
         print!("{AIUTO}");
         return Ok(());
     }
     let conn = Connection::system().await?;
     let m = ManagerProxy::new(&conn).await?;
     match comando {
-        "ragnatela" => print!("{}", disegna(&fili(&m).await?, colori())),
-        "salta" => {
-            let f = filo("salta")?;
+        "web" => print!("{}", disegna(&fili(&m).await?, colori())),
+        "hop" => {
+            let f = filo("hop")?;
             let ms = m.switch(f).await?;
             println!("● sei su {f} ({ms} ms)");
         }
-        "taglia" => {
-            let f = filo("taglia")?;
+        "snip" => {
+            let f = filo("snip")?;
             let ms = m.stop(f).await?;
             println!("· {f} spento ({ms} ms)");
         }
-        "dove" => {
+        "where" => {
             let fili = fili(&m).await?;
             match attivi(&fili).as_slice() {
                 [] => return Err(Errore("nessun filo attivo".into())),
                 nomi => println!("{}", nomi.join(" ")),
             }
         }
-        "ascolta" => {
+        "watch" => {
             print!("{}", disegna(&fili(&m).await?, colori()));
             println!("in ascolto… (Ctrl+C per uscire)");
             let mut eventi = m.receive_state_changed().await?;
@@ -104,7 +104,7 @@ async fn esegui(args: &[String]) -> Result<(), Errore> {
         }
         altro => {
             return Err(Errore(format!(
-                "comando sconosciuto: {altro:?}. Prova: aracno aiuto"
+                "comando sconosciuto: {altro:?}. Prova: aracno help"
             )))
         }
     }
