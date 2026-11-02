@@ -31,11 +31,14 @@ tempi() { grep -o 'visibile in [0-9]* ms ([^)]*)' "$LOG" || true; }
 vivo()  { pgrep -f "^$M" >/dev/null; }
 
 pkill -f "^$M" 2>/dev/null || true; sleep 0.3
-"$R/prototype/aracno" list 2>/dev/null | sed 's/^/    /' || true
+/usr/local/bin/aracno web 2>/dev/null | sed 's/^/    /' || true
+# il binario deve caricarsi (librerie trovate) prima di aprire qualsiasi finestra
+"$M" --help >/dev/null 2>"$LOG" || { echo "  aracno-menu non parte:"; sed 's/^/    /' "$LOG"; exit 1; }
 
 echo; echo ">> B1/B2: primo avvio: guarda il menù, premi Esc per chiuderlo, poi rispondi qui"
 "$M" >>"$LOG" 2>&1 &
 sleep 2
+vivo || { echo "  aracno-menu è uscito subito:"; sed 's/^/    /' "$LOG"; exit 1; }
 t=$(tempi | tail -1); echo "    $t"
 [[ $t == *layer-shell* ]] && ok "modo layer-shell" || fail "modo: ${t:-nessun log}"
 chiedi "Hai visto il menù a tutto schermo con debian (attivo, per primo) e arch, con simbolo, stato e RAM?" \

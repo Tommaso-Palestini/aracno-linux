@@ -87,7 +87,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Accettazione: M1 (< 200 ms dal tasto alla schermata).
   - Dipendenze: T9.
 - [ ] **T11: aggiornamenti live, traduzioni e tasto rapido** (S)
-  - Lavoro: `StateChanged`, gettext (`po/`), file `.desktop`, `Super+O` su COSMIC.
+  - Lavoro: `StateChanged`, gettext (`po/`), file `.desktop`, `Super+A` su COSMIC.
   - Accettazione: M5 su COSMIC; il ripiego si prova in VM più avanti.
   - Dipendenze: T10.
 
