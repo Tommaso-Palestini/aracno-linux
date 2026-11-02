@@ -39,3 +39,6 @@ Più avanti potrà aggiungersi una piccola icona di stato, nella tray o nella ba
 - Serve un componente privilegiato separato che esegua lo switch per conto del menù (regola polkit o piccolo servizio di sistema). Il menù gira come utente e non ha root. Va progettato con la skill `security-and-hardening`.
 - La schermata a tutto schermo è il punto naturale dove, più avanti, nascondere o raggruppare le finestre dei fili congelati.
 - Tecnologia (GTK4 + gtk4-layer-shell, Rust, altro) da decidere nella spec del menù.
+
+## Nota successiva (2026-11-02, T8)
+Su COSMIC (cosmic-comp 1.0.0) con gtk4-layer-shell 1.0.4, nascondere o chiudere la finestra layer-shell fa chiudere la connessione al compositor (`Error reading events from display: Broken pipe`, nessun errore di protocollo nel log `WAYLAND_DEBUG`). Una finestra normale non ha il problema. Quindi il menù non resta in memoria nascosto: ogni apertura è un processo nuovo e chiudere il menù fa uscire il processo subito, senza smontare la superficie. Costo: ogni apertura paga l'avvio (135–172 ms misurati, sotto i 200 di M1 ma con poco margine). Da riprovare con versioni nuove di cosmic-comp o gtk4-layer-shell.
