@@ -11,7 +11,8 @@
 # Ipotesi e criteri di T16 (scritti prima):
 #   C1 nel costruttore `lb --version` risponde (live-build di trixie)
 #   C2 il workspace di Aracno (aracnod, aracno, aracno-menu) compila contro le librerie di trixie,
-#      con il cargo di Debian, senza rpath verso ~/.local
+#      senza rpath verso ~/.local (primo giro: il rustc di trixie, 1.85.1, è troppo vecchio per
+#      gtk4-rs 0.11 e zbus 6; ora Rust 1.99.1 da rustup, uguale all'host)
 #   C3 live-build produce un'ISO minima di prova (senza desktop): misura del tempo e della dimensione
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
@@ -21,9 +22,15 @@ C=/var/lib/aracno/costruttore
 MIRROR=http://deb.debian.org/debian
 PACCHETTI=(
   live-build xorriso squashfs-tools mtools dosfstools ca-certificates curl gnupg
-  cargo rustc pkg-config build-essential gettext
+  pkg-config build-essential gettext
   libgtk-4-dev libgtk4-layer-shell-dev
 )
+# Rust fissato, dal sito ufficiale (rustup verifica le somme di controllo). Il rustc di trixie
+# (1.85.1) è troppo vecchio: gtk4-rs 0.11 chiede 1.92, zbus 6 chiede 1.89 (T16, primo giro).
+# Stessa versione dell'host, così costruttore e PC compilano allo stesso modo.
+RUST=1.99.1
+RUSTUP_HOME=/opt/rust/rustup
+RUST_BIN=/opt/rust/cargo/bin
 
 # esegue un comando nel costruttore: sorgenti di Aracno in /src (sola lettura), lavoro in /lavoro
 dentro() {
@@ -43,6 +50,13 @@ crea() {
   echo ">> pacchetti per costruire"
   dentro /bin/sh -c "export DEBIAN_FRONTEND=noninteractive
     apt-get update -q && apt-get install -y -q --no-install-recommends ${PACCHETTI[*]}"
+  if ! dentro /bin/sh -c "test -x $RUST_BIN/cargo && RUSTUP_HOME=$RUSTUP_HOME $RUST_BIN/rustc --version | grep -q ' $RUST '"; then
+    echo ">> Rust $RUST (rustup, profilo minimo)"
+    dentro /bin/sh -c "set -e; curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o /tmp/rustup-init.sh
+      RUSTUP_HOME=$RUSTUP_HOME CARGO_HOME=/opt/rust/cargo sh /tmp/rustup-init.sh -y --no-modify-path \
+        --profile minimal --default-toolchain $RUST
+      rm /tmp/rustup-init.sh"
+  fi
   echo ">> costruttore pronto: $C ($(du -sh --one-file-system "$C" | cut -f1))"
 }
 
@@ -56,19 +70,22 @@ verifica() {
 
   echo; echo ">> C2: il workspace di Aracno con le librerie di trixie"
   t0=$(date +%s)
-  if dentro /bin/sh -c 'export CARGO_TARGET_DIR=/lavoro/target CARGO_HOME=/lavoro/cargo
-        cd /src/aracno && cargo build --release --locked --workspace 2>&1 | tail -3'; then
+  if dentro /bin/sh -c "export CARGO_TARGET_DIR=/lavoro/target CARGO_HOME=/lavoro/cargo RUSTUP_HOME=$RUSTUP_HOME PATH=$RUST_BIN:\$PATH
+        cd /src/aracno && cargo build --release --locked --workspace 2>&1 | tail -3"; then
     for b in aracnod aracno aracno-menu; do
       [[ -x $C/lavoro/target/release/$b ]] && ok "$b compilato" || fail "$b mancante"
     done
     rp=$(dentro /bin/sh -c 'readelf -d /lavoro/target/release/aracno-menu | grep -iE "rpath|runpath" || true')
     [[ -z $rp ]] && ok "aracno-menu senza rpath (libreria di sistema)" || fail "aracno-menu con rpath: $rp"
-    echo "    compilazione: $(( $(date +%s) - t0 )) s; $(dentro rustc --version)"
+    echo "    compilazione: $(( $(date +%s) - t0 )) s; $(dentro env RUSTUP_HOME=$RUSTUP_HOME $RUST_BIN/rustc --version)"
   else
     fail "cargo build"
   fi
 
   echo; echo ">> C3: ISO minima di prova (live-build, senza desktop; 10–20 minuti)"
+  if [[ -f $R/iso/out/prova-lb.iso && -z ${RIFAI_ISO:-} ]]; then
+    ok "ISO di prova già fatta: $(du -h "$R/iso/out/prova-lb.iso" | cut -f1) (RIFAI_ISO=1 per rifarla)"
+  else
   t0=$(date +%s)
   dentro /bin/sh -c 'set -e; rm -rf /lavoro/prova-lb; mkdir -p /lavoro/prova-lb; cd /lavoro/prova-lb
     lb config --distribution trixie --architectures amd64 --binary-images iso-hybrid \
@@ -82,6 +99,7 @@ verifica() {
   else
     fail "live-build non ha prodotto l'ISO (log: $C/lavoro/prova-lb.log)"
   fi
+  fi
 
   echo
   if (( fails == 0 )); then echo "ESITO T16: PASS (costruttore pronto, Aracno compila su trixie, ISO di prova fatta)"
@@ -90,7 +108,7 @@ verifica() {
 
 case ${1:-} in
   "") crea ;;
-  --verifica) [[ -d $C/etc ]] || crea; verifica ;;
+  --verifica) crea; verifica ;;   # crea è idempotente: aggiunge solo ciò che manca
   --shell) dentro /bin/bash ;;
   *) echo "uso: $0 [--verifica|--shell]"; exit 2 ;;
 esac
