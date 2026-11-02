@@ -1,4 +1,4 @@
-# Octopus Linux — istruzioni per l'agente
+# Aracno Linux — istruzioni per l'agente
 
 Progetto: un sistema con più distro Linux come "tentacoli" (container systemd-nspawn su un unico kernel), un solo tentacolo attivo a piena potenza, menù a tentacoli per lo switch. Prototipo in `prototype/`.
 

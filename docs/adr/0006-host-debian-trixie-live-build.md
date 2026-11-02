@@ -10,7 +10,7 @@ Accettata
 Il prototipo gira su Pop!_OS 24.04. Per arrivare a un prodotto distribuibile (ISO, live su chiavetta, poi installazione) serve un sistema host costruito apposta. Deve essere leggero perché ospita i tentacoli, deve avere systemd recente con nspawn e freezer, e deve potersi costruire in modo ripetibile.
 
 ## Decisione
-L'host di Octopus è una Debian trixie costruita con `live-build`. Pop!_OS resta il riferimento per l'hardware e la piattaforma su cui si sviluppa il prototipo.
+L'host di Aracno è una Debian trixie costruita con `live-build`. Pop!_OS resta il riferimento per l'hardware e la piattaforma su cui si sviluppa il prototipo.
 
 ## Alternative considerate
 

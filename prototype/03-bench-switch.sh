@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 3: misura lo switch ripetuto e verifica che i processi
+# Aracno prototipo — fase 3: misura lo switch ripetuto e verifica che i processi
 # congelati si fermino davvero e riprendano dopo lo switch.
 #
 # Ogni tentacolo ha un contatore che incrementa ogni 10 ms e scrive il valore
@@ -11,19 +11,19 @@
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
-O="$(dirname "$0")/octo"
+O="$(dirname "$0")/aracno"
 N=${N:-20}
 A=debian
 B=arch
 M=/var/lib/machines
 SOGLIA_MS=150
 
-read_count() { cat "$M/$1/var/tmp/octo-count" 2>/dev/null || echo 0; }
+read_count() { cat "$M/$1/var/tmp/aracno-count" 2>/dev/null || echo 0; }
 
 start_counter() {
-  systemctl -M "$1" stop octo-count 2>/dev/null || true
-  systemd-run -M "$1" --unit=octo-count --quiet /bin/sh -c \
-    'n=0; while :; do n=$((n+1)); echo $n > /var/tmp/octo-count; sleep 0.01; done'
+  systemctl -M "$1" stop aracno-count 2>/dev/null || true
+  systemd-run -M "$1" --unit=aracno-count --quiet /bin/sh -c \
+    'n=0; while :; do n=$((n+1)); echo $n > /var/tmp/aracno-count; sleep 0.01; done'
 }
 
 other_of() { if [[ $1 == "$A" ]]; then echo "$B"; else echo "$A"; fi; }
@@ -86,7 +86,7 @@ MEDIANA=$(sort -n "$TIMES" | awk '{v[NR]=$1} END{print (NR%2)?v[(NR+1)/2]:(v[NR/
 rm -f "$TIMES"
 
 echo; echo ">> Pulizia contatori (i tentacoli restano accesi)"
-for n in $A $B; do systemctl -M "$n" stop octo-count 2>/dev/null || true; done
+for n in $A $B; do systemctl -M "$n" stop aracno-count 2>/dev/null || true; done
 
 echo
 if (( FAILS == 0 )) && awk -v m="$MEDIANA" -v s="$SOGLIA_MS" 'BEGIN{exit !(m < s)}'; then

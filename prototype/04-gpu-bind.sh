@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 4.1: rende visibile la GPU (/dev/dri) dentro ogni tentacolo.
+# Aracno prototipo — fase 4.1: rende visibile la GPU (/dev/dri) dentro ogni tentacolo.
 # Scrive /etc/systemd/nspawn/NAME.nspawn, riavvia il tentacolo e verifica.
 # Nota: riavviare un tentacolo lo spegne; i processi in esecuzione si perdono.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
 M=/var/lib/machines
-O="$(dirname "$0")/octo"
+O="$(dirname "$0")/aracno"
 CONF=/etc/systemd/nspawn
 
 names() { for d in "$M"/*/; do [[ -d $d/etc ]] && basename "$d"; done; }

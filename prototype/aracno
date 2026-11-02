@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# aracno — CLI minimale del prototipo Aracno
+#   aracno list                 stato, RAM e swap di ogni tentacolo
+#   aracno start|stop NAME
+#   aracno freeze|thaw NAME
+#   aracno switch NAME          congela tutti gli altri, attiva NAME (misura il tempo)
+#   aracno cpu NAME [SEC]       uso CPU del tentacolo (% di un core)
+#   aracno limit NAME SIZE      tetto RAM (es. 2G, oppure "infinity" per toglierlo)
+#   aracno shell NAME
+#   aracno upgrade [NAME...]    aggiorna i pacchetti dei tentacoli (default: tutti), poi rimette lo stato
+set -euo pipefail
+M=/var/lib/machines
+
+need_root() { [[ $EUID -eq 0 ]] || exec sudo "$0" "$@"; }
+unit()  { echo "systemd-nspawn@$1.service"; }
+cg()    { echo "/sys/fs/cgroup/machine.slice/systemd-nspawn@$1.service"; }
+names() { for d in "$M"/*/; do if [[ -d $d/etc ]]; then basename "$d"; fi; done; }
+
+state() {
+  systemctl is-active -q "$(unit "$1")" || { echo spenta; return; }
+  if [[ $(systemctl show -P FreezerState "$(unit "$1")") == frozen ]]; then echo congelata; else echo attiva; fi
+}
+human() { numfmt --to=iec --suffix=B "${1:-0}" 2>/dev/null || echo "$1"; }
+
+cpu_pct() {  # campiona usage_usec del cgroup
+  local f; f="$(cg "$1")/cpu.stat"; local s=${2:-2}
+  local a b; a=$(awk '/usage_usec/{print $2}' "$f"); sleep "$s"; b=$(awk '/usage_usec/{print $2}' "$f")
+  echo $(( (b - a) / (s * 10000) ))
+}
+
+wait_ready() {  # aspetta che systemd dentro il tentacolo sia su
+  for _ in $(seq 60); do
+    s=$(systemctl -M "$1" is-system-running 2>/dev/null || true)
+    [[ $s == running || $s == degraded ]] && return 0
+    sleep 0.5
+  done
+  echo "timeout avvio $1" >&2; return 1
+}
+
+upgrade_cmd() {  # comando di aggiornamento non interattivo, scelto da /etc/os-release del tentacolo
+  local id like
+  id=$(. "$M/$1/etc/os-release"; echo "${ID:-}")
+  like=$(. "$M/$1/etc/os-release"; echo "${ID_LIKE:-}")
+  case " $id $like " in
+    *" debian "*|*" ubuntu "*)
+      echo 'export DEBIAN_FRONTEND=noninteractive; apt-get update && apt-get -y -o Dpkg::Options::=--force-confold full-upgrade' ;;
+    *" arch "*)
+      # prima il keyring: con un keyring vecchio le firme dei pacchetti nuovi falliscono
+      echo 'pacman -Sy --noconfirm --needed archlinux-keyring && pacman -Su --noconfirm' ;;
+    *) return 1 ;;
+  esac
+}
+
+upgrade_one() {  # scongela/avvia, aggiorna, rimette lo stato di prima anche se l'aggiornamento fallisce
+  local n=$1 prev c rc=0 t0
+  [[ -d $M/$n/etc ]] || { echo "$n: tentacolo inesistente"; return 1; }
+  c=$(upgrade_cmd "$n") || { echo "$n: distro non supportata da aracno upgrade"; return 1; }
+  prev=$(state "$n")
+  echo ">> $n ($prev)"
+  case $prev in
+    spenta)    machinectl start "$n"; wait_ready "$n" ;;
+    congelata) systemctl thaw "$(unit "$n")" ;;
+  esac
+  t0=$(date +%s)
+  systemd-run -M "$n" --wait --pipe --quiet --collect /bin/sh -c "$c" || rc=$?
+  case $prev in
+    spenta)    machinectl poweroff "$n" ;;
+    congelata) systemctl freeze "$(unit "$n")" ;;
+  esac
+  if (( rc == 0 )); then echo "$n: aggiornato in $(( $(date +%s) - t0 )) s, stato rimesso: $prev"
+  else echo "$n: AGGIORNAMENTO FALLITO (codice $rc), stato rimesso: $prev"; fi
+  return "$rc"
+}
+
+cmd=${1:-list}; shift || true
+case $cmd in
+  list)
+    printf "%-10s %-10s %10s %10s %10s\n" TENTACOLO STATO RAM SWAP LIMITE
+    for n in $(names); do
+      st=$(state "$n"); ram=- sw=- lim=-
+      if [[ $st != spenta ]]; then
+        ram=$(human "$(cat "$(cg "$n")/memory.current")")
+        sw=$(human "$(cat "$(cg "$n")/memory.swap.current")")
+        lim=$(cat "$(cg "$n")/memory.max"); if [[ $lim != max ]]; then lim=$(human "$lim"); fi
+      fi
+      printf "%-10s %-10s %10s %10s %10s\n" "$n" "$st" "$ram" "$sw" "$lim"
+    done ;;
+  start)  need_root "$cmd" "$@"; machinectl start "$1"; wait_ready "$1"; echo "$1 avviata" ;;
+  stop)   need_root "$cmd" "$@"
+          if [[ $(state "$1") == congelata ]]; then systemctl thaw "$(unit "$1")"; fi
+          machinectl poweroff "$1" ;;
+  freeze) need_root "$cmd" "$@"; systemctl freeze "$(unit "$1")" ;;
+  thaw)   need_root "$cmd" "$@"; systemctl thaw "$(unit "$1")" ;;
+  switch)
+    need_root "$cmd" "$@"; target=$1; t0=$(date +%s%N)
+    for n in $(names); do
+      [[ $n == "$target" ]] && continue
+      if [[ $(state "$n") == attiva ]]; then systemctl freeze "$(unit "$n")"; echo "  congelata $n"; fi
+    done
+    case $(state "$target") in
+      congelata) systemctl thaw "$(unit "$target")"; echo "  scongelata $target" ;;
+      spenta)    machinectl start "$target"; wait_ready "$target"; echo "  avviata $target" ;;
+      attiva)    echo "  $target era già attiva" ;;
+    esac
+    echo "switch → $target in $(( ($(date +%s%N) - t0) / 1000000 )) ms" ;;
+  cpu)    echo "$1: $(cpu_pct "$1" "${2:-2}")% di un core" ;;
+  limit)  need_root "$cmd" "$@"; systemctl set-property --runtime "$(unit "$1")" MemoryMax="$2"; echo "limite RAM $1 = $2" ;;
+  shell)  need_root "$cmd" "$@"; machinectl shell "$1" ;;
+  upgrade)
+    need_root "$cmd" "$@"; falliti=0
+    if (( $# == 0 )); then set -- $(names); fi
+    for n in "$@"; do upgrade_one "$n" || falliti=$((falliti + 1)); echo; done
+    if (( falliti == 0 )); then echo "upgrade: tutti i tentacoli aggiornati"; else echo "upgrade: $falliti tentacoli falliti"; exit 1; fi ;;
+  *) sed -n '2,10p' "$0"; exit 1 ;;
+esac

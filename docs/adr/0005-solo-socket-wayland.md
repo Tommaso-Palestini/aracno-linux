@@ -11,8 +11,8 @@ Le finestre di un tentacolo devono comparire sul desktop dell'host (COSMIC su Wa
 
 ## Decisione
 `prototype/07-wayland-bind.sh` aggiunge al `.nspawn` di ogni tentacolo una sola riga:
-`Bind=/run/user/UID/wayland-1:/run/octo-wayland/wayland-1`.
-Nel container l'app si avvia con `XDG_RUNTIME_DIR=/run/octo-wayland` e `WAYLAND_DISPLAY=wayland-1`. D-Bus di sessione e PulseAudio/PipeWire non vengono montati.
+`Bind=/run/user/UID/wayland-1:/run/aracno-wayland/wayland-1`.
+Nel container l'app si avvia con `XDG_RUNTIME_DIR=/run/aracno-wayland` e `WAYLAND_DISPLAY=wayland-1`. D-Bus di sessione e PulseAudio/PipeWire non vengono montati.
 
 Verifica (fase 4.4): `vkcube` di ogni tentacolo compare sul desktop COSMIC, si ferma allo switch e riparte.
 

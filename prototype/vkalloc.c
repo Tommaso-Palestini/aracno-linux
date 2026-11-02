@@ -1,4 +1,4 @@
-/* Octopus prototipo — fase 4.3: alloca MB di memoria device-local (VRAM) con Vulkan
+/* Aracno prototipo — fase 4.3: alloca MB di memoria device-local (VRAM) con Vulkan
  * e la tiene allocata finché il processo vive.
  * Uso: vkalloc MB
  * Compilazione: gcc -O2 -o vkalloc vkalloc.c -lvulkan

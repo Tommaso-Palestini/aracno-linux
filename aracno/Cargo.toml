@@ -1,0 +1,19 @@
+# Workspace di Aracno: aracno-proto (interfaccia condivisa), poi aracnod e aracno-menu.
+# Le prove in spikes/ restano fuori (ognuna è un progetto a sé).
+[workspace]
+resolver = "2"
+members = ["aracno-proto", "aracnod"]
+exclude = ["spikes"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/Tommaso-Palestini/aracno-linux"
+
+[workspace.dependencies]
+thiserror = "2.0"
+# zbus senza tokio: basta il suo runtime (zbus::block_on). Niente tracing, niente object-manager.
+zbus = { version = "6.2", default-features = false, features = ["default-rt", "proxy", "service"] }
+aracno-proto = { path = "aracno-proto" }
+zbus_polkit = { version = "6.0", default-features = false }

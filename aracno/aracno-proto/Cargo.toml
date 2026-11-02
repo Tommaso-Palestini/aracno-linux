@@ -1,0 +1,10 @@
+[package]
+name = "aracno-proto"
+description = "Interfaccia D-Bus condivisa tra aracnod e i suoi client"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+thiserror.workspace = true

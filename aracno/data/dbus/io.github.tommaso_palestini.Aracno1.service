@@ -1,0 +1,7 @@
+# Attivazione via D-Bus: il bus chiede a systemd di avviare aracnod.service
+# alla prima chiamata. Exec non viene usato quando c'è SystemdService.
+[D-BUS Service]
+Name=io.github.tommaso_palestini.Aracno1
+Exec=/bin/false
+User=aracno
+SystemdService=aracnod.service

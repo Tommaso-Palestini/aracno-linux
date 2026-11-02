@@ -1,86 +1,80 @@
 {
   "prototype/00-setup.sh": {
-    "mtime": 1793445348.737391,
-    "seen": 1793446364.784186,
-    "ast_hash": "5227e3bada79125abd8ae05935e0b7f2",
+    "mtime": 1793610261.9032688,
+    "seen": 1793610324.253205,
+    "ast_hash": "2a7ef0f8b42979e6870293f539d5fde4",
     "semantic_hash": ""
   },
   "prototype/01-create-tentacles.sh": {
-    "mtime": 1793445348.8883934,
-    "seen": 1793446364.7841887,
-    "ast_hash": "14d519fb9cb57be738a81593774b11a0",
+    "mtime": 1793610261.9049146,
+    "seen": 1793610324.2532084,
+    "ast_hash": "cac6c9dd74e74c32d4e353e374bf8e04",
     "semantic_hash": ""
   },
   "prototype/02-test-freeze.sh": {
-    "mtime": 1793445349.9004087,
-    "seen": 1793446364.7841914,
-    "ast_hash": "d0f0fd51ffd3dbb48370c688eb04260e",
-    "semantic_hash": ""
-  },
-  "prototype/octo": {
-    "mtime": 1793538430.111738,
-    "seen": 1793539252.7872272,
-    "ast_hash": "7320078127bd8665945980b92d2fe744",
+    "mtime": 1793610261.8984976,
+    "seen": 1793610324.2532115,
+    "ast_hash": "f3dc05f5ad7b0cd8beb6f3d855a16d22",
     "semantic_hash": ""
   },
   "prototype/03-bench-switch.sh": {
-    "mtime": 1793454160.3194492,
-    "seen": 1793454506.3987513,
-    "ast_hash": "8ff8db3e0c90b105c3d3e08d53174f4b",
+    "mtime": 1793610261.9023986,
+    "seen": 1793610324.253214,
+    "ast_hash": "6637cf24baad9f043ad25b85eb97b931",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793446375.7072105,
-    "seen": 1793454506.3987563,
-    "ast_hash": "74d0a6770808c5d6b331e027e50d3602",
+    "mtime": 1793610261.900661,
+    "seen": 1793610324.2532482,
+    "ast_hash": "7248e756732b8bb7c2840226aa11b74d",
     "semantic_hash": ""
   },
   "prototype/04-gpu-bind.sh": {
-    "mtime": 1793468156.1588423,
-    "seen": 1793468162.8441637,
-    "ast_hash": "33200a10c7849c30214ce328438af53b",
+    "mtime": 1793610261.8978202,
+    "seen": 1793610324.2532163,
+    "ast_hash": "26aac25d8ed3aa4ff3eca921bbbf7ff9",
     "semantic_hash": ""
   },
   "prototype/05-gpu-driver.sh": {
-    "mtime": 1793455702.72273,
-    "seen": 1793455708.4264667,
-    "ast_hash": "68040b691a4bd2140f44217079d0f95c",
+    "mtime": 1793610261.8992445,
+    "seen": 1793610324.2532187,
+    "ast_hash": "c4eb8f50179f179030b63a43dcc04810",
     "semantic_hash": ""
   },
   "prototype/06-vram-test.sh": {
-    "mtime": 1793468644.0149531,
-    "seen": 1793468650.276133,
-    "ast_hash": "828553e1567e65523270fc0e8bd0ab77",
+    "mtime": 1793610261.9040136,
+    "seen": 1793610324.253221,
+    "ast_hash": "0aa694a65f9ae8f2e623d02e023f4aad",
     "semantic_hash": ""
   },
   "prototype/vkalloc.c": {
-    "mtime": 1793468630.9897382,
-    "seen": 1793468650.2761414,
-    "ast_hash": "019c83957cf2d6f264402e17f8986f92",
+    "mtime": 1793610261.9012547,
+    "seen": 1793610324.253246,
+    "ast_hash": "4e672d64ffa20fc076b3064289886b60",
     "semantic_hash": ""
   },
   "prototype/07-wayland-bind.sh": {
-    "mtime": 1793468979.059494,
-    "seen": 1793468984.15803,
-    "ast_hash": "d1f95c2f185fe03001db2679f24e08f9",
+    "mtime": 1793610261.8990257,
+    "seen": 1793610324.2532234,
+    "ast_hash": "4564f3c8c50bd4bcb9320cc77d79c2d4",
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793538926.2263103,
-    "seen": 1793539252.7872386,
-    "ast_hash": "e56fa49a98a395c34a0c94b3872afa17",
+    "mtime": 1793610261.904389,
+    "seen": 1793610324.253251,
+    "ast_hash": "da4288abe21f992830f049b3f683dc6e",
     "semantic_hash": ""
   },
   "docs/adr/0001-tentacoli-systemd-nspawn.md": {
-    "mtime": 1793527282.2427583,
-    "seen": 1793527292.730162,
-    "ast_hash": "fd6c3162872450b3e4591c547219ed12",
+    "mtime": 1793610261.9052749,
+    "seen": 1793610324.2532535,
+    "ast_hash": "98816c94aef7999ad3bbc4323a85f280",
     "semantic_hash": ""
   },
   "docs/adr/0002-switch-con-congelamento-cgroup.md": {
-    "mtime": 1793528282.9503574,
-    "seen": 1793528284.0107152,
-    "ast_hash": "7d7cb548c6833905e7806e5bd3271954",
+    "mtime": 1793610261.9015763,
+    "seen": 1793610324.2532556,
+    "ast_hash": "ce703a00689e4a8b735c7eb2a28e03f3",
     "semantic_hash": ""
   },
   "docs/adr/0003-rete-condivisa-con-host.md": {
@@ -96,27 +90,27 @@
     "semantic_hash": ""
   },
   "docs/adr/0005-solo-socket-wayland.md": {
-    "mtime": 1793527283.6788101,
-    "seen": 1793527292.7301745,
-    "ast_hash": "a825536e5304202d1536207a73d51f7c",
+    "mtime": 1793610261.9045777,
+    "seen": 1793610324.2532642,
+    "ast_hash": "c4dc20e91b22378cce6c1dd1061be525",
     "semantic_hash": ""
   },
   "docs/adr/0006-host-debian-trixie-live-build.md": {
-    "mtime": 1793527283.780814,
-    "seen": 1793527292.7301772,
-    "ast_hash": "8ee3b9238d972cfa4403431efcf58888",
+    "mtime": 1793610261.8995955,
+    "seen": 1793610324.253266,
+    "ast_hash": "89969c5ce19adcc688af1b0cf3fdc330",
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793540413.5145721,
-    "seen": 1793540503.300993,
-    "ast_hash": "31b805447a7308f98035e0ba4df53994",
+    "mtime": 1793610261.9107754,
+    "seen": 1793610324.2532742,
+    "ast_hash": "7ee18f0fb5d33b85714305f608737224",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
-    "mtime": 1793528176.2053308,
-    "seen": 1793528284.0106547,
-    "ast_hash": "03a48750c471bb7b0a37b2d25c91bb4a",
+    "mtime": 1793610261.9021206,
+    "seen": 1793610324.2532258,
+    "ast_hash": "80b06210f10354d0ee9dedb800697b90",
     "semantic_hash": ""
   },
   "prototype/memhog.c": {
@@ -126,141 +120,153 @@
     "semantic_hash": ""
   },
   "prototype/09-upgrade-test.sh": {
-    "mtime": 1793538451.6577208,
-    "seen": 1793539252.7872176,
-    "ast_hash": "f4b0417bc5d3ca64f3534b18d9b4d86e",
+    "mtime": 1793610261.9004655,
+    "seen": 1793610324.2532282,
+    "ast_hash": "9d4ae206c27f25ce67df057ec0b10384",
     "semantic_hash": ""
   },
   "docs/adr/0007-menu-a-tutto-schermo.md": {
-    "mtime": 1793538234.0981107,
-    "seen": 1793539252.7872648,
-    "ast_hash": "7561af3c8a9c8ed95dd418ec9ab76388",
+    "mtime": 1793610261.9060435,
+    "seen": 1793610324.2532685,
+    "ast_hash": "4a02eb9ffa7d6e4d94bf483a0dfccaf1",
     "semantic_hash": ""
   },
   "docs/spec/CAPABILITY-MAP.md": {
-    "mtime": 1793538561.9704704,
-    "seen": 1793539252.7872725,
-    "ast_hash": "52e04b815342bff4d4e5f2997e61852e",
-    "semantic_hash": ""
-  },
-  "docs/spec/SPEC-octo-menu.md": {
-    "mtime": 1793538926.2261446,
-    "seen": 1793539252.787276,
-    "ast_hash": "f59d816da8083fc6559da4a9839ba7d3",
-    "semantic_hash": ""
-  },
-  "docs/spec/SPEC-octod.md": {
-    "mtime": 1793541527.676574,
-    "seen": 1793541587.225271,
-    "ast_hash": "381371d63f770ccfd2ff148778dca1d9",
+    "mtime": 1793610261.9003122,
+    "seen": 1793610324.2532763,
+    "ast_hash": "4e37636d476aacd9d1fd74b2061596f3",
     "semantic_hash": ""
   },
   "tasks/plan.md": {
-    "mtime": 1793540313.1553981,
-    "seen": 1793540313.8997283,
-    "ast_hash": "81872318fc71896a4f7cd9beca66389c",
+    "mtime": 1793610261.8988347,
+    "seen": 1793610324.2532825,
+    "ast_hash": "1578ae71ab501e2edb0b28c5b3e005ab",
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793541585.836342,
-    "seen": 1793541587.2252774,
-    "ast_hash": "7904a263512d330055cf5c2b13d1070c",
+    "mtime": 1793610261.898236,
+    "seen": 1793610324.2532847,
+    "ast_hash": "90a8c41fc173db4e7b24d60ff72b1563",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
-    "mtime": 1793539823.3842971,
-    "seen": 1793539877.273304,
-    "ast_hash": "b9d2a0def8e64dbcabcd33ad41740504",
+    "mtime": 1793610261.9008138,
+    "seen": 1793610324.253231,
+    "ast_hash": "20c2fcaa7189c682cad6aa5a26990c68",
     "semantic_hash": ""
   },
-  "octopus/spikes/layer-shell/Cargo.toml": {
-    "mtime": 1793539945.819894,
-    "seen": 1793540313.8996046,
-    "ast_hash": "54b3e567ec7e7946eeac8ed1bcd46201",
+  "aracno/Cargo.toml": {
+    "mtime": 1793610261.9066243,
+    "seen": 1793610324.2531614,
+    "ast_hash": "e18ff2f7c47e0d600d4eb95ee958ec77",
     "semantic_hash": ""
   },
-  "octopus/spikes/layer-shell/src/main.rs": {
-    "mtime": 1793540245.2636263,
-    "seen": 1793540313.8996139,
-    "ast_hash": "d1064865e2181e3a2d6a4eb36e8ced79",
+  "aracno/aracno-proto/Cargo.toml": {
+    "mtime": 1793610261.90776,
+    "seen": 1793610324.253169,
+    "ast_hash": "9f3e44e2a9c989b6c943b203731ddab8",
     "semantic_hash": ""
   },
-  "octopus/Cargo.toml": {
-    "mtime": 1793541104.7356043,
-    "seen": 1793541587.2251103,
-    "ast_hash": "c6fd44f6596c224a1d609d385df0b27a",
+  "aracno/aracno-proto/src/lib.rs": {
+    "mtime": 1793610261.9073963,
+    "seen": 1793610324.2531729,
+    "ast_hash": "ec41f5e84088ccfdf5f3907a9cb73642",
     "semantic_hash": ""
   },
-  "octopus/octopus-proto/Cargo.toml": {
-    "mtime": 1793540451.4032438,
-    "seen": 1793540503.3009205,
-    "ast_hash": "dff3dce19d9a0a7d88a5dd995783ffe4",
+  "aracno/aracnod/Cargo.toml": {
+    "mtime": 1793610261.910389,
+    "seen": 1793610324.2531838,
+    "ast_hash": "30becd535e6947c3e51598f771264e08",
     "semantic_hash": ""
   },
-  "octopus/octopus-proto/src/lib.rs": {
-    "mtime": 1793540481.503777,
-    "seen": 1793540503.3009238,
-    "ast_hash": "1d46a619bfd95fc2e1b3e44ececc5917",
+  "aracno/aracnod/src/auth.rs": {
+    "mtime": 1793610261.9098535,
+    "seen": 1793610324.2531865,
+    "ast_hash": "091406f8444a95f0aa9d293e05518024",
     "semantic_hash": ""
   },
-  "docs/adr/0008-octod-servizio-di-sistema.md": {
-    "mtime": 1793540413.3745697,
-    "seen": 1793540503.30099,
-    "ast_hash": "ce56b745dfe596fea894f755007d44ea",
+  "aracno/aracnod/src/error.rs": {
+    "mtime": 1793610261.9110842,
+    "seen": 1793610324.2531888,
+    "ast_hash": "f3976b1f66919875ba9479f5e34838b2",
     "semantic_hash": ""
   },
-  "octopus/octod/Cargo.toml": {
-    "mtime": 1793541174.6750104,
-    "seen": 1793541587.2251208,
-    "ast_hash": "f725a7cf9574228ef94e6be782d51f59",
+  "aracno/aracnod/src/list.rs": {
+    "mtime": 1793610261.902902,
+    "seen": 1793610324.253191,
+    "ast_hash": "066755145757161f5f6d4f128ecfbc24",
     "semantic_hash": ""
   },
-  "octopus/octod/src/list.rs": {
-    "mtime": 1793540672.1511557,
-    "seen": 1793540931.5832505,
-    "ast_hash": "2f01dae091007a7eec19d397d51fa52d",
+  "aracno/aracnod/src/main.rs": {
+    "mtime": 1793610261.90922,
+    "seen": 1793610324.253193,
+    "ast_hash": "a2d1db5e911aaa9b032418fba74acd20",
     "semantic_hash": ""
   },
-  "octopus/octod/src/main.rs": {
-    "mtime": 1793541203.8962283,
-    "seen": 1793541587.2251415,
-    "ast_hash": "22b13309e147f17cde318f86c1e2996e",
+  "aracno/aracnod/src/switch.rs": {
+    "mtime": 1793610261.9062173,
+    "seen": 1793610324.253195,
+    "ast_hash": "21f07d9a5f4934ccfb3e291b6e8369e4",
     "semantic_hash": ""
   },
-  "octopus/octod/src/systemd.rs": {
-    "mtime": 1793541203.8992283,
-    "seen": 1793541587.2251499,
-    "ast_hash": "7499ef1353b0e94017d045c3903abcc2",
+  "aracno/aracnod/src/systemd.rs": {
+    "mtime": 1793610261.9078822,
+    "seen": 1793610324.253197,
+    "ast_hash": "1f2a2a13c379f6d93bda1d9b804b5374",
     "semantic_hash": ""
   },
-  "prototype/11-install-octod.sh": {
-    "mtime": 1793541265.3423822,
-    "seen": 1793541587.22521,
-    "ast_hash": "1d1e4af4908746322e66d9302265ddaa",
+  "aracno/spikes/layer-shell/Cargo.toml": {
+    "mtime": 1793610261.9019935,
+    "seen": 1793610324.253199,
+    "ast_hash": "c79fcfc50777121b44f8a11688d8bf57",
     "semantic_hash": ""
   },
-  "octopus/octod/src/auth.rs": {
-    "mtime": 1793541104.7442985,
-    "seen": 1793541587.225127,
-    "ast_hash": "c21c06a2ccebd0410615708915e747f4",
+  "aracno/spikes/layer-shell/src/main.rs": {
+    "mtime": 1793610261.905075,
+    "seen": 1793610324.2532012,
+    "ast_hash": "a80519f2f2466aeddc1e8db3e9515398",
     "semantic_hash": ""
   },
-  "octopus/octod/src/error.rs": {
-    "mtime": 1793541104.7412984,
-    "seen": 1793541587.225131,
-    "ast_hash": "ac397a7075e28182fea49b303d0ae63b",
+  "prototype/11-install-aracnod.sh": {
+    "mtime": 1793610261.8997614,
+    "seen": 1793610324.2532332,
+    "ast_hash": "2db18c89fc3827bf6f450eb3b41c8b44",
     "semantic_hash": ""
   },
-  "octopus/octod/src/switch.rs": {
-    "mtime": 1793541052.885289,
-    "seen": 1793541587.2251449,
-    "ast_hash": "fbe1c473289c26a95905b53ae18906e9",
+  "prototype/12-aracnod-test.sh": {
+    "mtime": 1793610261.9026132,
+    "seen": 1793610324.2532353,
+    "ast_hash": "d2762789d59fb4201a8642adb8e98640",
     "semantic_hash": ""
   },
-  "prototype/12-octod-test.sh": {
-    "mtime": 1793541520.0111654,
-    "seen": 1793541587.2252126,
-    "ast_hash": "13b2885a407d65f80c977e56af7a3ff3",
+  "prototype/13-aracnod-stop-test.sh": {
+    "mtime": 1793610261.9037654,
+    "seen": 1793610324.2532375,
+    "ast_hash": "0bdaecd96dfd9270e6feed8e68ce6a3d",
+    "semantic_hash": ""
+  },
+  "prototype/aracno": {
+    "mtime": 1793610261.9017391,
+    "seen": 1793610324.2532396,
+    "ast_hash": "40ced41269ae3faf4d121ae6ea8e51f5",
+    "semantic_hash": ""
+  },
+  "docs/adr/0008-aracnod-servizio-di-sistema.md": {
+    "mtime": 1793610261.908962,
+    "seen": 1793610324.2532706,
+    "ast_hash": "8fb350d7f6830596b52cb7541f52e459",
+    "semantic_hash": ""
+  },
+  "docs/spec/SPEC-aracno-menu.md": {
+    "mtime": 1793610261.9067626,
+    "seen": 1793610324.2532783,
+    "ast_hash": "d0ad3f7b3938c0edea7c6cf065047434",
+    "semantic_hash": ""
+  },
+  "docs/spec/SPEC-aracnod.md": {
+    "mtime": 1793610261.9034202,
+    "seen": 1793610324.2532802,
+    "ast_hash": "b982185958eadd9727ef01d6ef6634b2",
     "semantic_hash": ""
   }
 }

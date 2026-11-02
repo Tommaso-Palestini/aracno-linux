@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 4.6: verifica `octo upgrade`.
+# Aracno prototipo — fase 4.6: verifica `aracno upgrade`.
 #
 # Ipotesi e criteri (scritti prima del test):
-#   U1  Con debian attiva e arch congelata, `octo upgrade` aggiorna entrambe ed esce con 0.
+#   U1  Con debian attiva e arch congelata, `aracno upgrade` aggiorna entrambe ed esce con 0.
 #       Dopo: debian ancora attiva, arch ancora congelata (lo stato di prima è rimesso).
 #   U2  Dopo l'aggiornamento non restano pacchetti da aggiornare:
 #       debian `apt list --upgradable` vuoto, arch `pacman -Qu` vuoto.
 #   U3  Un tentacolo spento viene avviato, aggiornato e rispento.
 #   U4  Un nome inesistente fa uscire con errore, senza toccare gli altri tentacoli.
-# Il tempo di ogni aggiornamento viene stampato da octo (solo misura, senza soglia).
+# Il tempo di ogni aggiornamento viene stampato da aracno (solo misura, senza soglia).
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
-O="$(dirname "$0")/octo"
+O="$(dirname "$0")/aracno"
 A=debian
 B=arch
 fails=0
@@ -25,8 +25,8 @@ for n in $A $B; do [[ $(state_of "$n") != spenta ]] || "$O" start "$n"; done
 "$O" switch "$A" >/dev/null
 "$O" list | sed 's/^/  /'
 
-echo; echo ">> U1: octo upgrade (tutti)"
-if "$O" upgrade; then echo "  uscita 0"; else fail "octo upgrade è uscito con errore"; fi
+echo; echo ">> U1: aracno upgrade (tutti)"
+if "$O" upgrade; then echo "  uscita 0"; else fail "aracno upgrade è uscito con errore"; fi
 [[ $(state_of "$A") == attiva ]]    || fail "$A non è più attiva ($(state_of "$A"))"
 [[ $(state_of "$B") == congelata ]] || fail "$B non è più congelata ($(state_of "$B"))"
 "$O" list | sed 's/^/  /'
@@ -45,7 +45,7 @@ echo; echo ">> U3: tentacolo spento"
 "$O" stop "$B" >/dev/null
 for _ in $(seq 20); do [[ $(state_of "$B") == spenta ]] && break; sleep 0.5; done
 [[ $(state_of "$B") == spenta ]] || fail "$B non si è spenta per il test"
-if "$O" upgrade "$B"; then echo "  uscita 0"; else fail "octo upgrade $B è uscito con errore"; fi
+if "$O" upgrade "$B"; then echo "  uscita 0"; else fail "aracno upgrade $B è uscito con errore"; fi
 for _ in $(seq 20); do [[ $(state_of "$B") == spenta ]] && break; sleep 0.5; done
 [[ $(state_of "$B") == spenta ]] || fail "$B non è stata rispenta ($(state_of "$B"))"
 
@@ -59,7 +59,7 @@ echo; echo ">> Ripristino: $B riaccesa e congelata"
 
 echo
 if (( fails == 0 )); then
-  echo "ESITO 4.6: PASS (octo upgrade aggiorna e rimette lo stato di ogni tentacolo)"
+  echo "ESITO 4.6: PASS (aracno upgrade aggiorna e rimette lo stato di ogni tentacolo)"
 else
   echo "ESITO 4.6: FAIL ($fails controlli). Incolla l'output completo."
   exit 1

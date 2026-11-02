@@ -4,18 +4,18 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 ## Fase 1: prove dei rischi
 
-- [x] **T1: prova di utente `octopus` + regola polkit** (S): PASS il 2026-11-01. Serve anche una policy D-Bus per FreezeUnit/ThawUnit su systemd 255
-  - Lavoro: `octopus/data/sysusers/octopus.conf`, `octopus/data/polkit/50-octopus.rules`, `prototype/10-polkit-spike.sh` (installa, prova, rimuove).
+- [x] **T1: prova di utente `aracno` + regola polkit** (S): PASS il 2026-11-01. Serve anche una policy D-Bus per FreezeUnit/ThawUnit su systemd 255
+  - Lavoro: `aracno/data/sysusers/aracno.conf`, `aracno/data/polkit/50-aracno.rules`, `prototype/10-polkit-spike.sh` (installa, prova, rimuove).
   - Accettazione:
-    - come `octopus`, `busctl call … FreezeUnit/ThawUnit systemd-nspawn@arch.service` funziona senza password;
-    - come `octopus`, `RestartUnit` sullo stesso tentacolo e `StopUnit` su un'altra unit (per esempio `cron.service`) vengono **rifiutati**;
-    - come `octopus`, `machine1 ListImages` restituisce debian e arch.
+    - come `aracno`, `busctl call … FreezeUnit/ThawUnit systemd-nspawn@arch.service` funziona senza password;
+    - come `aracno`, `RestartUnit` sullo stesso tentacolo e `StopUnit` su un'altra unit (per esempio `cron.service`) vengono **rifiutati**;
+    - come `aracno`, `machine1 ListImages` restituisce debian e arch.
   - Verifica: `sudo /home/xenon/Desktop/progetti-personal/idea-linux/prototype/10-polkit-spike.sh` → PASS.
   - Dipendenze: nessuna.
 
 - [x] **T2: prova di layer-shell su COSMIC** (S): PASS il 2026-11-01. Layer-shell overlay a tutto schermo (pannelli compresi), tastiera esclusiva, Esc chiude; ripiego X11 ok; avvio a freddo 129–207 ms
   - Prerequisito (lo lancia l'utente): `sudo apt install libgtk-4-dev meson ninja-build libwayland-dev wayland-protocols`. Poi gtk4-layer-shell 1.0.4 compilata in `~/.local`, senza introspection e senza vala.
-  - Lavoro: `octopus/spikes/layer-shell/` (una finestra minima in Rust).
+  - Lavoro: `aracno/spikes/layer-shell/` (una finestra minima in Rust).
   - Accettazione:
     - la finestra copre tutto lo schermo sopra le altre, riceve la tastiera e si chiude con Esc;
     - con `GDK_BACKEND=x11`, o senza layer-shell, parte il ripiego a schermo intero.
@@ -25,49 +25,49 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 ### Checkpoint A
 - [x] T1 e T2 passati (2026-11-01). Ipotesi corretta in T1: serve una policy D-Bus per FreezeUnit/ThawUnit.
 
-## Fase 2: `octod`
+## Fase 2: `aracnod`
 
 - [x] **T3: ADR-0008** (XS): demone di sistema + D-Bus + polkit, utente dedicato, Rust. Con i risultati di T1 e T2.
-- [x] **T4: workspace e `octopus-proto`** (S): 7 test verdi (nomi, stati, coerenza con la regola polkit), clippy e fmt puliti
-  - Lavoro: `octopus/Cargo.toml`, `octopus/octopus-proto/` con i nomi D-Bus, `TentacleName`, `TentacleState` e gli errori.
+- [x] **T4: workspace e `aracno-proto`** (S): 7 test verdi (nomi, stati, coerenza con la regola polkit), clippy e fmt puliti
+  - Lavoro: `aracno/Cargo.toml`, `aracno/aracno-proto/` con i nomi D-Bus, `TentacleName`, `TentacleState` e gli errori.
   - Accettazione: test unitari della validazione dei nomi (validi, vuoto, maiuscole, `../`, spazi, 64 caratteri).
-  - Verifica: `cargo test -p octopus-proto`, `cargo clippy -- -D warnings`.
-- [x] **T5: `octod` con `ListTentacles`** (M): PASS il 2026-11-01 (O1a–O1d). Senza tokio: zbus 6 ha il suo runtime; RAM e limite dalle proprietà di systemd, nessun file letto
-  - Lavoro: `octopus/octod/`; i file `data/dbus/`, `data/systemd/octod.service`; `prototype/11-install-octod.sh`.
-  - Accettazione: O1. `ListTentacles` restituisce nome, stato, RAM e limite giusti con debian attiva e arch congelata, confrontati con `octo list`.
-  - Verifica: `cargo test`; installazione; `busctl call io.github.tommaso_palestini.Octopus1 … ListTentacles`.
+  - Verifica: `cargo test -p aracno-proto`, `cargo clippy -- -D warnings`.
+- [x] **T5: `aracnod` con `ListTentacles`** (M): PASS il 2026-11-01 (O1a–O1d). Senza tokio: zbus 6 ha il suo runtime; RAM e limite dalle proprietà di systemd, nessun file letto
+  - Lavoro: `aracno/aracnod/`; i file `data/dbus/`, `data/systemd/aracnod.service`; `prototype/11-install-aracnod.sh`.
+  - Accettazione: O1. `ListTentacles` restituisce nome, stato, RAM e limite giusti con debian attiva e arch congelata, confrontati con `aracno list`.
+  - Verifica: `cargo test`; installazione; `busctl call io.github.tommaso_palestini.Aracno1 … ListTentacles`.
   - Dipendenze: T1, T4.
-- [x] **T6: `Switch`** (M): PASS il 2026-11-01. Mediana 13 ms, nobody fuori dalla sessione rifiutato, 12 Busy su 60 chiamate in contemporanea, stato sempre coerente. Le azioni polkit hanno come proprietario `unix-user:octopus`
+- [x] **T6: `Switch`** (M): PASS il 2026-11-01. Mediana 13 ms, nobody fuori dalla sessione rifiutato, 12 Busy su 60 chiamate in contemporanea, stato sempre coerente. Le azioni polkit hanno come proprietario `unix-user:aracno`
   - Accettazione:
     - O2: switch dalla sessione senza password, mediana su 20 switch < 150 ms;
     - O3: `nobody` rifiutato;
     - O4: nomi non validi rifiutati;
     - O5: due switch in contemporanea: uno riesce, l'altro riceve `Busy`.
   - Il segnale `StateChanged` viene emesso. Ogni operazione va nel log con chi l'ha chiesta.
-  - Verifica: `prototype/12-octod-test.sh` → PASS.
+  - Verifica: `prototype/12-aracnod-test.sh` → PASS.
   - Dipendenze: T5.
 - [ ] **T7: `Stop` + restrizioni della unit + controlli di sicurezza** (S)
   - Accettazione:
     - `Stop` chiede la password di amministratore;
-    - O6: `systemd-analyze security octod.service` ≤ 2.0;
+    - O6: `systemd-analyze security aracnod.service` ≤ 2.0;
     - `cargo audit` e `cargo deny check` puliti.
-  - Verifica: la parte Stop/O6 di `12-octod-test.sh`.
+  - Verifica: la parte Stop/O6 di `12-aracnod-test.sh`.
   - Revisione con la skill `security-and-hardening`.
   - Dipendenze: T6.
 
 ### Checkpoint B
 - [ ] O1–O6 PASS, test e clippy verdi, revisione con te.
 
-## Fase 3: `octo-menu`
+## Fase 3: `aracno-menu`
 
 - [ ] **T8: menù base** (M)
   - Lavoro: istanza unica (lanciato di nuovo si chiude), layer-shell o ripiego, elenco testuale da `ListTentacles`, Esc.
-  - Accettazione: M4, cioè un messaggio chiaro se `octod` non risponde o rifiuta.
+  - Accettazione: M4, cioè un messaggio chiaro se `aracnod` non risponde o rifiuta.
   - Da T2: l'avvio a freddo (129–207 ms) è al limite di M1. Tenere il processo già avviato e mostrare o nascondere la finestra; misurare.
   - Da T2: controllare che il display sia Wayland prima di `is_supported()`, altrimenti la libreria 1.0.4 dà un CRITICAL su X11.
   - Dipendenze: T2, T5.
 - [ ] **T9: raggiera, tastiera e switch** (M)
-  - Lavoro: `radial.rs` (logica pura, test per 1–8 tentacoli su 1366×768), navigazione con frecce, Tab e Invio, `Switch` tramite `octod`, chiusura a switch fatto.
+  - Lavoro: `radial.rs` (logica pura, test per 1–8 tentacoli su 1366×768), navigazione con frecce, Tab e Invio, `Switch` tramite `aracnod`, chiusura a switch fatto.
   - Accettazione: M2, M3.
   - Dipendenze: T6, T8.
 - [ ] **T10: grafica** (M)

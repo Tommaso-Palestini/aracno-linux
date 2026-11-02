@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 4.5: verifica `octo limit` (tetto RAM per tentacolo).
+# Aracno prototipo — fase 4.5: verifica `aracno limit` (tetto RAM per tentacolo).
 #
 # Perché: il congelamento libera solo la CPU, non la RAM (ADR-0002). Con 5,7 GB
 # serve un modo per togliere RAM a un tentacolo, soprattutto quando è congelato.
 #
 # Ipotesi e criteri (scritti prima del test):
-#   T1  `octo limit debian 512M` scrive memory.max = 536870912 e `octo list` lo mostra;
-#       `octo limit debian infinity` lo riporta a "max".
+#   T1  `aracno limit debian 512M` scrive memory.max = 536870912 e `aracno list` lo mostra;
+#       `aracno limit debian infinity` lo riporta a "max".
 #   T2  Con un tetto di 512M, un processo che riempie 768 MB NON viene ucciso:
 #       il kernel manda in swap l'eccesso. Attese: memhog "ok", swap del
 #       tentacolo >= 200 MB, nessun oom_kill, tentacolo ancora attivo.
@@ -20,7 +20,7 @@
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
-O="$(dirname "$0")/octo"
+O="$(dirname "$0")/aracno"
 SRC="$(dirname "$0")/memhog.c"
 A=debian
 B=arch
@@ -36,10 +36,10 @@ avail()     { awk '/^MemAvailable/{printf "%d", $2/1024}' /proc/meminfo; }
 zram()      { [[ -r /sys/block/zram0/mm_stat ]] && awk '{printf "zram: %d MB di dati in %d MB di RAM", $1/1048576, $3/1048576}' /sys/block/zram0/mm_stat || echo "zram: assente"; }
 inside()    { systemd-run -M "$1" --quiet --wait --pipe /bin/sh -c "$2" 2>&1; }
 wait_log()  { for _ in $(seq "${2:-120}"); do grep -q -E "$1" "$LOG" 2>/dev/null && return 0; sleep 0.5; done; return 1; }
-stop_hog()  { systemctl -M "$A" stop octo-mem 2>/dev/null || true; systemctl -M "$A" reset-failed octo-mem 2>/dev/null || true; }
+stop_hog()  { systemctl -M "$A" stop aracno-mem 2>/dev/null || true; systemctl -M "$A" reset-failed aracno-mem 2>/dev/null || true; }
 start_hog() {
   stop_hog; rm -f "$LOG"
-  systemd-run -M "$A" --unit=octo-mem --collect --quiet /bin/sh -c "exec /var/tmp/memhog $1 > /var/tmp/memhog.log 2>&1"
+  systemd-run -M "$A" --unit=aracno-mem --collect --quiet /bin/sh -c "exec /var/tmp/memhog $1 > /var/tmp/memhog.log 2>&1"
 }
 
 fails=0
@@ -104,15 +104,15 @@ echo "  tetto applicato in $ms_lim ms; RAM tolta al tentacolo: $((c0 - c1)) MB; 
 
 out=$("$O" switch "$A"); echo "  $out" | tail -1
 "$O" limit "$A" infinity >/dev/null
-systemctl -M "$A" is-active -q octo-mem || fail "memhog non è più vivo dopo lo switch"
-systemctl -M "$A" kill --kill-whom=main -s USR1 octo-mem
+systemctl -M "$A" is-active -q aracno-mem || fail "memhog non è più vivo dopo lo switch"
+systemctl -M "$A" kill --kill-whom=main -s USR1 aracno-mem
 if wait_log '^verify' 240; then grep '^verify' "$LOG" | sed 's/^/  memhog: /'; fi
-grep -q "^verify ok" "$LOG" 2>/dev/null || { fail "dati non verificati dopo lo swap"; echo "  log memhog:"; sed "s/^/    /" "$LOG" 2>/dev/null; systemctl -M "$A" status octo-mem --no-pager 2>&1 | sed "s/^/    /" || true; }
+grep -q "^verify ok" "$LOG" 2>/dev/null || { fail "dati non verificati dopo lo swap"; echo "  log memhog:"; sed "s/^/    /" "$LOG" 2>/dev/null; systemctl -M "$A" status aracno-mem --no-pager 2>&1 | sed "s/^/    /" || true; }
 echo "  dopo il rientro: RAM $A $(cur) MB, swap $A $(swp) MB"
 
 echo
 if (( fails == 0 )); then
-  echo "ESITO 4.5: PASS (octo limit funziona, anche su tentacolo congelato; dati intatti)"
+  echo "ESITO 4.5: PASS (aracno limit funziona, anche su tentacolo congelato; dati intatti)"
 else
   echo "ESITO 4.5: FAIL ($fails controlli). Incolla l'output completo."
   exit 1

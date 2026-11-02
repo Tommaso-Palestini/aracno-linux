@@ -7,7 +7,7 @@ Accettata
 2026-10-31 (scritta il 2026-11-01)
 
 ## Contesto
-Octopus deve tenere più distro Linux pronte sullo stesso PC e passare dall'una all'altra in modo rapido, senza riavviare. L'hardware di riferimento è modesto: Ryzen con Radeon Vega e 5,7 GB di RAM. Per questo ogni strato di virtualizzazione costa caro, soprattutto in RAM e GPU.
+Aracno deve tenere più distro Linux pronte sullo stesso PC e passare dall'una all'altra in modo rapido, senza riavviare. L'hardware di riferimento è modesto: Ryzen con Radeon Vega e 5,7 GB di RAM. Per questo ogni strato di virtualizzazione costa caro, soprattutto in RAM e GPU.
 
 Requisiti:
 - switch in meno di un secondo, che non perda lo stato dei programmi;
@@ -48,4 +48,4 @@ Ogni tentacolo è una cartella in `/var/lib/machines/NOME` avviata con `systemd-
 - Tutti i tentacoli condividono kernel e moduli dell'host, compreso il driver amdgpu. Un tentacolo non può avere un kernel diverso né moduli propri.
 - Con `PrivateUsers=no` il root del container ha lo stesso UID del root dell'host. nspawn toglie comunque alcune capability, ma l'isolamento non vale come confine di sicurezza: un tentacolo è di fiducia quanto l'host.
 - Creare il tentacolo Arch richiede oggi Docker e la rete. Per l'ISO serve un'altra strada (fase 5b: immagini già dentro l'ISO).
-- I tentacoli usano gli strumenti standard: `machinectl`, `systemctl -M`, `systemd-run -M`. La CLI `prototype/octo` ci aggiunge sopra solo uno strato sottile.
+- I tentacoli usano gli strumenti standard: `machinectl`, `systemctl -M`, `systemd-run -M`. La CLI `prototype/aracno` ci aggiunge sopra solo uno strato sottile.

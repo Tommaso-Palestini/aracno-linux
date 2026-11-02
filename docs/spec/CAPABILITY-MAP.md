@@ -8,12 +8,12 @@ Le separo perché il componente con i privilegi deve essere piccolo, verificabil
 
 | Id modulo | Responsabilità | Dipende da |
 |---|---|---|
-| `octopus-proto` | Interfaccia D-Bus condivisa: nomi, metodi, tipi, validazione dei nomi dei tentacoli | — |
-| `octod` | Demone di sistema: elenca i tentacoli, fa switch/stop tramite systemd, controlla i permessi con polkit | `octopus-proto` |
-| `octo-menu` | Schermata a tutto schermo per l'utente, client di `octod`, nessun privilegio | `octopus-proto` |
+| `aracno-proto` | Interfaccia D-Bus condivisa: nomi, metodi, tipi, validazione dei nomi dei tentacoli | — |
+| `aracnod` | Demone di sistema: elenca i tentacoli, fa switch/stop tramite systemd, controlla i permessi con polkit | `aracno-proto` |
+| `aracno-menu` | Schermata a tutto schermo per l'utente, client di `aracnod`, nessun privilegio | `aracno-proto` |
 
-Ordine di costruzione: `octopus-proto` → `octod` → `octo-menu`.
+Ordine di costruzione: `aracno-proto` → `aracnod` → `aracno-menu`.
 
-Spec: [SPEC-octod.md](SPEC-octod.md) (comprende `octopus-proto`), [SPEC-octo-menu.md](SPEC-octo-menu.md).
+Spec: [SPEC-aracnod.md](SPEC-aracnod.md) (comprende `aracno-proto`), [SPEC-aracno-menu.md](SPEC-aracno-menu.md).
 
-La CLI `prototype/octo` resta lo strumento del prototipo. Diventerà un client di `octod` in un passo successivo, fuori da questa mappa.
+La CLI `prototype/aracno` resta lo strumento del prototipo. Diventerà un client di `aracnod` in un passo successivo, fuori da questa mappa.

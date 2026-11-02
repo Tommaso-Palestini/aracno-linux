@@ -1,0 +1,12 @@
+# T2: prova isolata di gtk4-layer-shell su COSMIC. Non fa parte del workspace.
+[package]
+name = "aracno-spike-layer-shell"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+gtk = { package = "gtk4", version = "0.11" }
+gtk4-layer-shell = "0.8"
+
+[workspace]

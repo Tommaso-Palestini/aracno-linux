@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 1: crea due tentacoli (Debian e Arch) come cartelle
+# Aracno prototipo — fase 1: crea due tentacoli (Debian e Arch) come cartelle
 #   /var/lib/machines/debian   (via debootstrap)
 #   /var/lib/machines/arch     (via immagine ufficiale archlinux esportata da Docker)
 set -euo pipefail

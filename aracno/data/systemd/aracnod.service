@@ -1,0 +1,53 @@
+# Aracno — servizio aracnod (spec: docs/spec/SPEC-aracnod.md, ADR-0008).
+# Utente dedicato senza capability: i permessi su systemd vengono solo da
+# polkit (50-aracno.rules) e dalla policy D-Bus per freeze/thaw.
+[Unit]
+Description=Aracno: gestione dei tentacoli
+Documentation=https://github.com/Tommaso-Palestini/aracno-linux
+After=dbus.service
+
+[Service]
+Type=dbus
+BusName=io.github.tommaso_palestini.Aracno1
+ExecStart=/usr/local/libexec/aracnod
+User=aracno
+Group=aracno
+
+# Restrizioni (T7: obiettivo systemd-analyze security ≤ 2.0).
+# Restano aperti di proposito: AF_UNIX (serve per D-Bus), RootDirectory (non serve),
+# char-rtc in lettura (lo aggiunge ProtectClock stesso).
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+SystemCallErrorNumber=EPERM
+DevicePolicy=closed
+RemoveIPC=yes
+# aracnod non legge /proc di altri processi né file di sistema in /proc
+ProtectProc=invisible
+ProcSubset=pid
+# Namespace utente proprio: aracnod vede solo sé stesso e root. Le credenziali dei
+# chiamanti le dà il bus (dal kernel), quindi polkit e i log non cambiano: da verificare
+# con i test di T5/T6 dopo ogni modifica.
+PrivateUsers=yes
+UMask=0077

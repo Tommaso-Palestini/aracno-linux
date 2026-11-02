@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 4.2: verifica che dentro ogni tentacolo il driver grafico
+# Aracno prototipo — fase 4.2: verifica che dentro ogni tentacolo il driver grafico
 # sia quello della Radeon (RADV/radeonsi), non il renderer software (llvmpipe).
 # Non installa nulla: se mancano gli strumenti, stampa il comando da lanciare.
 set -euo pipefail

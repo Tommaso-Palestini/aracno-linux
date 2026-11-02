@@ -1,16 +1,16 @@
-# Piano: menù a tentacoli (`octod` + `octo-menu`)
+# Piano: menù a tentacoli (`aracnod` + `aracno-menu`)
 
-Spec: `docs/spec/CAPABILITY-MAP.md`, `SPEC-octod.md`, `SPEC-octo-menu.md` (approvate il 2026-11-01).
+Spec: `docs/spec/CAPABILITY-MAP.md`, `SPEC-aracnod.md`, `SPEC-aracno-menu.md` (approvate il 2026-11-01).
 Task: `tasks/todo.md`.
 
 ## Sintesi
-Si costruisce un servizio di sistema senza privilegi (`octod`, utente `octopus`) che fa switch e stop dei tentacoli parlando con systemd su D-Bus, con i permessi controllati da polkit. Sopra va una schermata a tutto schermo (`octo-menu`) che gira come utente e chiede tutto a `octod`. Prima si eliminano i due rischi più grossi con due prove isolate, poi `octod` a fette verticali e infine il menù.
+Si costruisce un servizio di sistema senza privilegi (`aracnod`, utente `aracno`) che fa switch e stop dei tentacoli parlando con systemd su D-Bus, con i permessi controllati da polkit. Sopra va una schermata a tutto schermo (`aracno-menu`) che gira come utente e chiede tutto a `aracnod`. Prima si eliminano i due rischi più grossi con due prove isolate, poi `aracnod` a fette verticali e infine il menù.
 
 ## Decisioni architetturali
-- **Utente dedicato `octopus` + regola polkit**, non root. Verificato sul sorgente di systemd v255: freeze e thaw passano a polkit `unit` e `verb` (`stop`/`start`), e anche root senza `CAP_SYS_ADMIN` passa da polkit. La regola permette solo `start` e `stop` sulle sole unit `systemd-nspawn@*.service`.
-- **Elenco dei tentacoli da systemd-machined** (`ListImages`): `/var/lib/machines` è 0700 root e `octod` non deve leggerlo.
-- **Rust**, workspace in `octopus/`: `zbus` 6.2, `zbus_polkit` 6.0, `tokio` 1.54, `thiserror` 2.0, `gtk4` 0.11, `gtk4-layer-shell` 0.8 (versioni stabili su crates.io al 2026-11-01). Il crate di layer-shell richiede la libreria C ≥ 1.0: Debian trixie ha 1.0.4, Pop!_OS 24.04 non ce l'ha: per lo sviluppo è compilata dai sorgenti v1.0.4 in `~/.local` (build con `PKG_CONFIG_PATH=$HOME/.local/lib/x86_64-linux-gnu/pkgconfig`, avvio con `LD_LIBRARY_PATH=$HOME/.local/lib/x86_64-linux-gnu`).
-- **Installazione di sviluppo** sul PC con uno script lanciato dall'utente (`prototype/11-install-octod.sh`), in percorsi locali: `/usr/local/libexec`, `/etc/dbus-1/system.d`, `/etc/polkit-1/rules.d`, `/etc/systemd/system`. I pacchetti `.deb` e Arch, con i percorsi in `/usr/share`, arrivano con l'ISO.
+- **Utente dedicato `aracno` + regola polkit**, non root. Verificato sul sorgente di systemd v255: freeze e thaw passano a polkit `unit` e `verb` (`stop`/`start`), e anche root senza `CAP_SYS_ADMIN` passa da polkit. La regola permette solo `start` e `stop` sulle sole unit `systemd-nspawn@*.service`.
+- **Elenco dei tentacoli da systemd-machined** (`ListImages`): `/var/lib/machines` è 0700 root e `aracnod` non deve leggerlo.
+- **Rust**, workspace in `aracno/`: `zbus` 6.2, `zbus_polkit` 6.0, `tokio` 1.54, `thiserror` 2.0, `gtk4` 0.11, `gtk4-layer-shell` 0.8 (versioni stabili su crates.io al 2026-11-01). Il crate di layer-shell richiede la libreria C ≥ 1.0: Debian trixie ha 1.0.4, Pop!_OS 24.04 non ce l'ha: per lo sviluppo è compilata dai sorgenti v1.0.4 in `~/.local` (build con `PKG_CONFIG_PATH=$HOME/.local/lib/x86_64-linux-gnu/pkgconfig`, avvio con `LD_LIBRARY_PATH=$HOME/.local/lib/x86_64-linux-gnu`).
+- **Installazione di sviluppo** sul PC con uno script lanciato dall'utente (`prototype/11-install-aracnod.sh`), in percorsi locali: `/usr/local/libexec`, `/etc/dbus-1/system.d`, `/etc/polkit-1/rules.d`, `/etc/systemd/system`. I pacchetti `.deb` e Arch, con i percorsi in `/usr/share`, arrivano con l'ISO.
 - Le decisioni confermate dalle prove vanno registrate in **ADR-0008** (task 3).
 
 ## Grafo delle dipendenze
@@ -23,8 +23,8 @@ T1 e T2 sono indipendenti. Il menù (T8) ha bisogno almeno di `ListTentacles` (T
 
 ## Fasi
 1. **Prove dei rischi**: T1, T2. Checkpoint A.
-2. **`octod`**: T3–T7. Checkpoint B (O1–O6 della spec).
-3. **`octo-menu`**: T8–T11. Checkpoint C (M1–M5 della spec).
+2. **`aracnod`**: T3–T7. Checkpoint B (O1–O6 della spec).
+3. **`aracno-menu`**: T8–T11. Checkpoint C (M1–M5 della spec).
 
 ## Rischi
 | Rischio | Impatto | Mitigazione |

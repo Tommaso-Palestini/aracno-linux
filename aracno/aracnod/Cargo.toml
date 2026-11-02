@@ -1,0 +1,14 @@
+[package]
+name = "aracnod"
+description = "Servizio di sistema di Aracno: elenca i tentacoli e fa lo switch per conto dei client"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+aracno-proto.workspace = true
+zbus.workspace = true
+zbus_polkit.workspace = true
+# già presente nell'albero tramite zbus: serve solo per leggere gli stream dei segnali
+futures-core = "0.3"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Octopus prototipo — fase 0: installa gli strumenti sull'host ("la testa")
+# Aracno prototipo — fase 0: installa gli strumenti sull'host ("la testa")
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 
