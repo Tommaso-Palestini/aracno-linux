@@ -1,0 +1,4 @@
+#!/bin/sh
+# Aracno (solo ISO di prova): attiva il rapporto sulla seriale
+set -e
+systemctl enable aracno-prova-rapporto.service

@@ -1,0 +1,26 @@
+# Aracno — pacchetti del sistema (T18). Desktop: KDE Plasma minimale, sessione Wayland.
+kde-plasma-desktop
+kwin-wayland
+sddm
+konsole
+dolphin
+plasma-nm
+network-manager
+
+# sistema live
+live-boot
+live-config
+live-config-systemd
+
+# i fili (systemd-nspawn, machinectl)
+systemd-container
+
+# swap compresso in RAM: senza swap il kernel non può liberare la memoria dei fili congelati (ADR-0011)
+zram-tools
+
+# firmware per il PC vero (Radeon Vega di riferimento) e lingua
+firmware-linux-free
+firmware-amd-graphics
+locales
+console-setup
+sudo

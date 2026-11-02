@@ -1,0 +1,10 @@
+[Unit]
+Description=Aracno (solo ISO di prova): rapporto sulla console seriale
+After=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/aracno-prova-rapporto
+
+[Install]
+WantedBy=graphical.target

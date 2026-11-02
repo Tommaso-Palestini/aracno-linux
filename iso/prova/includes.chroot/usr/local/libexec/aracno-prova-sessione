@@ -1,0 +1,16 @@
+#!/bin/sh
+# Aracno — solo ISO di prova (costruisci.sh --prova). Parte con la sessione grafica
+# (autostart) e raccoglie in /run/aracno-prova quello che il rapporto sulla seriale stampa:
+# tipo di sessione, protocolli Wayland dal socket normale e da uno etichettato (T19).
+D=/run/aracno-prova
+L=/usr/local/libexec
+{
+  echo "XDG_SESSION_TYPE=${XDG_SESSION_TYPE:-?}"
+  echo "XDG_CURRENT_DESKTOP=${XDG_CURRENT_DESKTOP:-?}"
+  echo "WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-?}"
+} >"$D/sessione"
+"$L/aracno-wayland-globali" >"$D/globali" 2>&1
+"$L/aracno-socket-sicuro" "$XDG_RUNTIME_DIR/aracno-prova.sock" prova >"$D/sicuro.log" 2>&1 &
+sleep 2
+WAYLAND_DISPLAY=aracno-prova.sock "$L/aracno-wayland-globali" >"$D/globali-sicuro" 2>&1
+touch "$D/fatto"

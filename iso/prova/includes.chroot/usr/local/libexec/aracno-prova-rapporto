@@ -1,0 +1,20 @@
+#!/bin/sh
+# Aracno — solo ISO di prova. Aspetta i dati della sessione grafica (aracno-prova-sessione)
+# e scrive un rapporto sulla console seriale, dove lo legge iso/prova-vm.sh.
+# Ogni riga inizia con ARACNO- così è facile da cercare.
+D=/run/aracno-prova
+S=/dev/ttyS0
+i=0
+while [ ! -e "$D/fatto" ] && [ $i -lt 300 ]; do sleep 1; i=$((i + 1)); done
+{
+  echo "ARACNO-INIZIO"
+  echo "ARACNO-TEMPO $(cut -d' ' -f1 /proc/uptime) s dall'avvio"
+  echo "ARACNO-SISTEMA $(systemctl is-system-running)"
+  systemctl --failed --no-legend --plain | sed 's/^/ARACNO-FALLITO /'
+  [ -e "$D/fatto" ] || echo "ARACNO-SESSIONE nessuna sessione grafica in 300 s"
+  sed 's/^/ARACNO-SESSIONE /' "$D/sessione" 2>/dev/null
+  sed 's/^/ARACNO-GLOBALE /' "$D/globali" 2>/dev/null
+  sed 's/^/ARACNO-SICURO /' "$D/globali-sicuro" 2>/dev/null
+  sed 's/^/ARACNO-SICURO-LOG /' "$D/sicuro.log" 2>/dev/null
+  echo "ARACNO-FINE"
+} >"$S"

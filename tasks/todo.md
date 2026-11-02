@@ -154,6 +154,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Accettazione: l'ISO di prova di T16 si avvia; lo script vede il login sulla seriale ed esce
     con l'esito.
 - [ ] **T18: ISO minima con Plasma** (M)
+  - Scritto il 2026-11-02: `iso/config/` (pacchetti: kde-plasma-desktop, kwin-wayland, sddm, systemd-container, zram-tools, firmware), `iso/costruisci.sh [--prova]`, GRUB con timeout 5 s e seriale; la ISO di prova misura anche T19 (`iso/prova/`, rapporto sulla seriale); verifica: `iso/verifica-desktop.sh`.
   - Lavoro: `iso/config/` (trixie, amd64, UEFI+BIOS, plasma-desktop minimale, sddm, utente
     live con login automatico, getty su ttyS0), `iso/costruisci.sh`.
   - Accettazione: in VM, desktop Plasma in meno di 2 minuti; dalla seriale

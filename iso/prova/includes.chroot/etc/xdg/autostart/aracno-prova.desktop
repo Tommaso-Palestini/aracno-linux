@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Aracno prova
+Comment=Solo ISO di prova: raccoglie i protocolli Wayland per il rapporto sulla seriale
+Exec=/usr/local/libexec/aracno-prova-sessione
+NoDisplay=true
+X-KDE-autostart-phase=2
