@@ -164,7 +164,7 @@ impl Manager {
         let o = op.nome();
 
         let target = TentacleName::try_from(name).map_err(|_| {
-            eprintln!("aracnod: {o} rifiutato ({chi}): nome non valido {name:?}");
+            eprintln!("aracnod: {o} rifiutato ({chi}): nome non valido {}", per_log(name));
             AracnoError::InvalidName("nome di tentacolo non valido".into())
         })?;
         if let Err(e) = auth::authorize(conn, header, op.azione(), op.interattiva()).await {
@@ -188,6 +188,19 @@ impl Manager {
             .collect::<Result<_, _>>()?;
         Ok((target, chi, stati, turno))
     }
+}
+
+/// Forma di un nome rifiutato da scrivere nel journal: escapata e al massimo 64
+/// caratteri. Il nome arriva da chiunque sul bus, prima del controllo dei permessi.
+fn per_log(name: &str) -> String {
+    const MAX: usize = 64;
+    let mut s: String = name.chars().take(MAX).collect();
+    let troncato = name.chars().nth(MAX).is_some();
+    s = format!("{s:?}");
+    if troncato {
+        s.push('…');
+    }
+    s
 }
 
 fn inesistente(op: Operazione, target: &TentacleName, chi: &str) -> AracnoError {
@@ -284,6 +297,20 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
+    use super::per_log;
+
+    #[test]
+    fn nome_rifiutato_troncato_nel_log() {
+        let lungo = "a".repeat(100_000);
+        let r = per_log(&lungo);
+        assert!(r.chars().count() <= 80, "{} caratteri", r.chars().count());
+        assert!(r.ends_with('…'));
+        // caratteri di controllo escapati, niente a capo finto nel journal
+        assert_eq!(per_log("x\ny"), "\"x\\ny\"");
+        // non spezza i caratteri multibyte
+        let _ = per_log(&"è".repeat(100));
+    }
+
     #[test]
     fn nome_interfaccia_coerente() {
         let sorgente = include_str!("main.rs");

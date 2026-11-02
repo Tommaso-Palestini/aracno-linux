@@ -46,7 +46,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Il segnale `StateChanged` viene emesso. Ogni operazione va nel log con chi l'ha chiesta.
   - Verifica: `prototype/12-aracnod-test.sh` → PASS.
   - Dipendenze: T5.
-- [ ] **T7: `Stop` + restrizioni della unit + controlli di sicurezza** (S)
+- [x] **T7: `Stop` + restrizioni della unit + controlli di sicurezza** (S)
   - Accettazione:
     - `Stop` chiede la password di amministratore;
     - O6: `systemd-analyze security aracnod.service` ≤ 2.0;
@@ -54,7 +54,7 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Verifica: la parte Stop/O6 di `12-aracnod-test.sh`.
   - Revisione con la skill `security-and-hardening`.
   - Dipendenze: T6.
-  - Stato 2026-11-02: `Stop` e O6 PASS (`13-aracnod-stop-test.sh`, esposizione 0.2). Mancano `cargo audit`/`cargo deny check` e la revisione di sicurezza.
+  - PASS il 2026-11-02: `13-aracnod-stop-test.sh` (Stop con password, esposizione 0.2), `cargo audit` e `cargo deny check` puliti, revisione in `docs/security/2026-11-02-revisione-aracnod.md`.
 
 ### Checkpoint B
 - [ ] O1–O6 PASS, test e clippy verdi, revisione con te.

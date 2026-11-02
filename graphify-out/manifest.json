@@ -144,9 +144,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793610261.898236,
-    "seen": 1793610324.2532847,
-    "ast_hash": "90a8c41fc173db4e7b24d60ff72b1563",
+    "mtime": 1793611883.493951,
+    "seen": 1793611889.9606676,
+    "ast_hash": "3de231280579f874e3f1b7e9ca9d4014",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -156,15 +156,15 @@
     "semantic_hash": ""
   },
   "aracno/Cargo.toml": {
-    "mtime": 1793610261.9066243,
-    "seen": 1793610324.2531614,
-    "ast_hash": "e18ff2f7c47e0d600d4eb95ee958ec77",
+    "mtime": 1793611742.1925416,
+    "seen": 1793611889.9604986,
+    "ast_hash": "6b18ad53ee5dab75543cd6b5671198e7",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/Cargo.toml": {
-    "mtime": 1793610261.90776,
-    "seen": 1793610324.253169,
-    "ast_hash": "9f3e44e2a9c989b6c943b203731ddab8",
+    "mtime": 1793611742.2010815,
+    "seen": 1793611889.9605086,
+    "ast_hash": "cdac7b332fcd5564ac8749d1992e955c",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/src/lib.rs": {
@@ -174,9 +174,9 @@
     "semantic_hash": ""
   },
   "aracno/aracnod/Cargo.toml": {
-    "mtime": 1793610261.910389,
-    "seen": 1793610324.2531838,
-    "ast_hash": "30becd535e6947c3e51598f771264e08",
+    "mtime": 1793611742.1964564,
+    "seen": 1793611889.960521,
+    "ast_hash": "f7b342ec3fc6f5d9f0ff1c3fb400eee9",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/auth.rs": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "aracno/aracnod/src/main.rs": {
-    "mtime": 1793610261.90922,
-    "seen": 1793610324.253193,
-    "ast_hash": "a2d1db5e911aaa9b032418fba74acd20",
+    "mtime": 1793611667.9512675,
+    "seen": 1793611889.9605372,
+    "ast_hash": "71f38668ee1f6923676749ba3e23a15d",
     "semantic_hash": ""
   },
   "aracno/aracnod/src/switch.rs": {
@@ -267,6 +267,12 @@
     "mtime": 1793610261.9034202,
     "seen": 1793610324.2532802,
     "ast_hash": "b982185958eadd9727ef01d6ef6634b2",
+    "semantic_hash": ""
+  },
+  "docs/security/2026-11-02-revisione-aracnod.md": {
+    "mtime": 1793611748.397119,
+    "seen": 1793611889.9606504,
+    "ast_hash": "d97749bab9f624ca08d82ae357c51a22",
     "semantic_hash": ""
   }
 }

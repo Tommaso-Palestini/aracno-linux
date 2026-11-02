@@ -10,6 +10,8 @@ version = "0.1.0"
 edition = "2021"
 license = "GPL-3.0-or-later"
 repository = "https://github.com/Tommaso-Palestini/aracno-linux"
+# Non si pubblica su crates.io: così le dipendenze per percorso sono ammesse da cargo deny.
+publish = false
 
 [workspace.dependencies]
 thiserror = "2.0"
