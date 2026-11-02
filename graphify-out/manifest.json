@@ -318,15 +318,15 @@
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/main.rs": {
-    "mtime": 1793616268.8177073,
-    "seen": 1793616472.8259256,
-    "ast_hash": "9b1ec9ee7117e925533bc36e691699e9",
+    "mtime": 1793616830.0463002,
+    "seen": 1793616849.9549353,
+    "ast_hash": "4dee2635893fa72cd1b1889b919bf798",
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/view.rs": {
-    "mtime": 1793616247.769945,
-    "seen": 1793616472.8259313,
-    "ast_hash": "28ad42db7f4ae8533d937ebe80fc7c8b",
+    "mtime": 1793616801.9057095,
+    "seen": 1793616849.9549446,
+    "ast_hash": "2bbc0658a68e755f49d204f01e46aaf6",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/src/client.rs": {
@@ -354,9 +354,9 @@
     "semantic_hash": ""
   },
   "prototype/17-menu-switch-test.sh": {
-    "mtime": 1793616471.015067,
-    "seen": 1793616472.8260055,
-    "ast_hash": "230bcbefd244a8c28f2708136cccc845",
+    "mtime": 1793616848.3866203,
+    "seen": 1793616849.9550793,
+    "ast_hash": "efdc8de808053b80076a31d7f32cb4e4",
     "semantic_hash": ""
   }
 }

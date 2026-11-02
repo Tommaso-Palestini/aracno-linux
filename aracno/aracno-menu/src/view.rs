@@ -131,20 +131,27 @@ impl Vista {
             b.update_property(&[gtk::accessible::Property::Label(&testo_accessibile(&f))]);
             let s = scelta.clone();
             let filo = f.clone();
-            b.connect_clicked(move |_| s(&filo));
+            b.connect_clicked(move |_| {
+                eprintln!("aracno-menu: scelto {}", filo.nome);
+                s(&filo)
+            });
             self.fisso.put(&b, r.x, r.y);
             nodi.push((b, f, r));
         }
         // il primo elemento selezionato è il filo attivo (spec)
-        if let Some((b, _, _)) = nodi.first() {
+        if let Some((b, f, _)) = nodi.first() {
             b.grab_focus();
+            eprintln!("aracno-menu: selezionato {} (all'apertura)", f.nome);
         }
     }
 
     /// Sposta il focus con una freccia. Vero se la freccia è stata usata.
+    /// Si usa `is_focus` e non `has_focus`: `has_focus` è vero solo a finestra attiva,
+    /// e una superficie layer-shell su COSMIC può diventarlo dopo secondi (T9, 2026-11-02:
+    /// le frecce riportavano sempre la selezione sul primo filo).
     pub fn muovi(&self, dir: Direzione) -> bool {
         let nodi = self.nodi.borrow();
-        let Some(da) = nodi.iter().position(|(b, _, _)| b.has_focus()) else {
+        let Some(da) = nodi.iter().position(|(b, _, _)| b.is_focus()) else {
             return match nodi.first() {
                 Some((b, _, _)) => b.grab_focus(),
                 None => false,
@@ -153,8 +160,14 @@ impl Vista {
         let rett: Vec<Rett> = nodi.iter().map(|(_, _, r)| *r).collect();
         if let Some(j) = radial::vicino(&rett, da, dir) {
             nodi[j].0.grab_focus();
+            eprintln!("aracno-menu: freccia {dir:?} → {}", nodi[j].1.nome);
         }
         true
+    }
+
+    /// Nome del filo selezionato (per il log).
+    pub fn selezionato(&self) -> Option<String> {
+        self.nodi.borrow().iter().find(|(b, _, _)| b.is_focus()).map(|(_, f, _)| f.nome.clone())
     }
 
     /// Durante lo switch: pulsanti bloccati, indicatore sul filo scelto.

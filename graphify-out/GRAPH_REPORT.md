@@ -1,17 +1,17 @@
 # Graph Report - idea-linux  (2026-11-02)
 
 ## Corpus Check
-- 60 files · ~28,400 words
+- 60 files · ~28,642 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 11 file(s) not represented in the graph (top: .conf 4, (none) 2, .service 2)
 
 ## Summary
-- 609 nodes · 941 edges · 50 communities (39 shown, 11 thin omitted)
+- 610 nodes · 942 edges · 50 communities (39 shown, 11 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.71)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `32f135ec`
+- Built from commit: `dbf24d45`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -68,7 +68,7 @@
 ## God Nodes (most connected - your core abstractions)
 1. `StrandName` - 25 edges
 2. `StrandState` - 23 edges
-3. `Vista` - 19 edges
+3. `Vista` - 20 edges
 4. `AracnoError` - 19 edges
 5. `Filo` - 16 edges
 6. `Spec: `aracnod` (con `aracno-proto`)` - 13 edges
@@ -82,12 +82,12 @@
   aracno/aracno-menu/src/main.rs → aracno/aracno-proto/src/client.rs
 - `scelta()` --calls--> `messaggio()`  [INFERRED]
   aracno/aracno-menu/src/main.rs → aracno/aracno-proto/src/client.rs
+- `n()` --references--> `StrandName`  [EXTRACTED]
+  aracno/aracnod/src/list.rs → aracno/aracno-proto/src/lib.rs
 - `fili()` --references--> `UnitInfo`  [INFERRED]
   aracno/aracnod/src/main.rs → aracno/aracnod/src/list.rs
-- `esegui()` --references--> `Step`  [INFERRED]
-  aracno/aracnod/src/main.rs → aracno/aracnod/src/switch.rs
-- `esegui()` --calls--> `attivi()`  [INFERRED]
-  aracno/aracno-cli/src/main.rs → aracno/aracno-cli/src/ragnatela.rs
+- `stato()` --references--> `UnitInfo`  [INFERRED]
+  aracno/aracnod/src/main.rs → aracno/aracnod/src/list.rs
 
 ## Import Cycles
 - 1-file cycle: `aracno/aracnod/src/main.rs -> aracno/aracnod/src/main.rs`
@@ -119,24 +119,24 @@ Cohesion: 0.18
 Nodes (10): ADR-0002: Switch con il freezer dei cgroup (`systemctl freeze`), Alternative considerate, Conseguenze, Contesto, Data, Decisione, SIGSTOP/SIGCONT ai processi, Solo priorità (CPUWeight/nice) senza congelare (+2 more)
 
 ### Community 9 - "switch.rs"
-Cohesion: 0.20
-Nodes (18): filo_sconosciuto(), gia_attivo_e_unico_non_fa_nulla(), i_congelamenti_vengono_sempre_prima(), n(), plan(), plan_stop(), Step, Freeze (+10 more)
+Cohesion: 0.16
+Nodes (19): StrandName, filo_sconosciuto(), gia_attivo_e_unico_non_fa_nulla(), i_congelamenti_vengono_sempre_prima(), n(), plan(), plan_stop(), Step (+11 more)
 
 ### Community 10 - "ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con utente dedicato, polkit e D-Bus"
-Cohesion: 0.29
-Nodes (6): ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con utente dedicato, polkit e D-Bus, Conseguenze, Contesto, Data, Decisione, Stato
+Cohesion: 0.15
+Nodes (12): ADR-0008: Lo switch passa da `aracnod`, un servizio di sistema con utente dedicato, polkit e D-Bus, Alternative considerate, `aracnod` come root, Conseguenze, Contesto, Data, Decisione, Il menù chiama systemd direttamente, con una regola polkit per l'utente (+4 more)
 
 ### Community 11 - "client.rs"
-Cohesion: 0.06
-Nodes (28): colore(), colori_solo_se_chiesti(), disegna(), f(), filo_attivo(), ragnatela_ordinata_e_senza_colori(), CENTRO_H, CENTRO_W (+20 more)
+Cohesion: 0.05
+Nodes (30): colore(), colori_solo_se_chiesti(), disegna(), f(), filo_attivo(), ragnatela_ordinata_e_senza_colori(), CENTRO_H, CENTRO_W (+22 more)
 
 ### Community 12 - "lib.rs"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (14): ACTION_MANAGE, ACTION_SWITCH, BUS_NAME, BUSY, FAILED, INTERFACE, INVALID_NAME, MAX_NAME_LEN (+6 more)
 
 ### Community 13 - "ADR-0001: Fili come container systemd-nspawn su un unico kernel"
-Cohesion: 0.17
-Nodes (11): ADR-0001: Fili come container systemd-nspawn su un unico kernel, Alternative considerate, Conseguenze, Contesto, Data, Decisione, Docker / Podman, LXC/LXD (Incus) (+3 more)
+Cohesion: 0.33
+Nodes (6): ADR-0001: Fili come container systemd-nspawn su un unico kernel, Conseguenze, Contesto, Data, Decisione, Stato
 
 ### Community 14 - "08-ram-limit.sh"
 Cohesion: 0.27
@@ -151,8 +151,8 @@ Cohesion: 0.14
 Nodes (7): AIUTO, Errore, esegui(), fili(), main(), prossimo(), attivi()
 
 ### Community 17 - "TentacleName"
-Cohesion: 0.09
-Nodes (16): StrandName, n(), ALREADY_SUBSCRIBED, freeze(), image_names(), job(), Machined, next() (+8 more)
+Cohesion: 0.10
+Nodes (14): ALREADY_SUBSCRIBED, freeze(), image_names(), job(), Machined, next(), NO_SUCH_UNIT, Service (+6 more)
 
 ### Community 18 - "Piano: menù a tentacoli (`octod` + `octo-menu`)"
 Cohesion: 0.25
@@ -171,8 +171,8 @@ Cohesion: 0.56
 Nodes (7): allow(), as(), deny(), fail(), ok(), sd(), 10-polkit-spike.sh script
 
 ### Community 22 - "aracno-menu/src/main.rs"
-Cohesion: 0.08
-Nodes (12): APP_ID, chiudi(), crea(), main(), mostra(), prepara_superficie(), scelta(), Scelta (+4 more)
+Cohesion: 0.12
+Nodes (10): APP_ID, chiudi(), crea(), main(), mostra(), prepara_superficie(), scelta(), Scelta (+2 more)
 
 ### Community 24 - "ADR-0007: Menù a tentacoli come schermata a tutto schermo"
 Cohesion: 0.18
@@ -208,7 +208,7 @@ Nodes (5): Confini di fiducia, Dipendenze, Revisione di sicurezza di aracnod (T7
 
 ### Community 34 - "list.rs"
 Cohesion: 0.15
-Nodes (14): ProtoError, InvalidName, UnknownState, attivo_con_memoria_e_senza_limite(), congelato_con_limite(), entry(), info(), memoria_sconosciuta_vale_zero() (+6 more)
+Nodes (15): ProtoError, InvalidName, UnknownState, attivo_con_memoria_e_senza_limite(), congelato_con_limite(), Entry, entry(), info() (+7 more)
 
 ### Community 35 - "14-aracno-cli-test.sh"
 Cohesion: 0.62
@@ -235,7 +235,7 @@ Cohesion: 0.47
 Nodes (9): apri(), chiedi(), DBUS_SYSTEM_BUS_ADDRESS, fail(), log_pulito(), ok(), 16-menu-base-test.sh script, uscito_bene() (+1 more)
 
 ### Community 43 - "ADR-0003: Rete dei fili condivisa con l'host"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (9): ADR-0003: Rete dei fili condivisa con l'host, Alternative considerate, Bridge di rete verso la LAN, Conseguenze, Contesto, Data, Decisione, Stato (+1 more)
 
 ### Community 44 - "17-menu-switch-test.sh"
@@ -243,8 +243,8 @@ Cohesion: 0.62
 Nodes (6): chiedi(), fail(), ok(), prova(), 17-menu-switch-test.sh script, vivo()
 
 ### Community 45 - "Alternative considerate"
-Cohesion: 0.33
-Nodes (6): Alternative considerate, `aracnod` come root, Il menù chiama systemd direttamente, con una regola polkit per l'utente, Linguaggio: Python o C invece di Rust, Scrivere direttamente `cgroup.freeze`, `sudo` senza password per `aracno` (sudoers)
+Cohesion: 0.40
+Nodes (5): Alternative considerate, Docker / Podman, LXC/LXD (Incus), Macchine virtuali (KVM/QEMU), Multiboot (più distro installate, scelta da GRUB)
 
 ### Community 46 - "ADR-0009: Disco cifrato con LUKS2, due password all'avvio"
 Cohesion: 0.33
@@ -252,7 +252,7 @@ Nodes (5): ADR-0009: Disco cifrato con LUKS2, due password all'avvio, Alternativ
 
 ## Knowledge Gaps
 - **17 isolated node(s):** `aracno-cli`, `aracno-menu`, `Su`, `Giu`, `Sinistra` (+12 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 246 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 247 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -263,12 +263,12 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `aracno-cli`, `aracno-menu`, `Su` to the rest of the system?**
   _17 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `client.rs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06334841628959276 - nodes in this community are weakly interconnected._
-- **Why does `StrandName` connect `TentacleName` to `switch.rs`, `list.rs`, `aracnod/src/main.rs`, `lib.rs`?**
+  _Cohesion score 0.052214452214452214 - nodes in this community are weakly interconnected._
+- **Why does `StrandName` connect `switch.rs` to `TentacleName`, `list.rs`, `aracnod/src/main.rs`, `lib.rs`?**
   _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Should `lib.rs` be split into smaller, more focused modules?**
-  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
-- **Why does `AracnoError` connect `aracnod/src/main.rs` to `list.rs`, `client.rs`, `auth.rs`?**
+  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
+- **Why does `AracnoError` connect `aracnod/src/main.rs` to `client.rs`, `auth.rs`?**
   _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Should `Spec: `aracnod` (con `aracno-proto`)` be split into smaller, more focused modules?**
   _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._

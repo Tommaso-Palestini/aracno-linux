@@ -53,12 +53,16 @@ fn crea(app: &gtk::Application, avvio: Instant) {
 
     let vista = Rc::new(Vista::new());
     win.set_child(Some(&vista.radice));
+    // Il filo selezionato si vede subito, non solo dopo il primo tasto.
+    win.set_focus_visible(true);
+
 
     // Fase di cattura: le frecce le gestisce la ragnatela (radial::vicino), non la
     // navigazione standard di GTK. Tab e Invio restano quelli di GTK.
     let tasti = gtk::EventControllerKey::new();
     tasti.set_propagation_phase(gtk::PropagationPhase::Capture);
     let v = vista.clone();
+    let w = win.clone();
     tasti.connect_key_pressed(move |_, key, _, _| {
         use gtk::gdk::Key;
         let dir = match key {
@@ -67,9 +71,17 @@ fn crea(app: &gtk::Application, avvio: Instant) {
             Key::Down => Direzione::Giu,
             Key::Left => Direzione::Sinistra,
             Key::Right => Direzione::Destra,
+            Key::Return | Key::KP_Enter | Key::Tab | Key::ISO_Left_Tab => {
+                eprintln!("aracno-menu: tasto {} con selezionato {:?}", key.name().unwrap_or_default(), v.selezionato());
+                return glib::Propagation::Proceed;
+            }
             _ => return glib::Propagation::Proceed,
         };
         if v.muovi(dir) {
+            // Le frecce le intercettiamo prima di GTK, che quindi non accende da solo
+            // l'evidenziazione del focus: senza questo la selezione si spostava senza
+            // vedersi (T9, 2026-11-02: "le frecce non funzionano finché non premo Tab").
+            w.set_focus_visible(true);
             glib::Propagation::Stop
         } else {
             glib::Propagation::Proceed
