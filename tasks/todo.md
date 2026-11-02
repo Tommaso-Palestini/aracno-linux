@@ -128,3 +128,11 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     `wp_security_context_v1`, socket dedicato per filo con i protocolli privilegiati
     filtrati; decisione in un ADR che sostituisce o aggiorna lo 0005.
   - 2026-11-02, misurato dall'host: socket normale 59 protocolli (appunti letti di nascosto, cattura schermo, tastiera virtuale, layer-shell, blocco schermo, gestione finestre e monitor); socket etichettato con `wp_security_context_v1` 36, i 23 privilegiati nascosti. Helper `aracno-socket-sicuro` + servizio utente `aracno-wayland@FILO`; test `24-wayland-sicuro-test.sh` da lanciare. Notato anche: i `.nspawn` hanno `PrivateUsers=no` (root nel filo = root dell'host), da rivedere.
+
+- [ ] **T15: fili con spazio utenti separato (PrivateUsers=pick)** (M) — chiesto il 2026-11-02
+  - Oggi (ADR-0001) root nel filo è root dell'host. Ipotesi: con `PrivateUsers=pick` e
+    `PrivateUsersOwnership=map` (nessun file cambiato sul disco) funziona tutto se (1) nei fili
+    si monta solo `renderD128` reso 0666 da una regola udev (card0 resta chiuso) e (2) il
+    socket Wayland etichettato è 0777 dentro `/run/user/UID` (0700).
+  - Test: `prototype/25-private-users-test.sh` (I1–I3, G1–G2, W1–W2, A1), `--rimuovi` per tornare indietro.
+  - Poi: ADR che aggiorna lo 0001.
