@@ -109,7 +109,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
     rifiuta se lo spazio libero è meno di 1,2 volte il filo; `aracno ripristina NOME`.
   - Accettazione: `prototype/22-upgrade-copia-test.sh` (U1–U4) con tempi misurati.
   - PASS il 2026-11-02 (`22-upgrade-copia-test.sh`: copia di 1,3 GB in 8,8–9,2 s, filo attivo congelato per quel tempo; ripristino ok). `aracno upgrade` copia prima di aggiornare (`--senza-copia` per saltare), `aracno ripristina`, `aracno copie`.
-- [ ] **T13: politica della RAM per i fili congelati** (S)
+- [x] **T13: politica della RAM per i fili congelati** (S)
+  - PASS il 2026-11-02 al terzo giro (`23-ram-pressione-test.sh`, lavoro che tocca la memoria: 100% dal congelato, rilettura 379 ms). Decisione: ADR-0011, nessun tetto automatico.
   - Domanda: serve un tetto automatico allo switch, o il kernel sacrifica già da solo i
     fili congelati quando la memoria scarseggia? Dato di partenza: fase 4.5 (con zram si
     guadagna circa metà di quanto si toglie).

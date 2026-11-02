@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793627171.576808,
-    "seen": 1793627173.448574,
-    "ast_hash": "be6db782920fe7c623d1d1d0c63bce4d",
+    "mtime": 1793627448.2239506,
+    "seen": 1793627450.149411,
+    "ast_hash": "fa2d28d87ad9358536f1ca188c90200c",
     "semantic_hash": ""
   },
   "docs/adr/0002-switch-con-congelamento-cgroup.md": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793627171.5735552,
-    "seen": 1793627173.448615,
-    "ast_hash": "467272685390441722949dfcb40afd71",
+    "mtime": 1793627448.2191584,
+    "seen": 1793627450.1494527,
+    "ast_hash": "45f0dd708c9ffcd2384de8ba4d296887",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793627171.5820692,
-    "seen": 1793627173.448637,
-    "ast_hash": "0c7aacf3c5f28291c9875d96dfc8613e",
+    "mtime": 1793627448.2287076,
+    "seen": 1793627450.149473,
+    "ast_hash": "8a9d492ad1e92705a4144f50931fedfc",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -435,6 +435,12 @@
     "mtime": 1793627171.4048047,
     "seen": 1793627173.4486113,
     "ast_hash": "c5283b132af40cd5e6e3b442741da12e",
+    "semantic_hash": ""
+  },
+  "docs/adr/0011-ram-fili-congelati.md": {
+    "mtime": 1793627448.0587986,
+    "seen": 1793627450.149449,
+    "ast_hash": "4d7d49aa9c41c4f6188c2a0af58d81b2",
     "semantic_hash": ""
   }
 }

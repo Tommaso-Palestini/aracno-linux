@@ -17,5 +17,6 @@ Nome dei file: `NNNN-titolo-breve.md`, numerazione progressiva.
 | [0008](0008-aracnod-servizio-di-sistema.md) | Lo switch passa da `aracnod`: servizio di sistema, utente dedicato, polkit, D-Bus, Rust | Accettata |
 | [0009](0009-disco-cifrato-doppia-password.md) | Disco cifrato con LUKS2: password del disco all'avvio, poi password dell'utente | Accettata, da fare nella fase 5 |
 | [0010](0010-socket-wayland-etichettato.md) | Nei fili un socket Wayland etichettato (`wp_security_context_v1`): niente appunti letti di nascosto, cattura schermo, tastiera virtuale, layer-shell | Accettata |
+| [0011](0011-ram-fili-congelati.md) | RAM dei fili congelati: nessun tetto automatico, il kernel libera da solo le loro pagine | Accettata |
 
 Nota: le decisioni 0001–0005 sono state prese e verificate durante le fasi 0–4.4 del prototipo, tra ottobre e il 31/10/2026. Sono state messe per scritto il 01/11/2026, quindi le alternative sono una ricostruzione fatta dopo.

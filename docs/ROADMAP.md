@@ -30,7 +30,7 @@ Stato aggiornato al 31/10/2026. Legenda: `[x]` fatto e verificato sul PC, `[ ]` 
 - [x] **Scelta del menù a ragnatela:** schermata a tutto schermo con tasto rapido (ADR-0007)
 - [ ] **Menù a ragnatela:** spec approvate (`docs/spec/`), ora piano e implementazione (`spec-driven-development`, `security-and-hardening`, `frontend-ui-engineering`, `design-taste-frontend`)
 - [x] **`aracno upgrade`, copia di sicurezza:** copia completa in `/var/lib/aracno/copie` prima di aggiornare, `aracno ripristina` (T12, 9 s per 1,3 GB su ext4; con btrfs nell'ISO `cp --reflink` la rende quasi gratis)
-- [ ] **RAM dei fili congelati:** decidere la politica (tetto automatico allo switch? quanto basso? zram o swap su disco per i congelati?). Dato di partenza: fase 4.5
+- [x] **RAM dei fili congelati:** nessun tetto automatico; sotto pressione il kernel toglie memoria solo al filo congelato (100%, 0 MB al lavoro attivo); risveglio ~2 s per 800 MB (ADR-0011, T13). L'ISO deve avere swap.
 - [x] **Socket Wayland:** socket etichettato per filo, i 23 protocolli privilegiati di COSMIC nascosti (ADR-0010, T14)
 - [ ] **Isolamento dei fili:** i `.nspawn` hanno `PrivateUsers=no` (root nel filo = root dell'host): rivedere prima dell'uso quotidiano
 
