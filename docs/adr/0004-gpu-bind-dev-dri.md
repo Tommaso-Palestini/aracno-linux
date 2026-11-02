@@ -1,7 +1,7 @@
 # ADR-0004: GPU nei fili con bind di `/dev/dri` e drop-in systemd
 
 ## Stato
-Accettata
+Accettata. Aggiornata da ADR-0012 (2026-11-02): nei fili solo `/dev/dri/renderD128` (0666 via udev), non più `card0`.
 
 ## Data
 2026-10-31 (scritta il 2026-11-01)

@@ -1,7 +1,7 @@
 # ADR-0001: Fili come container systemd-nspawn su un unico kernel
 
 ## Stato
-Accettata
+Accettata. Aggiornata da ADR-0012 (2026-11-02): i fili non usano più `PrivateUsers=no`.
 
 ## Data
 2026-10-31 (scritta il 2026-11-01)

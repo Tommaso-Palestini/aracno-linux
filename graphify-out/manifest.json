@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1793627448.2239506,
-    "seen": 1793627450.149411,
-    "ast_hash": "fa2d28d87ad9358536f1ca188c90200c",
+    "mtime": 1793627906.804607,
+    "seen": 1793627922.770671,
+    "ast_hash": "7111416ec04d5c67aec7e7536ebb1cbe",
     "semantic_hash": ""
   },
   "docs/adr/0002-switch-con-congelamento-cgroup.md": {
@@ -72,9 +72,9 @@
     "semantic_hash": ""
   },
   "docs/adr/0004-gpu-bind-dev-dri.md": {
-    "mtime": 1793613419.3089628,
-    "seen": 1793613641.5503466,
-    "ast_hash": "d9b363d6347d46a2917cdc171dfb2a5e",
+    "mtime": 1793627920.704506,
+    "seen": 1793627922.770682,
+    "ast_hash": "d83022a5a18340a15b5a27474df2ddd4",
     "semantic_hash": ""
   },
   "docs/adr/0005-solo-socket-wayland.md": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "docs/adr/README.md": {
-    "mtime": 1793627448.2191584,
-    "seen": 1793627450.1494527,
-    "ast_hash": "45f0dd708c9ffcd2384de8ba4d296887",
+    "mtime": 1793627906.7991588,
+    "seen": 1793627922.7707088,
+    "ast_hash": "c1cfa6b70023c420ab5211cfe2822b0e",
     "semantic_hash": ""
   },
   "prototype/08-ram-limit.sh": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793627448.2287076,
-    "seen": 1793627450.149473,
-    "ast_hash": "8a9d492ad1e92705a4144f50931fedfc",
+    "mtime": 1793627906.8120384,
+    "seen": 1793627922.7707367,
+    "ast_hash": "4d5ce54cd381b66c1250bf190871b9b5",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -294,9 +294,9 @@
     "semantic_hash": ""
   },
   "docs/adr/0001-fili-systemd-nspawn.md": {
-    "mtime": 1793613419.3109138,
-    "seen": 1793613641.5503364,
-    "ast_hash": "126ce61261cf4306417f247f5df38ee9",
+    "mtime": 1793627913.532684,
+    "seen": 1793627922.770674,
+    "ast_hash": "037caf1cdca40d8936f637ed67d6aa22",
     "semantic_hash": ""
   },
   "docs/adr/0009-disco-cifrato-doppia-password.md": {
@@ -402,9 +402,9 @@
     "semantic_hash": ""
   },
   "aracno/spikes/wayland-globali/src/bin/aracno-socket-sicuro.rs": {
-    "mtime": 1793626347.3583474,
-    "seen": 1793626459.8141537,
-    "ast_hash": "3a0dd6fd53acc9ddd049970e30497f38",
+    "mtime": 1793627591.288042,
+    "seen": 1793627922.770571,
+    "ast_hash": "782fceb10f495c2bae2634500b0131da",
     "semantic_hash": ""
   },
   "aracno/spikes/wayland-globali/src/main.rs": {
@@ -441,6 +441,18 @@
     "mtime": 1793627448.0587986,
     "seen": 1793627450.149449,
     "ast_hash": "4d7d49aa9c41c4f6188c2a0af58d81b2",
+    "semantic_hash": ""
+  },
+  "prototype/25-private-users-test.sh": {
+    "mtime": 1793627824.840202,
+    "seen": 1793627922.7706554,
+    "ast_hash": "6658b7c9ec5192f0e9d63d05ea9b119d",
+    "semantic_hash": ""
+  },
+  "docs/adr/0012-fili-con-utenti-separati.md": {
+    "mtime": 1793627906.690499,
+    "seen": 1793627922.770706,
+    "ast_hash": "aca92097060f8c670ddf8e0e7848b7e7",
     "semantic_hash": ""
   }
 }

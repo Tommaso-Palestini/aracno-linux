@@ -44,7 +44,7 @@
   "42": "16-menu-base-test.sh",
   "43": "ADR-0003: Rete dei fili condivisa con l'host",
   "44": "17-menu-switch-test.sh",
-  "45": "list.rs",
+  "45": "25-private-users-test.sh",
   "46": "ADR-0009: Disco cifrato con LUKS2, due password all'avvio",
   "47": "README.md",
   "48": "Vista",
@@ -60,7 +60,9 @@
   "58": "24-wayland-sicuro-test.sh",
   "59": "22-upgrade-copia-test.sh",
   "60": "aracno-wayland-globali",
+  "61": "auth.rs",
   "62": "ADR-0010: Nei fili un socket Wayland etichettato (wp_security_context_v1)",
+  "63": "ADR-0012: Fili con spazio utenti separato (PrivateUsers=pick, proprietà mappata)",
   "72": "00-setup.sh",
   "73": "02-test-freeze.sh"
 }
