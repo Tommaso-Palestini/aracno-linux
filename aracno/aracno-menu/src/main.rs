@@ -1,5 +1,6 @@
 //! aracno-menu — il menù a ragnatela (spec: docs/spec/SPEC-aracno-menu.md, ADR-0007).
-//! T8: istanza unica, layer-shell o ripiego, elenco testuale da ListStrands, Esc.
+//! T8: istanza unica, layer-shell o ripiego, Esc. T9: fili a ragnatela, frecce, Tab,
+//! Invio o clic per lo switch tramite aracnod, chiusura a switch fatto.
 //!
 //! Ogni apertura è un processo nuovo; chiudere il menù (Esc, oppure lanciare di nuovo
 //! `aracno-menu` col tasto rapido) fa uscire il processo. Non si nasconde né si chiude
@@ -11,6 +12,7 @@
 
 #![forbid(unsafe_code)]
 
+mod radial;
 mod view;
 
 use aracno_proto::client::{self, messaggio, ManagerProxy};
@@ -19,7 +21,8 @@ use gtk::prelude::*;
 use gtk4_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
 use std::rc::Rc;
 use std::time::Instant;
-use view::Vista;
+use radial::Direzione;
+use view::{Scelta, Vista};
 
 const APP_ID: &str = "io.github.tommaso_palestini.AracnoMenu";
 
@@ -51,12 +54,26 @@ fn crea(app: &gtk::Application, avvio: Instant) {
     let vista = Rc::new(Vista::new());
     win.set_child(Some(&vista.radice));
 
+    // Fase di cattura: le frecce le gestisce la ragnatela (radial::vicino), non la
+    // navigazione standard di GTK. Tab e Invio restano quelli di GTK.
     let tasti = gtk::EventControllerKey::new();
-    tasti.connect_key_pressed(|_, key, _, _| {
-        if key == gtk::gdk::Key::Escape {
-            chiudi();
+    tasti.set_propagation_phase(gtk::PropagationPhase::Capture);
+    let v = vista.clone();
+    tasti.connect_key_pressed(move |_, key, _, _| {
+        use gtk::gdk::Key;
+        let dir = match key {
+            Key::Escape => chiudi(),
+            Key::Up => Direzione::Su,
+            Key::Down => Direzione::Giu,
+            Key::Left => Direzione::Sinistra,
+            Key::Right => Direzione::Destra,
+            _ => return glib::Propagation::Proceed,
+        };
+        if v.muovi(dir) {
+            glib::Propagation::Stop
+        } else {
+            glib::Propagation::Proceed
         }
-        glib::Propagation::Proceed
     });
     win.add_controller(tasti);
 
@@ -105,12 +122,39 @@ fn mostra(win: &gtk::ApplicationWindow, vista: Rc<Vista>) {
                 .await
                 .map_err(|e| messaggio(&e))?;
             let p = ManagerProxy::new(&conn).await.map_err(|e| messaggio(&e))?;
-            client::fili(&p).await
+            client::fili(&p).await.map(|f| (f, p))
         }
         .await;
         match esito {
-            Ok(fili) => vista.mostra_fili(&fili),
+            Ok((fili, p)) => {
+                let scelta = scelta(vista.clone(), p);
+                vista.mostra_fili(&fili, scelta);
+            }
             Err(e) => vista.mostra_errore(&e),
         }
     });
+}
+
+/// Invio o clic su un filo: se è già attivo si chiude e basta, altrimenti Switch.
+/// A switch fatto il menù si chiude; in caso di errore resta aperto col messaggio.
+fn scelta(vista: Rc<Vista>, p: ManagerProxy<'static>) -> Scelta {
+    Rc::new(move |f: &client::Filo| {
+        if f.stato == aracno_proto::StrandState::Active {
+            chiudi();
+        }
+        vista.in_switch(&f.nome);
+        let (v, p, nome) = (vista.clone(), p.clone(), f.nome.clone());
+        glib::spawn_future_local(async move {
+            match p.switch(&nome).await {
+                Ok(ms) => {
+                    eprintln!("aracno-menu: switch {nome} ok in {ms} ms");
+                    chiudi();
+                }
+                Err(e) => {
+                    eprintln!("aracno-menu: switch {nome} fallito: {e}");
+                    v.mostra_errore(&messaggio(&e));
+                }
+            }
+        });
+    })
 }

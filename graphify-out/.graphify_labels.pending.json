@@ -36,10 +36,17 @@
   "34": "list.rs",
   "35": "14-aracno-cli-test.sh",
   "36": "01-create-strands.sh",
-  "37": "README.md",
+  "37": "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`",
   "38": "build.rs",
   "39": "15-watchdog-freeze.sh",
+  "40": "radial.rs",
+  "41": "ADR-0005: Desktop: nei fili si monta solo il socket Wayland",
   "42": "16-menu-base-test.sh",
+  "43": "ADR-0003: Rete dei fili condivisa con l'host",
+  "44": "17-menu-switch-test.sh",
+  "45": "Alternative considerate",
+  "46": "ADR-0009: Disco cifrato con LUKS2, due password all'avvio",
+  "47": "README.md",
   "72": "00-setup.sh",
   "73": "02-test-freeze.sh"
 }
