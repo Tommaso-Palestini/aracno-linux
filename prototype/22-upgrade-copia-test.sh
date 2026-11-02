@@ -54,9 +54,9 @@ d=$(( a > c ? a - c : c - a ))
 "$O" copie | grep -qE '^debian +[0-9]{4}-' && ok "aracno copie elenca debian con la data" || fail "aracno copie non elenca debian"
 
 echo; echo ">> U4: ripristino"
-echo "scritto dopo la copia, $(date)" >"$M/$MARCA"
+echo "scritto dopo la copia, $(date)" >"$M/debian/$MARCA"
 "$O" ripristina debian | sed 's/^/    /'
-[[ ! -e $M/$MARCA ]] && ok "il file scritto dopo la copia è sparito" || fail "il file c'è ancora"
+[[ ! -e $M/debian/$MARCA ]] && ok "il file scritto dopo la copia è sparito" || fail "il file c'è ancora"
 [[ -e $COPIE/debian.scartata/$MARCA ]] && ok "la versione tolta è in .scartata" || fail "manca .scartata con il file"
 [[ $(stato debian) == attiva ]] && ok "debian di nuovo attivo" || fail "debian: $(stato debian)"
 w=$(runuser -u "$UTENTE" -- /usr/local/bin/aracno where 2>&1 || true)
