@@ -71,8 +71,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 
 ## Fase 3: `aracno-menu`
 
-- [ ] **T8: menù base** (M)
-  - Fatto il 2026-11-02, da verificare: crate `aracno-menu` (ogni apertura è un processo nuovo; chiudere = uscire, perché su COSMIC nascondere o chiudere una superficie layer-shell fa cadere la connessione; dal tasto alla finestra 135–172 ms, margine stretto per M1 quando arriva la grafica di T10), client D-Bus condiviso spostato in `aracno_proto::client`. Test: `prototype/16-menu-base-test.sh` (guidato). Il menù non è nei `default-members` del workspace: serve `PKG_CONFIG_PATH=$HOME/.local/lib/x86_64-linux-gnu/pkgconfig` e `-p aracno-menu`.
+- [x] **T8: menù base** (M)
+  - PASS il 2026-11-02 (`16-menu-base-test.sh`: layer-shell, 144–168 ms dal tasto alla finestra, uscita pulita, M4 ok): crate `aracno-menu` (ogni apertura è un processo nuovo; chiudere = uscire, perché su COSMIC nascondere o chiudere una superficie layer-shell fa cadere la connessione; dal tasto alla finestra 135–172 ms, margine stretto per M1 quando arriva la grafica di T10), client D-Bus condiviso spostato in `aracno_proto::client`. Test: `prototype/16-menu-base-test.sh` (guidato). Il menù non è nei `default-members` del workspace: serve `PKG_CONFIG_PATH=$HOME/.local/lib/x86_64-linux-gnu/pkgconfig` e `-p aracno-menu`.
   - Lavoro: istanza unica (lanciato di nuovo si chiude), layer-shell o ripiego, elenco testuale da `ListStrands`, Esc.
   - Accettazione: M4, cioè un messaggio chiaro se `aracnod` non risponde o rifiuta.
   - Da T2: l'avvio a freddo (129–207 ms) è al limite di M1. Tenere il processo già avviato e mostrare o nascondere la finestra; misurare.
