@@ -1,6 +1,6 @@
 # Spec: fase 5, ISO di Aracno Linux
 
-Stato: **bozza da approvare** (2026-11-02). Decisioni di riferimento: ADR-0006 (host Debian
+Stato: **approvata** il 2026-11-02 (desktop: KDE Plasma da misurare per primo; installatore: Calamares; nome: Aracno Linux, `aracno-AAAAMMGG-amd64.iso`). Decisioni di riferimento: ADR-0006 (host Debian
 trixie con `live-build`), ADR-0009 (disco cifrato, due password), ADR-0010 (socket Wayland
 etichettato), ADR-0011 (RAM, serve swap), ADR-0012 (fili con utenti separati).
 
@@ -52,7 +52,7 @@ Ordine: `costruzione`, `prova-vm` → `iso-base` → `fili-offline` → `primo-a
 - Installatore: **Calamares** (quello delle ISO live di Debian, grafico, sa fare LUKS) —
   vedi domanda aperta 2.
 - VM: QEMU/KVM con OVMF (UEFI), console seriale per i controlli automatici.
-- Desktop dell'host: **da decidere** (domanda aperta 1).
+- Desktop dell'host: **KDE Plasma** (deciso il 2026-11-02), se in VM ha `zwlr_layer_shell_v1` e `wp_security_context_manager_v1`; altrimenti si torna su questa scelta.
 
 ## Comandi (obiettivo)
 ```
@@ -104,7 +104,7 @@ iso/
    tutto il punto 2; `lsblk` mostra root e swap dentro `crypt`.
 4. Sul PC vero, da chiavetta: avvio live fino al desktop e switch tra i fili.
 
-## Domande aperte
+## Domande (risolte il 2026-11-02: 1 Plasma da misurare, 2 Calamares, 3 nome ok)
 1. **Quale desktop sull'host dell'ISO?** Aracno ha bisogno di un compositor con `layer-shell`
    (il menù) e `wp_security_context_v1` (ADR-0010). Oggi usi COSMIC, che non è nei pacchetti
    di Debian trixie. Candidati da misurare in VM con lo spike `wayland-globali`:
