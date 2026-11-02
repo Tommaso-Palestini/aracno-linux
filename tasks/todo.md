@@ -88,8 +88,8 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
   - Lavoro: CSS, icone, stati come testo e icona, animazione di apertura. Skill `frontend-ui-engineering` e `design-taste-frontend`; screenshot.
   - Accettazione: M1 (< 200 ms dal tasto alla schermata).
   - Dipendenze: T9.
-- [ ] **T11: aggiornamenti live, traduzioni e tasto rapido** (S)
-  - Fatto il 2026-11-02, da verificare: aggiornamenti in diretta da StateChanged (nodi aggiornati al loro posto), gettext (dominio "aracno", testi originali in italiano, `po/en.po`; estrazione con `po/estrai.py` perché xgettext 0.21 non conosce il Rust), voce `.desktop`, tasto **Super+Shift+A** (Super+A su COSMIC è la libreria applicazioni) con `prototype/20-tasto-rapido.sh`. gettext-rs 0.8 (la 0.7 ha RUSTSEC-2026-0244); niente setlocale nostro, lo fa GTK. Test: `prototype/21-menu-t11-test.sh`.
+- [x] **T11: aggiornamenti live, traduzioni e tasto rapido** (S)
+  - PASS il 2026-11-02 (`21-menu-t11-test.sh`: aggiornamenti in diretta, menù in inglese con LANG=en_US, voce "Aracno" tra le applicazioni, Super+Shift+A apre e chiude): aggiornamenti in diretta da StateChanged (nodi aggiornati al loro posto), gettext (dominio "aracno", testi originali in italiano, `po/en.po`; estrazione con `po/estrai.py` perché xgettext 0.21 non conosce il Rust), voce `.desktop`, tasto **Super+Shift+A** (Super+A su COSMIC è la libreria applicazioni) con `prototype/20-tasto-rapido.sh`. gettext-rs 0.8 (la 0.7 ha RUSTSEC-2026-0244); niente setlocale nostro, lo fa GTK. Test: `prototype/21-menu-t11-test.sh`.
   - Lavoro: `StateChanged`, gettext (`po/`), file `.desktop`, `Super+Shift+A` su COSMIC (Super+A è la libreria applicazioni).
   - Accettazione: M5 su COSMIC; il ripiego si prova in VM più avanti.
   - Dipendenze: T10.
