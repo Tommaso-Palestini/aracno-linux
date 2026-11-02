@@ -12,6 +12,9 @@
 #      stesso MainPID, NRestarts invariato, ActiveState active, Result success,
 #      systemd dentro arch risponde (running o degraded)
 #   W3 lo stesso per debian, se si lancia con FILI="arch debian"
+#   (correzione dopo il primo giro, 2026-11-02: il controllo del journal partiva da prima di W1 e
+#    vedeva il watchdog della vecchia istanza, uccisa alle 11:12:20 prima del drop-in. W2 era PASS:
+#    stesso pid 31643, NRestarts 0, nessun watchdog dopo il riavvio delle 11:12:20)
 # Durata: circa 4 minuti e mezzo. Si lancia con sudo.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
@@ -52,6 +55,7 @@ for n in $FILI; do
 done
 
 echo; echo ">> W2: congelamento lungo ($ATTESA s)"
+T0=$(date '+%Y-%m-%d %H:%M:%S')   # solo da qui: la vecchia istanza può essere morta di watchdog in W1
 declare -A pid0 nr0
 for n in $FILI; do
   pid0[$n]=$(p "$n" MainPID); nr0[$n]=$(p "$n" NRestarts)
@@ -69,7 +73,7 @@ for n in $FILI; do
   [[ $pid == "${pid0[$n]}" && $nr == "${nr0[$n]}" ]] && ok "$n non riavviato" || fail "$n riavviato (pid ${pid0[$n]}→$pid)"
   [[ $s == running || $s == degraded ]] && ok "$n risponde" || fail "$n non risponde ($s)"
 done
-journalctl -u "$(u arch)" --since "-$((ATTESA + 60))s" --no-pager -o cat | grep -i watchdog \
+journalctl -u "$(u arch)" --since "$T0" --no-pager -o cat | grep -i watchdog \
   && fail "il journal parla ancora di watchdog" || ok "nessun watchdog nel journal"
 
 echo; echo ">> Ripristino: debian attiva, arch congelata"
