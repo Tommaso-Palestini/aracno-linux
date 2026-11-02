@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "tasks/todo.md": {
-    "mtime": 1793616471.1280692,
-    "seen": 1793616472.8260567,
-    "ast_hash": "998d858e9527508b5d739b7e19aed86b",
+    "mtime": 1793618900.4753916,
+    "seen": 1793618903.7098076,
+    "ast_hash": "7f1d9fd1c19594919ba57865516f9577",
     "semantic_hash": ""
   },
   "prototype/10-polkit-spike.sh": {
@@ -312,21 +312,21 @@
     "semantic_hash": ""
   },
   "aracno/aracno-menu/Cargo.toml": {
-    "mtime": 1793616275.6046357,
-    "seen": 1793616472.8259196,
-    "ast_hash": "22c22be7ebe6f367cf033f6dfe4a5fb3",
+    "mtime": 1793618571.1772835,
+    "seen": 1793618903.7096207,
+    "ast_hash": "3d9bf6bfd21ed18e074dac9f0599502e",
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/main.rs": {
-    "mtime": 1793616830.0463002,
-    "seen": 1793616849.9549353,
-    "ast_hash": "4dee2635893fa72cd1b1889b919bf798",
+    "mtime": 1793618809.066244,
+    "seen": 1793618903.7096286,
+    "ast_hash": "e0ab478a586cd575d3872e68ff9e1452",
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/view.rs": {
-    "mtime": 1793616801.9057095,
-    "seen": 1793616849.9549446,
-    "ast_hash": "2bbc0658a68e755f49d204f01e46aaf6",
+    "mtime": 1793618556.7490158,
+    "seen": 1793618903.7096353,
+    "ast_hash": "afc3bbf96bb73b57c4e6eb1d222eb2ac",
     "semantic_hash": ""
   },
   "aracno/aracno-proto/src/client.rs": {
@@ -348,15 +348,27 @@
     "semantic_hash": ""
   },
   "aracno/aracno-menu/src/radial.rs": {
-    "mtime": 1793616341.1887944,
-    "seen": 1793616472.825929,
-    "ast_hash": "9000ed0a5b6944b95fc81b5e82486995",
+    "mtime": 1793618842.126151,
+    "seen": 1793618903.7096322,
+    "ast_hash": "c652d5b5d4c72fdb881993e38692b15c",
     "semantic_hash": ""
   },
   "prototype/17-menu-switch-test.sh": {
-    "mtime": 1793616848.3866203,
-    "seen": 1793616849.9550793,
-    "ast_hash": "efdc8de808053b80076a31d7f32cb4e4",
+    "mtime": 1793618267.4959786,
+    "seen": 1793618903.7097347,
+    "ast_hash": "9ca1a52781cf0d69d257ab42150f89d5",
+    "semantic_hash": ""
+  },
+  "prototype/18-menu-grafica-test.sh": {
+    "mtime": 1793618889.9951973,
+    "seen": 1793618903.7097385,
+    "ast_hash": "a9cb1f306e8a837feadb05417c2b02d0",
+    "semantic_hash": ""
+  },
+  "docs/img/aracno-menu-t10.png": {
+    "mtime": 1793618889.921998,
+    "seen": 1793618903.7098107,
+    "ast_hash": "35859aeac926838ccb122d3a62193072",
     "semantic_hash": ""
   }
 }

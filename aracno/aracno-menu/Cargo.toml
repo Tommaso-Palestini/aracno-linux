@@ -13,6 +13,6 @@ publish.workspace = true
 aracno-proto.workspace = true
 zbus.workspace = true
 # stesse versioni della prova di T2 (aracno/spikes/layer-shell), verificate su COSMIC
-# v4_10: proprietà accessibili (GTK 4.14 su Pop!_OS, 4.18 su Debian trixie)
-gtk = { package = "gtk4", version = "0.11", features = ["v4_10"] }
+# v4_12: proprietà accessibili e CSS da stringa (GTK 4.14 su Pop!_OS, 4.18 su Debian trixie)
+gtk = { package = "gtk4", version = "0.11", features = ["v4_12"] }
 gtk4-layer-shell = "0.8"

@@ -33,7 +33,7 @@
   "31": "aracno-proto",
   "32": "aracno-spike-layer-shell",
   "33": "Revisione di sicurezza di aracnod (T7) — 2026-11-02",
-  "34": "list.rs",
+  "34": "view.rs",
   "35": "14-aracno-cli-test.sh",
   "36": "01-create-strands.sh",
   "37": "ADR-0006: Host dell'ISO: Debian trixie costruita con `live-build`",
@@ -47,6 +47,11 @@
   "45": "Alternative considerate",
   "46": "ADR-0009: Disco cifrato con LUKS2, due password all'avvio",
   "47": "README.md",
+  "48": "Vista",
+  "49": "ragnatela.rs",
+  "50": "Filo",
+  "51": "StrandState",
+  "52": "18-menu-grafica-test.sh",
   "72": "00-setup.sh",
   "73": "02-test-freeze.sh"
 }

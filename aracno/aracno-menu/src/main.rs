@@ -47,8 +47,10 @@ fn chiudi() -> ! {
 }
 
 fn crea(app: &gtk::Application, avvio: Instant) {
+    carica_stile();
     let win = gtk::ApplicationWindow::new(app);
     win.set_title(Some("Aracno"));
+    win.add_css_class("aracno");
     let modo = prepara_superficie(&win);
 
     let vista = Rc::new(Vista::new());
@@ -103,12 +105,28 @@ fn crea(app: &gtk::Application, avvio: Instant) {
     mostra(&win, vista);
 }
 
+/// Aspetto del menù (data/style.css), compilato nel binario: nessun file da cercare.
+fn carica_stile() {
+    let css = gtk::CssProvider::new();
+    css.load_from_string(include_str!("../data/style.css"));
+    if let Some(d) = gtk::gdk::Display::default() {
+        gtk::style_context_add_provider_for_display(
+            &d,
+            &css,
+            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+        );
+    }
+}
+
 /// Layer-shell sopra tutto, oppure (GNOME, X11) una finestra a schermo intero.
 fn prepara_superficie(win: &gtk::ApplicationWindow) -> &'static str {
     // is_supported() della libreria 1.0.4 dà un CRITICAL se il display non è Wayland (T2).
     let su_wayland =
         gtk::gdk::Display::default().is_some_and(|d| d.type_().name() == "GdkWaylandDisplay");
-    if su_wayland && gtk4_layer_shell::is_supported() {
+    // ARACNO_MENU_ANTEPRIMA=1 (sviluppo): finestra normale, così gli strumenti di
+    // screenshot funzionano (con la tastiera esclusiva di layer-shell il portale si blocca).
+    let anteprima = std::env::var_os("ARACNO_MENU_ANTEPRIMA").is_some();
+    if su_wayland && !anteprima && gtk4_layer_shell::is_supported() {
         win.init_layer_shell();
         win.set_namespace(Some("aracno-menu"));
         win.set_layer(Layer::Overlay);
