@@ -22,6 +22,11 @@
 # PROTEGGI=SIZE (es. 1G): durante la prova il filo attivo ha MemoryLow=SIZE (il kernel non
 # gli toglie memoria sotto quella soglia finché può prenderla altrove), poi si toglie.
 # Ipotesi: con la protezione P1 ≥ 90% e P2 < 300 ms.
+# Secondo giro, PROTEGGI=1G: nessun effetto (63%). Difetti del test: (1) la pressione nasce
+# dentro debian, quindi MemoryLow sul filo intero non distingue il lavoro dal resto;
+# (2) il lavoro riempiva 500 MB e poi stava fermo: pagine fredde quanto quelle del filo
+# congelato. Terzo giro: il lavoro tocca la sua memoria ogni secondo (come un'app in uso),
+# prima e durante la pressione; si misura senza protezione.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 R="$(cd "$(dirname "$0")/.." && pwd)"
@@ -58,7 +63,15 @@ verifica() {  # rilegge la memoria di memhog e stampa il tempo
   grep '^verify' "$log" | tail -1
 }
 ferma() { systemctl -M "$1" stop "$2" 2>/dev/null || true; }
+# il lavoro di debian rilegge la sua memoria ogni secondo, come un'applicazione in uso
+TOCCA=""
+tocca_avvia() {
+  ( while :; do systemctl -M debian kill --signal=SIGUSR1 aracno-lavoro 2>/dev/null || true; sleep 1; done ) &
+  TOCCA=$!
+}
+tocca_ferma() { [[ -n $TOCCA ]] && kill "$TOCCA" 2>/dev/null; wait "$TOCCA" 2>/dev/null || true; TOCCA=""; }
 pulizia() {
+  tocca_ferma
   systemctl set-property --runtime systemd-nspawn@debian.service MemoryLow=0 2>/dev/null || true
   hop debian 2>/dev/null || true
   ferma debian aracno-lavoro; ferma debian aracno-pressione
@@ -79,7 +92,8 @@ if [[ -n ${PROTEGGI:-} ]]; then
   echo "    protezione: debian MemoryLow=$PROTEGGI ($(mb "$(cg debian)/memory.low") MB)"
   SOGLIA_P1=90; SOGLIA_P2=300
 fi
-sleep 2
+tocca_avvia
+sleep 6   # il lavoro diventa "caldo"
 a0=$(ram arch); as0=$(swp arch); d0=$(ram debian); ds0=$(swp_unit debian aracno-lavoro); o0=$(( $(ooms arch) + $(ooms debian) ))
 echo "    prima: arch ${a0} MB (swap ${as0}), debian ${d0} MB (lavoro in swap: ${ds0}), RAM disponibile $(avail) MB"
 
@@ -102,7 +116,7 @@ else
 fi
 
 echo; echo ">> P2: finita la pressione, debian rilegge i suoi ${LAVORO} MB"
-ferma debian aracno-pressione; sleep 1
+ferma debian aracno-pressione; tocca_ferma; sleep 1.5
 v=$(verifica debian aracno-lavoro); echo "    $v"
 ms=$(sed -n 's/.* in \([0-9]*\) ms/\1/p' <<<"$v")
 [[ $v == "verify ok"* && -n $ms ]] && (( ms < SOGLIA_P2 )) && ok "P2: ${ms} ms (soglia ${SOGLIA_P2})" || fail "P2: $v (soglia ${SOGLIA_P2} ms)"
