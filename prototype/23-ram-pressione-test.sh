@@ -16,6 +16,12 @@
 #   P3 solo misura: tornare su arch e rileggere i suoi 800 MB (quanto costa il risveglio)
 #   Nessun processo ucciso dal kernel (oom_kill = 0 in entrambi i fili).
 # Se P1–P2 passano: nessun tetto automatico, ci pensa il kernel (decisione in un ADR).
+#
+# Primo giro (2026-11-02), senza protezione: P1 61% (646 MB dal congelato, 409 MB dal
+# lavoro del filo attivo), P2 1172 ms, P3 1740 ms per 800 MB. Il kernel da solo non basta.
+# PROTEGGI=SIZE (es. 1G): durante la prova il filo attivo ha MemoryLow=SIZE (il kernel non
+# gli toglie memoria sotto quella soglia finché può prenderla altrove), poi si toglie.
+# Ipotesi: con la protezione P1 ≥ 90% e P2 < 300 ms.
 set -euo pipefail
 [[ $EUID -eq 0 ]] || { echo "Esegui con sudo"; exit 1; }
 R="$(cd "$(dirname "$0")/.." && pwd)"
@@ -23,6 +29,7 @@ O="$R/prototype/aracno"
 M=/var/lib/machines
 UTENTE=${SUDO_USER:-xenon}
 LAVORO=500; FERMO=800; OLTRE=700
+SOGLIA_P1=70; SOGLIA_P2=1000
 
 fails=0
 ok()   { echo "  ok: $*"; }
@@ -52,6 +59,7 @@ verifica() {  # rilegge la memoria di memhog e stampa il tempo
 }
 ferma() { systemctl -M "$1" stop "$2" 2>/dev/null || true; }
 pulizia() {
+  systemctl set-property --runtime systemd-nspawn@debian.service MemoryLow=0 2>/dev/null || true
   hop debian 2>/dev/null || true
   ferma debian aracno-lavoro; ferma debian aracno-pressione
   hop arch 2>/dev/null || true; ferma arch aracno-fermo; hop debian 2>/dev/null || true
@@ -66,6 +74,11 @@ hop arch
 hog arch aracno-fermo $FERMO
 hop debian          # arch congelato con i suoi 800 MB
 hog debian aracno-lavoro $LAVORO
+if [[ -n ${PROTEGGI:-} ]]; then
+  systemctl set-property --runtime systemd-nspawn@debian.service MemoryLow="$PROTEGGI"
+  echo "    protezione: debian MemoryLow=$PROTEGGI ($(mb "$(cg debian)/memory.low") MB)"
+  SOGLIA_P1=90; SOGLIA_P2=300
+fi
 sleep 2
 a0=$(ram arch); as0=$(swp arch); d0=$(ram debian); ds0=$(swp_unit debian aracno-lavoro); o0=$(( $(ooms arch) + $(ooms debian) ))
 echo "    prima: arch ${a0} MB (swap ${as0}), debian ${d0} MB (lavoro in swap: ${ds0}), RAM disponibile $(avail) MB"
@@ -83,7 +96,7 @@ tot=$(( da_arch + da_debian ))
 echo "    tolti al filo congelato: ${da_arch} MB; tolti al lavoro del filo attivo: ${da_debian} MB"
 if (( tot > 0 )); then
   q=$(( da_arch * 100 / tot ))
-  (( q >= 70 )) && ok "P1: il ${q}% viene dal filo congelato" || fail "P1: solo il ${q}% dal filo congelato"
+  (( q >= SOGLIA_P1 )) && ok "P1: il ${q}% viene dal filo congelato (soglia ${SOGLIA_P1}%)" || fail "P1: solo il ${q}% dal filo congelato (soglia ${SOGLIA_P1}%)"
 else
   fail "P1: nessuna memoria tolta (la pressione non è bastata?)"
 fi
@@ -92,7 +105,7 @@ echo; echo ">> P2: finita la pressione, debian rilegge i suoi ${LAVORO} MB"
 ferma debian aracno-pressione; sleep 1
 v=$(verifica debian aracno-lavoro); echo "    $v"
 ms=$(sed -n 's/.* in \([0-9]*\) ms/\1/p' <<<"$v")
-[[ $v == "verify ok"* && -n $ms ]] && (( ms < 1000 )) && ok "P2: ${ms} ms" || fail "P2: $v"
+[[ $v == "verify ok"* && -n $ms ]] && (( ms < SOGLIA_P2 )) && ok "P2: ${ms} ms (soglia ${SOGLIA_P2})" || fail "P2: $v (soglia ${SOGLIA_P2} ms)"
 
 echo; echo ">> P3: si torna su arch e si rileggono i suoi ${FERMO} MB (solo misura)"
 t0=$(date +%s%N); hop arch; echo "    switch: $(( ($(date +%s%N) - t0) / 1000000 )) ms"

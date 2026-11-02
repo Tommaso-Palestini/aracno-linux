@@ -28,7 +28,8 @@ UIDU=$(id -u "$UTENTE")
 RUN=/run/user/$UIDU
 HELPER=/usr/local/libexec/aracno-socket-sicuro
 UNITA=/etc/systemd/user/aracno-wayland@.service
-PRIVILEGIATI='data_control|image_copy_capture|image_capture_source|virtual_keyboard|input_method|layer_shell|session_lock|toplevel_manager|toplevel_info|output_manager|output_power|workspace|foreign_toplevel'
+# nomi esatti (secondo giro: "output_manager" prendeva anche zxdg_output_manager_v1, normale)
+PRIVILEGIATI='^(ext_data_control_manager_v1|zwlr_data_control_manager_v1|ext_image_copy_capture_manager_v1|ext_output_image_capture_source_manager_v1|ext_foreign_toplevel_image_capture_source_manager_v1|zcosmic_workspace_image_capture_source_manager_v1|zwp_virtual_keyboard_manager_v1|zwp_input_method_manager_v2|zwlr_layer_shell_v1|ext_session_lock_manager_v1|cosmic_session_lock_layer_manager_v1|zcosmic_toplevel_manager_v1|zcosmic_toplevel_info_v1|ext_foreign_toplevel_list_v1|zwlr_output_manager_v1|zcosmic_output_manager_v1|zwlr_output_power_manager_v1|ext_workspace_manager_v1|zcosmic_workspace_manager_v2|wp_security_context_manager_v1) '
 
 fails=0
 ok()   { echo "  ok: $*"; }
@@ -96,6 +97,8 @@ riavvia_fili
 echo; echo ">> W2: protocolli visti da dentro ogni filo"
 for n in $(names); do
   install -m 755 "$SP/aracno-wayland-globali" "$M/$n/var/tmp/aracno-wayland-globali"
+  # un filo congelato non può avviare programmi (secondo giro: arch non misurato)
+  "$O" switch "$n" >/dev/null
   lista=$(systemd-run -M "$n" --quiet --wait --pipe \
     --setenv=XDG_RUNTIME_DIR=/run/aracno-wayland --setenv=WAYLAND_DISPLAY=wayland-1 \
     /var/tmp/aracno-wayland-globali 2>&1 || true)
@@ -110,6 +113,7 @@ for n in $(names); do
   [[ -z $privilegiati ]] && ok "$n: nessun protocollo privilegiato" || fail "$n: visibili $privilegiati"
 done
 
+"$O" switch debian >/dev/null
 echo; echo ">> W3: vkcube da debian per 6 secondi: guarda se compare la finestra"
 systemd-run -M debian --quiet --wait --pipe \
   --setenv=XDG_RUNTIME_DIR=/run/aracno-wayland --setenv=WAYLAND_DISPLAY=wayland-1 \
