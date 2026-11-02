@@ -141,14 +141,14 @@ Piano: `tasks/plan.md`. Ogni task si chiude con la sua verifica sul PC reale (pr
 ## Fase 5: ISO (spec `docs/spec/SPEC-iso.md`, piano in `tasks/plan.md`)
 
 ### Fondamenta e rischi
-- [ ] **T16: costruttore** (M)
+- [x] **T16: costruttore** (M) — PASS il 2026-11-02: live-build ok, ISO di prova 348 MB in 10 min, Aracno compila su trixie in 110 s con Rust 1.99.1 da rustup (il rustc di trixie, 1.85.1, è troppo vecchio per gtk4-rs 0.11 e zbus 6)
   - Lavoro: `iso/costruttore.sh` crea `/var/lib/aracno/costruttore` (debootstrap trixie) con
     live-build, xorriso, rustup/cargo e le librerie per compilare (gtk4, gtk4-layer-shell).
   - Accettazione: nel costruttore `lb --version` risponde; `cargo build --release` del
     workspace (aracnod, aracno, aracno-menu) riesce contro le librerie di trixie; un'ISO vuota
     di prova (`lb build` minimo) viene prodotta.
   - Verifica: `iso/costruttore.sh --verifica`.
-- [ ] **T17: prova-vm** (S)
+- [x] **T17: prova-vm** (S) — PASS il 2026-11-02: login sulla seriale in 30 s. GRUB di live-build non ha timeout e non usa la seriale: `--invio-dopo` lo sblocca; monitor di QEMU per tasti e screenshot (`--foto`)
   - Lavoro: `iso/prova-vm.sh` (QEMU/KVM, OVMF, 3 GB, console seriale su file); serve `qemu-system-x86`
     e `ovmf` sull'host (chiedere prima di installarli).
   - Accettazione: l'ISO di prova di T16 si avvia; lo script vede il login sulla seriale ed esce
